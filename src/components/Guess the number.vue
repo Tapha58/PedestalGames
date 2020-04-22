@@ -4,12 +4,12 @@
 
 
         <b-form class="row">
-            <div class="col-sm">
+            <div class="col-sm mb-3 mb-sm-0">
                 <label for="input-with-list">Левая граница:</label>
                 <b-form-input type="number" required list="input-list" id="input-with-list" v-model="min"></b-form-input>
             </div>
 
-            <div class="col-sm">
+            <div class="col-sm mb-3 mb-sm-0">
                 <label for="">Загаданное число:</label>
                 <b-input-group>
                     <b-form-input type="number" min="" v-model="selectNumber"></b-form-input>
