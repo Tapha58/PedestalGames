@@ -1,18 +1,41 @@
 <template>
     <div class="mx-5">
 
-        <h4 class="p-2 mb-2 bg-warning text-dark">2. Правила конкурса</h4>
+        <h5 class="p-2 mb-2 bg-primary text-white">2. Правила конкурса</h5>
+
+        <b-form-group
+                label-cols-sm="12"
+                label-cols-md="5"
+                label="Для использования попытки"
+                label-for="repost"
+        >
+            <b-form-select required id="repost" v-model="selected3" :options="options1"></b-form-select>
+        </b-form-group>
+
+
+        <hr class="bg-primary">
 
         <b-form-group
             label-cols-sm="12"
             label-cols-md="5"
-            label="Количество попыток"
-            label-for="numberOfAttempts"
+            label="Количество бесплатных попыток"
+            label-for="numberOfFreeAttempts"
         >
-            <b-form-input type="number" id="numberOfAttempts" value="3"></b-form-input>
+            <b-form-input type="number" id="numberOfFreeAttempts" value="3"></b-form-input>
         </b-form-group>
 
-        <hr>
+        <hr class="bg-primary">
+
+        <b-form-group
+            label-cols-sm="12"
+            label-cols-md="5"
+            label="Количество платных попыток"
+            label-for="numberOfPaidAttempts"
+        >
+            <b-form-input type="number" id="numberOfPaidAttempts" value="3"></b-form-input>
+        </b-form-group>
+
+        <hr class="bg-primary">
 
         <b-form-group
             label-cols-sm="12"
@@ -20,7 +43,7 @@
             label="Репост"
             label-for="repost"
         >
-            <b-form-select required id="repost" v-model="selected" :options="options"></b-form-select>
+            <b-form-select required id="repost" v-model="selected" :options="options2"></b-form-select>
         </b-form-group>
 
         <b-form-group
@@ -33,7 +56,7 @@
             <b-form-input type="number" required id="attemptsBehindRepost" value="1"></b-form-input>
         </b-form-group>
 
-        <hr>
+        <hr class="bg-primary">
 
         <b-form-group
             label-cols-sm="12"
@@ -41,7 +64,7 @@
             label="Подписка на группу"
             label-for="subscribingGroup"
         >
-            <b-form-select required id="subscribingGroup" v-model="selected1" :options="options"></b-form-select>
+            <b-form-select required id="subscribingGroup" v-model="selected1" :options="options2"></b-form-select>
         </b-form-group>
 
         <b-form-group
@@ -54,7 +77,7 @@
             <b-form-input type="number" required id="attemptsBehindSubscribingGroup" value="1"></b-form-input>
         </b-form-group>
 
-        <hr>
+        <hr class="bg-primary">
 
         <b-form-group
                 label-cols-sm="12"
@@ -62,7 +85,7 @@
                 label="Подписка на сообщения группы"
                 label-for="subscribingGroupMessage"
         >
-            <b-form-select required id="subscribingGroupMessage" v-model="selected2" :options="options"></b-form-select>
+            <b-form-select required id="subscribingGroupMessage" v-model="selected2" :options="options2"></b-form-select>
         </b-form-group>
 
         <b-form-group
@@ -75,7 +98,7 @@
             <b-form-input type="number" required id="attemptsBehindSubscribingGroupMessage" value="1"></b-form-input>
         </b-form-group>
 
-        <hr>
+        <hr class="bg-primary">
 
         <b-form-group
                 label-cols-sm="12"
@@ -86,7 +109,7 @@
             <b-form-input type="number" id="timeBetweenAttempts" value="1"></b-form-input>
         </b-form-group>
 
-        <hr>
+        <hr class="bg-primary">
 
     </div>
 
@@ -100,10 +123,16 @@
             selected: 'a',
             selected1: 'a',
             selected2: 'a',
-            options: [
+            selected3: 'a',
+            options1: [
+                { value: 'a', text: 'Ничего не нужно' },
+                { value: 'b', text: 'Спишется рейтинг активности' },
+                { value: 'c', text: 'Спишется баланс магазина' }
+            ],
+            options2: [
                 { value: 'a', text: 'Не требуется' },
                 { value: 'b', text: 'Требуется' },
-                { value: 'c', text: 'Дает дополнительные попытки' },
+                { value: 'c', text: 'Дает дополнительные попытки' }
             ]
         })
     }
