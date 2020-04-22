@@ -1,7 +1,8 @@
 <template>
   <div id="app" >
-    <app-guessTheNumber></app-guessTheNumber>
-    <app-rules class="mt-5"></app-rules>
+    <app-guessTheNumber class="mt-5"></app-guessTheNumber>
+    <app-rules class="mt-3"></app-rules>
+    <app-postSettings class="mb-5"></app-postSettings>
 
   </div>
 </template>

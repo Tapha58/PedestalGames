@@ -2,7 +2,7 @@
 
     <div class="px-5 col-lg-6">
 
-        <h5 class="p-2 mb-2 bg-primary text-white">2. Правила конкурса</h5>
+        <h6 class="p-2 mb-2 bg-primary text-white">2. Правила конкурса</h6>
 
         <b-form-group
                 label-cols-sm="12"
@@ -22,7 +22,7 @@
             label="Количество бесплатных попыток"
             label-for="numberOfFreeAttempts"
         >
-            <b-form-input type="number" id="numberOfFreeAttempts" value="3"></b-form-input>
+            <b-form-input  type="number" id="numberOfFreeAttempts" value="3"></b-form-input>
         </b-form-group>
 
         <hr>
@@ -198,6 +198,7 @@
 </script>
 
 <style scoped>
+
 
 
 </style>
