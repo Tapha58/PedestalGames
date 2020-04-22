@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-5">
+    <div class="px-5 col-lg-6">
         <h5 class="p-2 mb-2 bg-primary text-white">1. Загадывание числа</h5>
 
 
