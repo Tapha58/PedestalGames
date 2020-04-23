@@ -3,16 +3,16 @@
         <h6 class="p-2 mb-2 bg-primary text-white">1. Загадывание числа</h6>
 
 
-        <b-form class="row">
+        <div class="row">
             <div class="col-sm mb-3 mb-sm-0">
-                <label for="input-with-list">Левая граница:</label>
-                <b-form-input type="number" required list="input-list" id="input-with-list" v-model="min"></b-form-input>
+                <label for="leftBorder">Левая граница:</label>
+                <b-form-input name="leftBorder" type="number" required list="input-list" id="leftBorder" v-model="min"></b-form-input>
             </div>
 
             <div class="col-sm mb-3 mb-sm-0">
-                <label for="">Загаданное число:</label>
+                <label for="selectNumber">Загаданное число:</label>
                 <b-input-group>
-                    <b-form-input type="number" min="" v-model="selectNumber"></b-form-input>
+                    <b-form-input name="selectNumber" id="selectNumber" type="number" min="" v-model="selectNumber"></b-form-input>
                     <b-input-group-append>
                         <b-button @click="randomNumber" variant="outline-secondary">
                             <b-icon icon="arrow-repeat"></b-icon>
@@ -22,13 +22,13 @@
             </div>
 
             <div class="col-sm">
-                <label for="input-with-list">Правая граница:</label>
-                <b-form-input type="number" list="input-list" id="input-with-list" v-model="max"></b-form-input>
+                <label for="rightBorder">Правая граница:</label>
+                <b-form-input name="rightBorder" type="number" list="input-list" id="rightBorder" v-model="max"></b-form-input>
             </div>
 
 
 
-        </b-form>
+        </div>
 
     </div>
 </template>

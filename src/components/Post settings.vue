@@ -2,14 +2,14 @@
     <div class="px-5 col-lg-6">
         <h6 class="p-2 mb-2 bg-primary text-white">3. Настройки поста</h6>
         <b-form-textarea
+                name="textOfThePost"
                 id="textarea"
                 v-model="text"
                 placeholder="Напишите текст поста с игрой."
                 rows="3"
+                value="text"
                 max-rows="18"
         ></b-form-textarea>
-
-
     </div>
 </template>
 

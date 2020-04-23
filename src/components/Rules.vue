@@ -8,11 +8,10 @@
                 label-cols-sm="12"
                 label-cols-md="5"
                 label="Для использования попытки"
-                label-for=""
+                label-for="forUseAttempt"
         >
-            <b-form-select required id="" v-model="selected3" :options="options1"></b-form-select>
+            <b-form-select name="forUseAttempt" required id="forUseAttempt" v-model="selected3" :options="options1"></b-form-select>
         </b-form-group>
-
 
         <hr>
 
@@ -22,7 +21,7 @@
             label="Количество бесплатных попыток"
             label-for="numberOfFreeAttempts"
         >
-            <b-form-input  type="number" id="numberOfFreeAttempts" value="3"></b-form-input>
+            <b-form-input name="numberOfFreeAttempts" type="number" id="numberOfFreeAttempts" value="3"></b-form-input>
         </b-form-group>
 
         <hr>
@@ -35,7 +34,7 @@
             label="Количество платных попыток"
             label-for="numberOfPaidAttempts"
         >
-            <b-form-input type="number" id="numberOfPaidAttempts" value="3"></b-form-input>
+            <b-form-input name="numberOfPaidAttempts" type="number" id="numberOfPaidAttempts" value="3"></b-form-input>
         </b-form-group>
 
         <b-form-group
@@ -43,15 +42,12 @@
                 label-cols-sm="12"
                 label-cols-md="5"
                 label="Цена попытки"
-                label-for=""
+                label-for="attemptPrice"
         >
-            <b-form-input type="number" id="" value="3"></b-form-input>
+            <b-form-input name="attemptPrice" type="number" id="attemptPrice" value="3"></b-form-input>
         </b-form-group>
 
         <hr>
-
-
-
 
         <b-form-group
             label-cols-sm="12"
@@ -59,7 +55,7 @@
             label="Репост"
             label-for="repost"
         >
-            <b-form-select required id="repost" v-model="selected" :options="options2"></b-form-select>
+            <b-form-select name="repost" required id="repost" v-model="selected" :options="options2"></b-form-select>
         </b-form-group>
 
         <b-form-group
@@ -69,7 +65,7 @@
             label="Попыток за репост"
             label-for="attemptsBehindRepost"
         >
-            <b-form-input type="number" required id="attemptsBehindRepost" value="1"></b-form-input>
+            <b-form-input name="attemptsBehindRepost" type="number" required id="attemptsBehindRepost" value="1"></b-form-input>
         </b-form-group>
 
         <hr>
@@ -80,7 +76,7 @@
             label="Подписка на группу"
             label-for="subscribingGroup"
         >
-            <b-form-select required id="subscribingGroup" v-model="selected1" :options="options2"></b-form-select>
+            <b-form-select name="subscribingGroup" required id="subscribingGroup" v-model="selected1" :options="options2"></b-form-select>
         </b-form-group>
 
         <b-form-group
@@ -90,7 +86,7 @@
             label="Попыток за подписку"
             label-for="attemptsBehindSubscribingGroup"
         >
-            <b-form-input type="number" required id="attemptsBehindSubscribingGroup" value="1"></b-form-input>
+            <b-form-input name="attemptsBehindSubscribingGroup" type="number" required id="attemptsBehindSubscribingGroup" value="1"></b-form-input>
         </b-form-group>
 
         <hr>
@@ -101,7 +97,7 @@
                 label="Подписка на сообщения группы"
                 label-for="subscribingGroupMessage"
         >
-            <b-form-select required id="subscribingGroupMessage" v-model="selected2" :options="options2"></b-form-select>
+            <b-form-select name="subscribingGroupMessage" required id="subscribingGroupMessage" v-model="selected2" :options="options2"></b-form-select>
         </b-form-group>
 
         <b-form-group
@@ -111,7 +107,7 @@
                 label="Попыток за подписку"
                 label-for="attemptsBehindSubscribingGroupMessage"
         >
-            <b-form-input type="number" required id="attemptsBehindSubscribingGroupMessage" value="1"></b-form-input>
+            <b-form-input name="attemptsBehindSubscribingGroupMessage" type="number" required id="attemptsBehindSubscribingGroupMessage" value="1"></b-form-input>
         </b-form-group>
 
         <hr>
@@ -122,7 +118,7 @@
                 label="Время между попытками (мин)"
                 label-for="timeBetweenAttempts"
         >
-            <b-form-input type="number" id="timeBetweenAttempts" value="1"></b-form-input>
+            <b-form-input name="timeBetweenAttempts" type="number" id="timeBetweenAttempts" value="1"></b-form-input>
         </b-form-group>
 
         <hr>
@@ -130,10 +126,10 @@
         <b-form-group
                 label-cols-sm="12"
                 label-cols-md="5"
-                label="Переодические попытки"
-                label-for=""
+                label="Периодические попытки"
+                label-for="periodicAttempts"
         >
-            <b-form-select required id="" v-model="selected4" :options="options3"></b-form-select>
+            <b-form-select name="periodicAttempts" id="periodicAttempts" v-model="selected4" :options="options3"></b-form-select>
         </b-form-group>
 
         <div v-show="selected4 == 'b'">
@@ -141,27 +137,27 @@
                     label-cols-sm="12"
                     label-cols-md="5"
                     label="Количество попыток"
-                    label-for=""
+                    label-for="numberOfAttempts"
             >
-                <b-form-input type="number" id="" value="3"></b-form-input>
+                <b-form-input name="numberOfAttempts" type="number" id="numberOfAttempts" value="3"></b-form-input>
             </b-form-group>
 
             <b-form-group
                     label-cols-sm="12"
                     label-cols-md="5"
                     label="Частота"
-                    label-for=""
+                    label-for="frequency"
             >
-                <b-form-input type="number" id="" value="3"></b-form-input>
+                <b-form-input name="frequency" type="number" id="frequency" value="3"></b-form-input>
             </b-form-group>
 
             <b-form-group
                     label-cols-sm="12"
                     label-cols-md="5"
                     label="Сколько раз"
-                    label-for=""
+                    label-for="howManyTimes"
             >
-                <b-form-input type="number" id="" value="3"></b-form-input>
+                <b-form-input name="howManyTimes" type="number" id="howManyTimes" value="3"></b-form-input>
             </b-form-group>
         </div>
 
