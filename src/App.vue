@@ -3,6 +3,7 @@
     <app-guessTheNumber class="mt-5"></app-guessTheNumber>
     <app-rules class="mt-3"></app-rules>
     <app-postSettings class="mb-5"></app-postSettings>
+    <app-image class="mb-5"></app-image>
 
   </div>
 </template>

@@ -29,6 +29,7 @@
 
 
         <b-form-group
+            v-show = "!(selected3 == 'a')"
             label-cols-sm="12"
             label-cols-md="5"
             label="Количество платных попыток"
@@ -37,9 +38,8 @@
             <b-form-input type="number" id="numberOfPaidAttempts" value="3"></b-form-input>
         </b-form-group>
 
-        <hr>
-
         <b-form-group
+                v-show = "!(selected3 == 'a')"
                 label-cols-sm="12"
                 label-cols-md="5"
                 label="Цена попытки"

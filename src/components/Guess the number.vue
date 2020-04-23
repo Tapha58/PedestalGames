@@ -14,7 +14,7 @@
                 <b-input-group>
                     <b-form-input type="number" min="" v-model="selectNumber"></b-form-input>
                     <b-input-group-append>
-                        <b-button @click="randomNumber" variant="primary">
+                        <b-button @click="randomNumber" variant="outline-secondary">
                             <b-icon icon="arrow-repeat"></b-icon>
                         </b-button>
                     </b-input-group-append>
@@ -37,9 +37,9 @@
     export default {
         data() {
             return {
-                min: 111,
-                selectNumber: 87654,
-                max: 555
+                min: 0,
+                selectNumber: 52148,
+                max: 85687
             }
         },
         methods : {
