@@ -206,8 +206,8 @@
         }),
         watch: {
             forUseAttempt: function () {
-                bridge.send("VKWebAppResizeWindow", {"width": 710, "height": document.body.offsetHeight + 152});
-                console.log('автосайз')
+                bridge.send("VKWebAppResizeWindow", {"width": 710, "height": +document.body.offsetHeight + 152});
+                console.log(document.body.offsetHeight)
             }
         }
     }
