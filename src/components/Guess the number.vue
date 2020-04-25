@@ -1,19 +1,19 @@
 <template>
-    <div class="px-5 col-lg-6">
+    <div class="col-lg-12">
         <h6 class="p-2 mb-2 bg-primary text-white">1. Загадывание числа</h6>
 
 
         <div class="row">
             <div class="col-sm mb-3 mb-sm-0">
                 <label for="leftBorder">Левая граница:</label>
-                <b-form-input name="leftBorder" :state="true" type="number" required list="input-list" id="leftBorder" v-model="min"></b-form-input>
+                <b-form-input name="leftBorder" :state="true" type="number" required list="input-list" id="leftBorder" min="0" v-model="min"></b-form-input>
             </div>
 
             <div class="col-sm mb-3 mb-sm-0">
                 <label for="selectNumber">Загаданное число:</label>
                 <b-input-group>
 
-                    <b-form-input name="selectNumber" :state="selectNumber" id="selectNumber" type="number" min="" v-model="select" aria-describedby="input-live-feedback"></b-form-input>
+                    <b-form-input name="selectNumber" :state="selectNumber" id="selectNumber" type="number" min="0" v-model="select" aria-describedby="input-live-feedback"></b-form-input>
                     <b-button @click="randomNumber" variant="outline-secondary">
                         <b-icon icon="arrow-repeat"></b-icon>
                     </b-button>
@@ -31,7 +31,7 @@
 
             <div class="col-sm">
                 <label for="rightBorder">Правая граница:</label>
-                <b-form-input name="rightBorder" :state="rightBorder" type="number" list="input-list" id="rightBorder" v-model="max"></b-form-input>
+                <b-form-input name="rightBorder" :state="rightBorder" type="number" list="input-list" id="rightBorder" min="0" v-model="max"></b-form-input>
                 <b-form-invalid-feedback id="input-live-feedback">
                     Укажите число больше {{min}}
                 </b-form-invalid-feedback>

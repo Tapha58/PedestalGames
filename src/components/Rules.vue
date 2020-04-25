@@ -1,12 +1,12 @@
 <template>
 
-    <div class="px-5 col-lg-6">
+    <div class="col-sm-12">
 
         <h6 class="p-2 mb-2 bg-primary text-white">2. Правила конкурса</h6>
 
         <b-form-group
                 id="forUseAttemptLabel"
-                label-cols-sm="12"
+                label-cols-sm="6"
                 label-cols-md="5"
                 label="Вариант игры"
                 label-for="forUseAttempt"
@@ -19,7 +19,7 @@
         <hr>
 
         <b-form-group
-            label-cols-sm="12"
+            label-cols-sm="6"
             label-cols-md="5"
             label="Количество бесплатных попыток"
             label-for="numberOfFreeAttempts"
@@ -32,7 +32,7 @@
 
         <b-form-group
             v-show = "!(forUseAttempt == 'a')"
-            label-cols-sm="12"
+            label-cols-sm="6"
             label-cols-md="5"
             label="Количество платных попыток"
             label-for="numberOfPaidAttempts"
@@ -42,7 +42,7 @@
 
         <b-form-group
                 v-show = "!(forUseAttempt == 'a')"
-                label-cols-sm="12"
+                label-cols-sm="6"
                 label-cols-md="5"
                 label="Цена попытки"
                 label-for="attemptPrice"
@@ -53,7 +53,7 @@
         <hr>
 
         <b-form-group
-            label-cols-sm="12"
+            label-cols-sm="6"
             label-cols-md="5"
             label="Репост"
             label-for="repost"
@@ -63,7 +63,7 @@
 
         <b-form-group
             v-show = "repost == 'c'"
-            label-cols-sm="12"
+            label-cols-sm="6"
             label-cols-md="5"
             label="Попыток за репост"
             label-for="attemptsBehindRepost"
@@ -74,7 +74,7 @@
         <hr>
 
         <b-form-group
-            label-cols-sm="12"
+            label-cols-sm="6"
             label-cols-md="5"
             label="Подписка на группу"
             label-for="subscribingGroup"
@@ -84,7 +84,7 @@
 
         <b-form-group
             v-show = "subscribingGroup == 'c'"
-            label-cols-sm="12"
+            label-cols-sm="6"
             label-cols-md="5"
             label="Попыток за подписку"
             label-for="attemptsBehindSubscribingGroup"
@@ -95,7 +95,7 @@
         <hr>
 
         <b-form-group
-                label-cols-sm="12"
+                label-cols-sm="6"
                 label-cols-md="5"
                 label="Подписка на сообщения группы"
                 label-for="subscribingGroupMessage"
@@ -105,7 +105,7 @@
 
         <b-form-group
                 v-show = "subscribingGroupMessage == 'c'"
-                label-cols-sm="12"
+                label-cols-sm="6"
                 label-cols-md="5"
                 label="Попыток за подписку"
                 label-for="attemptsBehindSubscribingGroupMessage"
@@ -116,7 +116,7 @@
         <hr>
 
         <b-form-group
-                label-cols-sm="12"
+                label-cols-sm="6"
                 label-cols-md="5"
                 label="Время между попытками (мин)"
                 label-for="timeBetweenAttempts"
@@ -127,7 +127,7 @@
         <hr>
 
         <b-form-group
-                label-cols-sm="12"
+                label-cols-sm="6"
                 label-cols-md="5"
                 label="Периодические попытки"
                 label-for="periodicAttempts"
@@ -137,7 +137,7 @@
 
         <div v-show="periodicAttempts == 'b'">
             <b-form-group
-                    label-cols-sm="12"
+                    label-cols-sm="6"
                     label-cols-md="5"
                     label="Количество попыток"
                     label-for="numberOfAttempts"
@@ -146,7 +146,7 @@
             </b-form-group>
 
             <b-form-group
-                    label-cols-sm="12"
+                    label-cols-sm="6"
                     label-cols-md="5"
                     label="Частота"
                     label-for="frequency"
@@ -155,7 +155,7 @@
             </b-form-group>
 
             <b-form-group
-                    label-cols-sm="12"
+                    label-cols-sm="6"
                     label-cols-md="5"
                     label="Сколько раз"
                     label-for="howManyTimes"
@@ -171,6 +171,7 @@
 </template>
 
 <script>
+    import bridge from '@vkontakte/vk-bridge';
     export default {
         data: () => ({
             repost: 'a',
@@ -179,7 +180,6 @@
             numberOfPaidAttempts: '4',
             numberOfFreeAttempts: '5',
             numberOfAttempts: '5',
-
             attemptPrice: '10',
             attemptsBehindSubscribingGroup: '1',
             attemptsBehindSubscribingGroupMessage: '1',
@@ -191,7 +191,7 @@
             attemptsBehindRepost: '3',
             options1: [
                 { value: 'a', text: 'бесплатные попытки' },
-                { value: 'b', text: 'бесплатные попытки + баланс рейтинга активности' },
+                { value: 'b', text: 'бесплатные попытки + баланс рейтинга' },
                 { value: 'c', text: 'бесплатные попытки + баланс магазина' }
             ],
             options2: [
@@ -203,7 +203,13 @@
                 { value: 'a', text: 'не выдаются' },
                 { value: 'b', text: 'выдаются бесплатные' },
             ]
-        })
+        }),
+        watch: {
+            forUseAttempt: function () {
+                bridge.send("VKWebAppResizeWindow", {"width": 800, "height": 1000});
+                console.log('автосайз')
+            }
+        }
     }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="px-5 col-lg-6">
+    <div class="col-lg-12">
         <h6 class="p-2 mb-2 bg-primary text-white">3. Настройки поста</h6>
         <b-form-textarea
                 name="textOfThePost"
