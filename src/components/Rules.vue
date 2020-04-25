@@ -207,9 +207,16 @@
         watch: {
             forUseAttempt: function () {
                 console.log('1: ' + document.body.offsetHeight)
-                bridge.send("VKWebAppResizeWindow", {"width": 710, "height": +document.body.offsetHeight});
+                setTimeout(this.resize, 0);
+
+
                 console.log('2: ' + document.body.offsetHeight)
 
+            }
+        },
+        methods: {
+            resize() {
+                bridge.send("VKWebAppResizeWindow", {"width": 710, "height": +document.body.offsetHeight})
             }
         }
     }
