@@ -18,6 +18,12 @@
     </form>
     <b-button class="mt-2" type="" @click="publishPost"   variant="primary">Опубликовать пост</b-button>
 
+      <form ref="formElem" @submit.prevent="func">
+          Картинка: <input type="file" name="picture" accept="image/*">
+          <input type="submit">
+      </form>
+
+
   </div>
 </template>
 
@@ -31,8 +37,18 @@
      methods: {
         publishPost() {
             bridge.send("VKWebAppShowWallPostBox", {"owner_id": -168555251, "message": 'hello group', "from_group": "1"});
+        },
+        async func() {
+            let response = await fetch("https://pu.vk.com/c857736/upload.php?act=do_add&mid=567610298&aid=-14&gid=-168555251&hash=a75eb4176885df8744ad6ac4e9ce270a&rhash=3e9f1e94ed22f35ec98456199492c146&swfupload=1&api=1&wallphoto=1", {
+                method: 'POST',
+                body: new FormData(this.$refs.formElem)
+            })
+            let result = await response.json();
+
+            alert(result);
         }
-     }
+     },
+
   }
 </script>
 
