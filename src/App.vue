@@ -16,6 +16,7 @@
         </div>
 
     </form>
+    <b-button class="mt-2" type="" @click="publishPost"   variant="primary">Опубликовать пост</b-button>
 
   </div>
 </template>
@@ -23,15 +24,15 @@
 <script>
   import 'bootstrap/dist/css/bootstrap.css'
   import 'bootstrap-vue/dist/bootstrap-vue.css'
-
-  // import {autosizePage} from '../src/assets/index'
+  import bridge from '@vkontakte/vk-bridge';
 
   export default {
-    data: () => ({}),
-  //   mounted() {
-  //       console.log('autosize')
-  //       autosizePage()
-  //   }
+     data: () => ({}),
+     methods: {
+        publishPost() {
+            bridge.send("VKWebAppShowWallPostBox", {"owner_id": -168555251, "message": 'hello group', "from_group": "1"});
+        }
+     }
   }
 </script>
 
