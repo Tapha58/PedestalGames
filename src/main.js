@@ -4,6 +4,7 @@ import Rules from './components/Rules.vue'
 import guessTheNumber from './components/Guess the number.vue'
 import postSettings from './components/Post settings.vue'
 import imagePost from './components/Image post.vue'
+import timePost from './components/TimePost.vue'
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
@@ -14,6 +15,7 @@ Vue.component('app-rules', Rules)
 Vue.component('app-guessTheNumber', guessTheNumber)
 Vue.component('app-postSettings', postSettings)
 Vue.component('app-image', imagePost)
+Vue.component('app-time', timePost)
 Vue.config.productionTip = false
 
 new Vue({

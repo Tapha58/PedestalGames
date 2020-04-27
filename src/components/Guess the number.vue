@@ -1,12 +1,17 @@
 <template>
     <div class="col-lg-12">
-        <h6 class="p-2 mb-2 bg-primary text-white">1. Загадывание числа</h6>
+        <h6
+            v-b-popover.hover.bottom.v-primary="'Бот случайным образом будет подсказывать меньше загаданное число или больше. Поэтому не бойтесь загадывать число побольше. Например число от 1 до 100 игроки угадают довольно-таки быстро.'"
+            title="Подсказка"
+            id="rules1"
+            class="p-2 mb-2  bg-primary text-white"
+        >1. Загадывание числа</h6>
 
 
         <div class="row">
             <div class="col-sm mb-3 mb-sm-0">
                 <label for="leftBorder">Левая граница:</label>
-                <b-form-input name="leftBorder" :state="true" type="number" required list="input-list" id="leftBorder" min="0" v-model="min"></b-form-input>
+                <b-form-input name="leftBorder" :state="null" type="number" required list="input-list" id="leftBorder" min="0" v-model="min"></b-form-input>
             </div>
 
             <div class="col-sm mb-3 mb-sm-0">
@@ -55,8 +60,12 @@
         },
         computed: {
             rightBorder() {
-                return +this.min <= +this.max
+                if (+this.min <= +this.max)
+                    return null
+                else
+                    return false
             },
+
             selectNumber() {
                 if (+this.min <= +this.max)
                     return (+this.select >= +this.min && +this.select <= +this.max)

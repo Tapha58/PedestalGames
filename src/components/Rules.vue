@@ -2,7 +2,8 @@
 
     <div class="col-sm-12">
 
-        <h6 class="p-2 mb-2 bg-primary text-white">2. Правила конкурса</h6>
+        <h6 class="p-2 mb-2 bg-primary text-white" >2. Правила конкурса</h6>
+
 
         <b-form-group
                 id="forUseAttemptLabel"
@@ -50,7 +51,7 @@
             <b-form-input :state="attemptPrice.length > 0" type="number" id="attemptPrice" min="1" v-model="attemptPrice"></b-form-input>
         </b-form-group>
 
-        <hr>
+        <hr v-show = "!(forUseAttempt == 'a')">
 
         <b-form-group
             label-cols-sm="6"
@@ -110,7 +111,7 @@
                 label="Попыток за подписку"
                 label-for="attemptsBehindSubscribingGroupMessage"
         >
-            <b-form-input  type="number" :state="attemptsBehindSubscribingGroupMessage.length > 0" v-model="attemptsBehindSubscribingGroupMessage" id="attemptsBehindSubscribingGroupMessage" min="1"></b-form-input>
+            <b-form-input stype="number" :state="attemptsBehindSubscribingGroupMessage.length > 0" v-model="attemptsBehindSubscribingGroupMessage" id="attemptsBehindSubscribingGroupMessage" min="1"></b-form-input>
         </b-form-group>
 
         <hr>
@@ -132,7 +133,7 @@
                 label="Периодические попытки"
                 label-for="periodicAttempts"
         >
-            <b-form-select  id="periodicAttempts" v-model="periodicAttempts" :options="options3"></b-form-select>
+            <b-form-select id="periodicAttempts" v-model="periodicAttempts" :options="options3"></b-form-select>
         </b-form-group>
 
         <div v-show="periodicAttempts == 'b'">
