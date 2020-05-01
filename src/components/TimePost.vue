@@ -1,46 +1,135 @@
 <template>
-    <div class="col-lg-12">
-        <h6 v-b-popover.hover.bottom.v-primary="'Popover!'" id="rules1" class="p-2 mb-2 bg-primary text-white">4. Отложенный запуск</h6>
-        <div  class="mb-3">
-            <b-form-checkbox v-model="checked" name="check-button" switch>
-                Запланировать запуск
-            </b-form-checkbox>
-        </div>
-        <div class="row mx-0" v-show = "checked">
-            <b-calendar v-model="value" label-no-date-selected="дата не выбрана" :min="min" :max="max" locale="ru"></b-calendar>
-            <b-time label-no-time-selected="время не выбрано" class="mx-2" id="ex-disabled-readonly" :readonly="readonly"></b-time>
-        </div>
+    <v-row dense class="px-3">
+        <v-col>
 
-    </div>
+            <v-alert
+                    border="left"
+                    color="blue-grey"
+                    dark
+                    icon="mdi-numeric-4-box"
+                    dense
+            >Отложенный запуск
+
+
+                <v-btn x-small :color="color" dark @click="changeCondition">{{ condition }}</v-btn>
+
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn x-small color="primary" dark v-on="on">Подсказка</v-btn>
+                    </template>
+                    <span>Подсказка</span>
+                </v-tooltip>
+            </v-alert>
+
+
+<!--        <v-switch-->
+<!--                class="mt-n3"-->
+<!--                v-model="delayedLaunch"-->
+<!--                label="4. Отложенный запуск"-->
+<!--                color="primary"-->
+<!--                hide-details-->
+<!--        ></v-switch>-->
+
+    <v-row
+    v-show="onOff"
+    >
+
+
+        <v-col cols="12" sm="6" md="3">
+            <v-menu
+                    v-model="menu2"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="290px"
+            >
+                <template v-slot:activator="{ on }">
+                    <v-text-field
+                            v-model="date"
+                            label="Дата публикации"
+                            prepend-icon="mdi-update"
+
+                            v-on="on"
+                            hint="ГГГГ/ММ/ДД формат"
+                            persistent-hint
+
+                    ></v-text-field>
+                </template>
+                <v-date-picker locale="ru" v-model="date" @input="menu2 = false"></v-date-picker>
+            </v-menu>
+        </v-col>
+        <v-spacer></v-spacer>
+
+        <v-col cols="12" sm="6" md="3">
+            <v-menu
+                    ref="menu"
+                    v-model="menu1"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="time"
+                    transition="scale-transition"
+                    offset-y
+                    max-width="290px"
+                    min-width="290px"
+            >
+                <template v-slot:activator="{ on }">
+                    <v-text-field
+                            v-model="time"
+                            label="Время публикации"
+                            prepend-icon="mdi-update"
+                            readonly
+                            v-on="on"
+                    ></v-text-field>
+                </template>
+                <v-time-picker
+                        v-if="menu1"
+                        v-model="time"
+                        full-width
+                        format="24hr"
+                        @click:minute="$refs.menu.save(time)"
+                ></v-time-picker>
+            </v-menu>
+        </v-col>
+        <v-col cols="12" sm="6" md="6"></v-col>
+
+    </v-row>
+        </v-col>
+
+    </v-row>
 </template>
 
 <script>
     export default {
-        data() {
-            const now = new Date()
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-            // 15th two months prior
-            const minDate = new Date(today)
-            // 15th in two months
-            const maxDate = new Date(today)
-            maxDate.setMonth(maxDate.getMonth() + 2)
-            maxDate.setDate(15)
+        data: () => ({
+            date: new Date().toISOString().substr(0, 10),
+            date1: '',
+            menu: false,
+            modal: false,
+            menu2: false,
+            menu1: false,
+            time: null,
+            modal2: false,
+            delayedLaunch: false,
+            condition: 'выключен',
+            onOff: false,
+            color: 'error'
+        }),
+        methods: {
+            changeCondition: function () {
+                if (this.onOff) {
+                    this.condition = 'выключен'
+                    this.onOff = !this.onOff
+                    this.color = 'error'
 
-            return {
-                value: '',
-                min: minDate,
-                max: maxDate,
-                checked: false
+               }
+                else {
+                this.condition = 'включен'
+                this.onOff = !this.onOff
+                this.color = 'success'
+               }
             }
-        },
-        computed: {
-            disabled() {
-                return this.state === 'disabled'
-            },
-            readonly() {
-                return this.state === 'readonly'
-            }
-        }
+    }
     }
 </script>
 

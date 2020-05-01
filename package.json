@@ -8,10 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/vue-fontawesome": "^0.1.9",
     "@vkontakte/vk-bridge": "^2.1.8",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "vuetify": "^2.2.25"
+    "vuetify": "^2.2.25",
+    "vuetify-datetime-picker": "^2.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
