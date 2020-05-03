@@ -12,8 +12,8 @@
     "@vkontakte/vk-bridge": "^2.1.8",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "vuetify": "^2.2.25",
-    "vuetify-datetime-picker": "^2.1.1"
+    "vue-ctk-date-time-picker": "^2.4.0",
+    "vuetify": "^2.2.25"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

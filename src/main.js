@@ -5,18 +5,20 @@ import GuessTheNumber from './components/GuessTheNumber.vue'
 import PostSettings from './components/PostSettings.vue'
 import imagePost from './components/Image post.vue'
 import timePost from './components/TimePost.vue'
+import ChoiceOfPrize from './components/СhoiceOfPrize.vue'
 import vuetify from '@/plugins/vuetify' // path to vuetify export
-// import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-import DatetimePicker from 'vuetify-datetime-picker'
+import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
+import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 
-// Vue.use(BootstrapVue)
-// Vue.use(IconsPlugin)
+Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
+
 Vue.component('app-rules', Rules)
 Vue.component('app-GuessTheNumber', GuessTheNumber)
 Vue.component('app-PostSettings', PostSettings)
 Vue.component('app-image', imagePost)
 Vue.component('app-time', timePost)
-Vue.use(DatetimePicker)
+Vue.component('app-ChoiceOfPrize', ChoiceOfPrize)
+
 Vue.config.productionTip = false
 
 new Vue({

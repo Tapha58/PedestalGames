@@ -5,7 +5,7 @@
                     border="left"
                     color="blue-grey"
                     dark
-                    icon="mdi-numeric-2-box"
+                    icon="mdi-numeric-3-box"
                     dense
             >Задайте правила игры
                 <v-tooltip bottom>

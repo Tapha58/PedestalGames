@@ -1,6 +1,7 @@
 <template>
   <v-app id="inspire" >
     <form name="test" action="https://pedestal-test2.aiva-studio.ru/check.php" method="post">
+        <app-ChoiceOfPrize></app-ChoiceOfPrize>
         <app-GuessTheNumber></app-GuessTheNumber>
         <app-rules></app-rules>
         <app-PostSettings></app-PostSettings>
@@ -27,7 +28,7 @@
 
 <style>
     #inspire {
-        width: 710px
+        width: 795px
 }
 
 </style>
