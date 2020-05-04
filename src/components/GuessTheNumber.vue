@@ -1,40 +1,21 @@
 <template>
     <v-row dense class="px-3 pt-5">
-        <v-expansion-panels>
-            <v-expansion-panel>
-                <v-expansion-panel-header color="white" disable-icon-rotate>
-
-                    2. Загадайте число
-                    <template v-slot:actions>
-                        <v-icon color="error">mdi-alert-circle</v-icon>
-                    </template>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-
-                    Бот случайным образом будет подсказывать меньше загаданное число или больше. Поэтому не бойтесь загадывать число побольше. Например число от 1 до 100 игроки угадают довольно-таки быстро.
-                </v-expansion-panel-content>
-            </v-expansion-panel>
-        </v-expansion-panels>
-
-
-
-
         <v-col>
-<!--            <v-alert-->
-<!--                border="left"-->
-<!--                color="blue-grey"-->
-<!--                dark-->
-<!--                icon="mdi-numeric-2-box"-->
-<!--                dense-->
-<!--            >Загадайте число-->
-<!--                <v-tooltip bottom>-->
-<!--                    <template v-slot:activator="{ on }">-->
-<!--                        <v-btn x-small color="primary" dark v-on="on">Подсказка</v-btn>-->
-<!--                    </template>-->
-<!--                    <span>Подсказка</span>-->
-<!--                </v-tooltip>-->
-<!--            </v-alert>-->
-
+            <v-alert
+                border="left"
+                color="blue-grey"
+                dark
+                icon="mdi-numeric-2-box"
+                dense
+            >Загадайте число
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                        <v-btn x-small color="primary" dark v-on="on">Подсказка</v-btn>
+                    </template>
+                    <span>Подсказка</span>
+                </v-tooltip>
+            </v-alert>
+<!--            <PrizeCreator></PrizeCreator>-->
             <v-form ref="form" v-model="valid">
                     <v-row style="border-color: #1a237e">
                         <v-col class="pb-0" cols="12" sm="4">
