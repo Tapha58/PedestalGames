@@ -41,21 +41,14 @@
             prizes: [
                 {
                     id: 1,
-                    prizes: []
+                    prizes: [{ type: 'own_prize' }]
                 }
             ],
             ix: 1,
             min: '',
-            up1: '',
-            up2: '',
             typePrize: '',
             required_repost: false,
-            options: [
-                {value: 'a', text: 'Свой приз'},
-                {value: 'b', text: 'Зачислить баланс магазина'},
-                {value: 'c', text: 'Зачислить баланс рейтинга'},
-                {value: 'd', text: 'Выполнить POST/GET запрос'}
-            ],
+
             items: [
                 {id: 1, type: null},
                 {id: 2, type: 'd'},
@@ -65,7 +58,7 @@
             add_prize() {
                 this.prizes.push({
                     id: ++this.ix,
-                    prizes: []
+                    prizes: [{ type: 'own_prize' }]
                 })
             },
             delete_prize(id) {
