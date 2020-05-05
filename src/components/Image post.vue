@@ -1,21 +1,48 @@
 <template>
-    <v-row align="center" dense class="px-3">
-        <v-col cols="12" sm="7">
+    <v-row  dense class="px-3">
+        <v-col cols="6">
+        <v-hover v-slot:default="{ hover }">
 
-                <v-img id="img" max-width="350"  height="auto" :src="src"></v-img>
+            <v-card
+                    class="mx-auto"
+                    color="grey lighten-4"
+                    width="300"
+            >
+                <v-img
+
+                        :src="src"
+                >
+                    <v-expand-transition>
+                        <div
+                                v-if="hover"
+                                class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal display-3 white--text"
+                                style="height: 100%;"
+                        >
+                            <v-btn>Загрузить свою картинку</v-btn>
+                        </div>
+                    </v-expand-transition>
+                </v-img>
+
+            </v-card>
+        </v-hover>
+
         </v-col>
+<!--        <v-col cols="12" sm="4">-->
+<!--                <v-img id="img" max-width="250"  height="auto" :src="src"></v-img>-->
+<!--        </v-col>-->
 
-        <v-col cols="12" sm="5">
-                    <v-file-input
-                        v-model="val"
-                        @change="create"
-                        accept="image/png, image/jpeg, image/bmp"
-                        prepend-icon="mdi-camera"
-                        label="Своя картинка для поста"
-                        id="fileItem"
-                        hint="Загрузите картинку размером не более 2Mb"
-                    ></v-file-input>
-                </v-col>
+<!--        <v-col cols="12" sm="5">-->
+<!--                    <v-file-input-->
+<!--                        v-model="val"-->
+<!--                        @change="create"-->
+<!--                        accept="image/png, image/jpeg, image/bmp"-->
+<!--                        prepend-icon="mdi-camera"-->
+<!--                        label="Своя картинка для поста"-->
+<!--                        id="fileItem"-->
+<!--                        hint="Загрузите картинку размером не более 2Mb"-->
+<!--                        persistent-hint-->
+<!--                    ></v-file-input>-->
+<!--                </v-col>-->
 
     </v-row>
 </template>
@@ -53,22 +80,30 @@
 </script>
 
 <style scoped>
-    .btn-file {
-        position: relative;
-        overflow: hidden;
-    }
-    .btn-file input[type=file] {
+    /*.btn-file {*/
+    /*    position: relative;*/
+    /*    overflow: hidden;*/
+    /*}*/
+    /*.btn-file input[type=file] {*/
+    /*    position: absolute;*/
+    /*    top: 0;*/
+    /*    right: 0;*/
+    /*    min-width: 100%;*/
+    /*    min-height: 100%;*/
+    /*    font-size: 100px;*/
+    /*    text-align: right;*/
+    /*    filter: alpha(opacity=0);*/
+    /*    opacity: 0;*/
+    /*    outline: none;*/
+    /*    cursor: inherit;*/
+    /*    display: block;*/
+    /*}*/
+    .v-card--reveal {
+        align-items: center;
+        bottom: 0;
+        justify-content: center;
+        opacity: .5;
         position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        font-size: 100px;
-        text-align: right;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        outline: none;
-        cursor: inherit;
-        display: block;
+        width: 100%;
     }
 </style>

@@ -1,46 +1,54 @@
 <template>
-    <v-row dense class="px-3">
-        <v-col>
-            <v-alert
-                    border="left"
-                    color="blue-grey"
-                    dark
-                    icon="mdi-numeric-4-box"
-                    dense
-            > Отложенный запуск
-                <template #append>
-                    <v-switch
-                            dark
-                            class="mt-n1"
-                            v-model="delayedLaunch"
-                            label=""
-                            color="white"
-                            hide-details
-                    ></v-switch>
-                </template>
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on }">
-                        <v-btn x-small color="primary" dark v-on="on">Подсказка</v-btn>
-                    </template>
-                    <span>Подсказка</span>
-                </v-tooltip>
-            </v-alert>
+    <v-row class="px-3 pt-3" dense>
+        <!--        <v-col cols="0">-->
+        <!--            <v-alert-->
+        <!--                    border="left"-->
+        <!--                    color="blue-grey"-->
+        <!--                    dark-->
+        <!--                    icon="mdi-numeric-4-box"-->
+        <!--                    dense-->
+        <!--            > Отложенный запуск-->
+        <!--                <template #append>-->
+        <!--                    <v-switch-->
+        <!--                            dark-->
+        <!--                            class="mt-n1"-->
+        <!--                            v-model="delayedLaunch"-->
+        <!--                            label=""-->
+        <!--                            color="white"-->
+        <!--                            hide-details-->
+        <!--                    ></v-switch>-->
+        <!--                </template>-->
+        <!--                <v-tooltip bottom>-->
+        <!--                    <template v-slot:activator="{ on }">-->
+        <!--                        <v-btn x-small color="primary" dark v-on="on">Подсказка</v-btn>-->
+        <!--                    </template>-->
+        <!--                    <span>Подсказка</span>-->
+        <!--                </v-tooltip>-->
+        <!--            </v-alert>-->
+        <!--        </v-col>-->
+        <!--            <v-row v-show="delayedLaunch">-->
+        <v-col cols="4">
+            <v-switch
 
-            <v-row v-show="delayedLaunch">
-                <v-col cols="12" sm="6" md="6" class="pt-0">
-                    <VueCtkDateTimePicker
-                    label="Задайте дату и время публикации"
-                    formated="||"
-                    no-button-now
-                    format="YYYY-MM-DD HH:mm"
-                    v-model="yourValue" />
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-
-                </v-col>
-            </v-row>
+                    color=""
+                    hide-details
+                    label="Отложенный запуск"
+                    v-model="delayedLaunch"
+            ></v-switch>
         </v-col>
+        <v-col align="center" cols="5" v-show="delayedLaunch">
+            <VueCtkDateTimePicker
+                    format="YYYY-MM-DD HH:mm"
+                    formated="||"
+                    label="Задайте дату и время публикации"
+                    no-button-now
+                    v-model="yourValue"/>
+        </v-col>
+
+        <!--            </v-row>-->
+
     </v-row>
+
 </template>
 
 <script>
@@ -67,14 +75,13 @@
                     this.onOff = !this.onOff
                     this.color = 'error'
 
-               }
-                else {
-                this.condition = 'включен'
-                this.onOff = !this.onOff
-                this.color = 'success'
-               }
+                } else {
+                    this.condition = 'включен'
+                    this.onOff = !this.onOff
+                    this.color = 'success'
+                }
             }
-    }
+        }
     }
 </script>
 

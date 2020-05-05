@@ -121,7 +121,7 @@
                 {value: 'post', text: 'POST'},
                 {value: 'get', text: 'GET'},
             ],
-            prize_count: null,
+            prize_count: 1,
             prize_next_id: 1
         }),
         computed: {

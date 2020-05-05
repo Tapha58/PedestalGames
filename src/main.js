@@ -6,6 +6,7 @@ import PostSettings from './components/PostSettings.vue'
 import imagePost from './components/Image post.vue'
 import timePost from './components/TimePost.vue'
 import ChoiceOfPrize from './components/СhoiceOfPrize.vue'
+import AdvancedSettings from './components/AdvancedSettings.vue'
 import vuetify from '@/plugins/vuetify' // path to vuetify export
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
@@ -18,6 +19,7 @@ Vue.component('app-PostSettings', PostSettings)
 Vue.component('app-image', imagePost)
 Vue.component('app-time', timePost)
 Vue.component('app-ChoiceOfPrize', ChoiceOfPrize)
+Vue.component('app-AdvancedSettings', AdvancedSettings)
 
 Vue.config.productionTip = false
 

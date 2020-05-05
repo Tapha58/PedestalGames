@@ -32,9 +32,28 @@
                             {max} — правая граница"
                 ></v-textarea>
             </v-col>
-
-
     </v-row>
+<!--    <v-row dense class="px-3">-->
+<!--        <v-col cols="6">-->
+<!--            <v-textarea-->
+<!--                    v-model="text"-->
+<!--                    solo-->
+<!--                    background-color="blue lighten-5"-->
+<!--                    name="input-7-4"-->
+<!--                    label="Напишите текст поста, который появится в Вашей группе при публикации игры."-->
+<!--                    value="text"-->
+<!--                    auto-grow-->
+
+<!--                    hint="-->
+<!--                        {ссылка} — подставится ссылка на архив,-->
+<!--                        {min} — левая граница,-->
+<!--                        {max} — правая граница"-->
+<!--            ></v-textarea>-->
+<!--        </v-col>-->
+<!--        <v-col cols="6">-->
+<!--            <v-img id="img" max-width="350"  height="auto" src='https://sun9-51.userapi.com/WxbaSDvU-d_JiBX8ISqiAEPb0-S0kvC5cSyuWw/jtdWb2p9smo.jpg'></v-img>-->
+<!--        </v-col>-->
+<!--    </v-row>-->
 </template>
 
 <script>

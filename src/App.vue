@@ -7,6 +7,8 @@
         <app-PostSettings></app-PostSettings>
         <app-image></app-image>
         <app-time></app-time>
+<!--        <v-divider class="mt-1"></v-divider>-->
+        <app-AdvancedSettings></app-AdvancedSettings>
     </form>
   </v-app>
 </template>
