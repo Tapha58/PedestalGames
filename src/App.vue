@@ -1,14 +1,8 @@
 <template>
   <v-app id="inspire" >
     <form name="test" action="https://pedestal-test2.aiva-studio.ru/check.php" method="post">
-        <app-ChoiceOfPrize></app-ChoiceOfPrize>
-        <app-GuessTheNumber></app-GuessTheNumber>
-        <app-rules></app-rules>
-        <app-PostSettings></app-PostSettings>
-        <app-image></app-image>
-        <app-time></app-time>
-<!--        <v-divider class="mt-1"></v-divider>-->
-        <app-AdvancedSettings></app-AdvancedSettings>
+        <app--game-guess-number></app--game-guess-number>
+        <v-divider class="mt-1"></v-divider>
     </form>
   </v-app>
 </template>
@@ -24,13 +18,37 @@
         },
      },
   }
+
 </script>
 
 
 
-<style>
+<style lang="scss">
+    @import url("https://fonts.googleapis.com/css?family=Questrial");
+
+    .application {
+        font-family: "Questrial",fantasy;
+    }
+
+    .dense-textarea textarea {
+        line-height: 1.4rem !important;
+    }
     #inspire {
         width: 795px
-}
+    }
+    #area1 {
+        text-align: center !important;
+    }
+    #area2 {
+        text-align: center !important;
+    }
+    #area3 {
+        text-align: center !important;
+    }
+
+    #primary {
+        color: #1976D2;
+    }
+
 
 </style>

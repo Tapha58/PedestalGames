@@ -18,7 +18,7 @@
         <PrizeCreator
                 v-for="(prize, index) in prizes"
                 :key="prize.id"
-                :is_single_winner="false"
+                :is_single_winner="true"
                 :is_last_card="index+1 === prizes.length"
                 :is_one_card="1 === prizes.length"
                 :id="prize.id"

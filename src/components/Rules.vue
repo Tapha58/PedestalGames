@@ -1,16 +1,16 @@
 <template>
-    <v-row dense class="px-3">
+    <v-row class="px-3" dense>
         <v-col>
             <v-alert
                     border="left"
                     color="blue-grey"
                     dark
-                    icon="mdi-numeric-3-box"
                     dense
+                    icon="mdi-numeric-3-box"
             >Задайте правила игры
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                        <v-btn x-small color="primary" dark v-on="on">Подсказка</v-btn>
+                        <v-btn color="primary" dark v-on="on" x-small>Подсказка</v-btn>
                     </template>
                     <span>Подсказка</span>
                 </v-tooltip>
@@ -21,23 +21,24 @@
                     <v-col cols="12" sm="9">
                         <v-select
                                 :items="options"
-                                v-model="gameData.required_repost"
+                                dense
                                 label="Репост"
                                 outlined
-                                dense
+                                v-model="gameData.required_repost_abc"
                         ></v-select>
                     </v-col>
 
                     <v-col cols="12" sm="3">
                         <v-text-field
-                                v-model.number="gameData.count_attempts_for_repost"
-                                :disabled="(this.gameData.required_repost === 'a' || this.gameData.required_repost === 'b' || this.gameData.required_repost === '')"
-                                label="Кол-во попыток"
-                                required
-                                outlined
+                                :rules="repost_count_attempts_abc_rules"
                                 dense
-                                type="number"
+                                label="Кол-во попыток"
                                 min="1"
+                                outlined
+                                required
+                                type="number"
+                                v-model.number="gameData.repost_count_attempts"
+                                v-show="this.gameData.required_repost_abc === 'c'"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -45,26 +46,27 @@
                 <v-row class="mt-n6">
                     <v-col cols="12" sm="9">
                         <v-select
-                                xs="12"
                                 :items="options"
-                                v-model="gameData.required_join_group"
+                                dense
                                 label="Подписка на группу"
                                 outlined
-                                dense
+                                v-model="gameData.required_join_group_abc"
+                                xs="12"
                         ></v-select>
                     </v-col>
 
                     <v-col cols="12" sm="3">
                         <v-text-field
-                                xs="6" md="6"
-                                v-model.number="gameData.count_attempts_for_join_group"
-                                :disabled="(this.gameData.required_join_group === 'a' || this.gameData.required_join_group === 'b' || this.gameData.required_join_group === '')"
+                                :rules="join_group_count_attempts_rules" dense
                                 label="Кол-во попыток"
-                                required
-                                outlined
-                                dense
-                                type="number"
+                                md="6"
                                 min="1"
+                                outlined
+                                required
+                                type="number"
+                                v-model.number="gameData.join_group_count_attempts"
+                                v-show="!(this.gameData.required_join_group_abc === 'a' || this.gameData.required_join_group_abc === 'b' || this.gameData.required_join_group_abc === '')"
+                                xs="6"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -72,27 +74,27 @@
                 <v-row class="mt-n6">
                     <v-col cols="12" sm="9">
                         <v-select
-                                xs="12"
                                 :items="options"
-                                v-model="gameData.required_enable_notifications"
+                                dense
                                 label="Подписка на сообщения группы"
                                 outlined
-                                dense
+                                v-model="gameData.required_enable_notifications_abc"
+                                xs="12"
                         ></v-select>
                     </v-col>
 
                     <v-col cols="12" sm="3">
                         <v-text-field
-                                xs="6" md="6"
-                                v-model.number="gameData.enable_notifications_count_attempts"
-
+                                :rules="enable_notifications_count_attempts_rules" dense
                                 label="Кол-во попыток"
-                                required
-                                outlined
-                                :disabled="(this.gameData.required_enable_notifications === 'a' || this.gameData.required_enable_notifications === 'b' || this.gameData.required_enable_notifications === '')"
-                                dense
-                                type="number"
+                                md="6"
                                 min="1"
+                                outlined
+                                required
+                                type="number"
+                                v-model.number="gameData.enable_notifications_count_attempts"
+                                v-show="(this.gameData.required_enable_notifications_abc === 'c')"
+                                xs="6"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -101,37 +103,39 @@
                 <v-row class="mt-n6">
                     <v-col cols="12" sm="5">
                         <v-select
-                                xs="12"
                                 :items="options"
-                                v-model="gameData.required_join_partner_group"
+                                dense
                                 label="Подписка на партнерскую группу"
                                 outlined
-                                dense
+                                v-model="gameData.required_join_partner_group_abc"
+                                xs="12"
                         ></v-select>
                     </v-col>
 
 
                     <v-col cols="12" sm="4">
                         <v-text-field
-                                v-model.number="gameData.partner_group_id"
-                                :disabled="(this.gameData.required_join_partner_group === 'a' || this.gameData.required_join_partner_group === '')"
-                                label="URL на партнерскую группу"
-                                required
-                                outlined
+                                :rules="partner_group_id_rules"
                                 dense
+                                label="URL на партнерскую группу"
+                                outlined
+                                required
+                                v-model.number="gameData.partner_group_id"
+                                v-show="(this.gameData.required_join_partner_group_abc === 'b' || this.gameData.required_join_partner_group_abc === 'c')"
                         ></v-text-field>
                     </v-col>
 
                     <v-col cols="12" sm="3">
                         <v-text-field
-                                v-model.number="gameData.count_attempts_for_join_partner_group"
-                                :disabled="(this.gameData.required_join_partner_group === 'a' || this.gameData.required_join_partner_group === 'b' || this.gameData.required_join_partner_group === '')"
-                                label="Кол-во попыток"
-                                required
-                                outlined
+                                :rules="join_partner_group_count_attempts_rules"
                                 dense
-                                type="number"
+                                label="Кол-во попыток"
                                 min="1"
+                                outlined
+                                required
+                                type="number"
+                                v-model.number="gameData.join_partner_group_count_attempts"
+                                v-show="this.gameData.required_join_partner_group_abc === 'c'"
                         ></v-text-field>
 
 
@@ -140,127 +144,145 @@
 
 
                 <v-row class="mt-n6">
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="5">
                         <v-text-field
-                                v-model.number="gameData.count_attempts_free"
-                                label="Кол-во бесплатных попыток"
-                                required
-                                outlined
+                                :rules="free_attempts_count_rules"
                                 dense
+                                label="Кол-во бесплатных попыток"
+                                min="1"
+                                outlined
+                                required
                                 type="number"
-                                min="0"
+                                v-model.number="gameData.free_attempts_count"
                         ></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" sm="6">
+                    <v-col cols="12" sm="4">
                         <v-text-field
-                                v-model.number="gameData.attempts_interval_sec"
-                                label="Время между попытками"
-                                required
-                                outlined
+                                :rules="attempts_interval_rules"
                                 dense
+                                label="Время между попытками"
+                                min="1"
+                                outlined
+                                required
                                 suffix="минут"
                                 type="number"
-                                min="1"
+                                v-model.number="gameData.attempts_interval"
                         ></v-text-field>
                     </v-col>
                 </v-row>
 
                 <v-switch
                         class="mt-n5"
-                        v-model="gameData.attempts_extended"
-                        label="Периодические бесплатные попытки"
                         color="primary"
-                        value="success"
                         hide-details
+                        label="Периодические бесплатные попытки"
+
+                        v-model="gameData.attempts_extended"
                 ></v-switch>
 
                 <v-row class="mt-1">
                     <v-col cols="12" sm="4">
                         <v-text-field
-                                xs="6" md="6"
+                                :rules="attempts_extended_frequency_minutes_rules" dense
+                                label="Частота выдачи попыток"
+                                md="6"
+                                min="1"
+                                id="area1"
+                                outlined
+                                prefix="каждые"
+                                required
+                                suffix="минут"
+                                type="number"
+                                v-model.number="gameData.attempts_extended_frequency_minutes"
+                                v-show="gameData.attempts_extended"
+                                xs="6"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="4">
+                        <v-text-field
+                                :rules="attempts_extended_count_rules" dense
+                                label="Кол-во попыток за одну выдачу"
+                                md="6"
+                                id="area2"
+                                prefix="начислять"
+                                suffix="попыток"
+                                min="1"
+                                outlined
+                                required
+                                type="number"
                                 v-model.number="gameData.attempts_extended_count"
                                 v-show="gameData.attempts_extended"
-                                label="Кол-во попыток за одну выдачу"
-                                required
-                                outlined
-                                dense
-                                type="number"
-                                min="1"
+                                xs="6"
                         ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-text-field
-                                xs="6" md="6"
-                                v-model.number="gameData.attempts_extended_frequency_minutes"
-                                v-show="gameData.attempts_extended"
-                                label="Частота выдачи попыток"
-                                suffix="раз в час"
-                                required
-                                outlined
-                                dense
-                                type="number"
-                                min="1"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="4">
-                        <v-text-field
-                                xs="6" md="6"
-                                v-model.number="gameData.attempts_extended_frequency_minutes"
-                                v-show="gameData.attempts_extended"
-                                label="Сколько раз сработает таймер"
-                                required
-                                outlined
-                                dense
-                                type="number"
+                                id="area3"
+                                :rules="attempts_extended_max_count_rules" dense
+                                label="Доп. попыток max"
+                                md="6"
                                 min="0"
-                        ></v-text-field>
+                                prefix="но не более"
+                                outlined
+                                required
+                                type="number"
+                                v-model.number="gameData.attempts_extended_max_count"
+                                v-show="gameData.attempts_extended"
+                                xs="6"
+                        >
+                            <template v-slot:append>
+                                <v-icon>mdi-help-circle-outline</v-icon>
+                            </template>
+                        </v-text-field>
                     </v-col>
                 </v-row>
 
                 <v-switch
                         class="mt-n3"
-                        v-model="gameData.switchPaidAttempts"
-                        label="Платные попытки (баланс рейтинга активности, магазина)"
                         color="primary"
-                        value="success"
                         hide-details
+                        label="Платные попытки (баланс рейтинга активности, магазина)"
+
+                        v-model="gameData.switchPaidAttempts"
                 ></v-switch>
 
                 <v-row class="mt-1">
                     <v-col cols="12" sm="4">
                         <v-select
-                                v-show="this.gameData.switchPaidAttempts"
                                 :items="itemsGameWallet"
-                                v-model="gameData.gameWallet"
+                                dense
                                 label="Кошелек"
                                 outlined
-                                dense
+                                v-model="gameData.gameWallet"
+                                v-show="this.gameData.switchPaidAttempts"
                         ></v-select>
                     </v-col>
 
                     <v-col cols="12" sm="4">
                         <v-text-field
-                                v-model.number="gameData.count_attempts_pay"
-                                v-show="this.gameData.switchPaidAttempts"
-                                label="Кол-во платных попыток"
-                                required
-                                outlined
+                                :rules="paid_attempts_count_rules"
                                 dense
+                                label="Кол-во платных попыток"
+                                min="1"
+                                outlined
+                                required
                                 type="number"
-                                min="0"
+                                v-model.number="gameData.paid_attempts_count"
+                                v-show="this.gameData.switchPaidAttempts"
                         ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-text-field
-                                v-model.number="gameData.attempts_pay_price"
-                                v-show="this.gameData.switchPaidAttempts"
-                                label="Цена платной попытки"
-                                required
-                                outlined
+                                :rules="paid_attempt_price_rules"
                                 dense
+                                label="Цена платной попытки"
+                                min="1"
+                                outlined
+                                required
                                 type="number"
-                                min="0"
+                                v-model.number="gameData.paid_attempt_price"
+                                v-show="this.gameData.switchPaidAttempts"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -272,30 +294,25 @@
 <script>
     // import bridge from '@vkontakte/vk-bridge';
     export default {
+        model: {
+            prop: 'gameData',
+        },
+        props: ['gameData'],
         data: () => ({
-            gameData: {
-                count_attempts_free: '',
-                count_attempts_pay: 1,
-                attempts_pay_price: 10,
-                required_repost: '',
-                count_attempts_for_repost: '',
-                required_join_group: '',
-                count_attempts_for_join_group: '',
-                required_enable_notifications: '',
-                required_join_partner_group: '',
-                count_attempts_for_join_partner_group: '',
-                enable_notifications_count_attempts: '',
-                partner_group_id: '',
-                attempts_interval_sec: '',
-                attempts_extended: false,
-                attempts_extended_count: 1,
-                attempts_extended_frequency_minutes: 1,
-                switchPaidAttempts: false,
-                delayedLaunch: false,
-                gameWallet: 'b',
-                yy: false,
 
-            },
+
+            repost_count_attempts_abc_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            join_group_count_attempts_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            enable_notifications_count_attempts_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            join_partner_group_count_attempts_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            free_attempts_count_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            attempts_interval_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            attempts_extended_count_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            attempts_extended_frequency_minutes_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            paid_attempt_price_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            paid_attempts_count_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            partner_group_id_rules: [v => (!!v || v === 0) || 'Значение не задано'],
+            attempts_extended_max_count_rules: [v => (!!v || v === 0) || 'Значение не задано'],
 
             itemsGameOption: [
                 {value: 'a', text: 'Бесплатные попытки'},
@@ -316,13 +333,41 @@
                 {value: 'b', text: 'Магазин'},
             ]
         }),
-
+        watch: {
+            'gameData.required_repost_abc': function () {
+                if (this.gameData.required_repost_abc !== 'c')
+                    this.gameData.repost_count_attempts = 0
+            },
+            'gameData.required_enable_notifications_abc': function () {
+                if (this.gameData.required_enable_notifications_abc !== 'c')
+                    this.gameData.enable_notifications_count_attempts = 0
+            },
+            'gameData.required_join_group_abc': function () {
+                if (this.gameData.required_join_group_abc !== 'c')
+                    this.gameData.join_group_count_attempts = 0
+            },
+            'gameData.required_join_partner_group_abc': function () {
+                if (this.gameData.required_join_partner_group_abc !== 'c')
+                    this.gameData.join_partner_group_count_attempts = 0
+            },
+            'gameData.attempts_extended': function () {
+                if (this.gameData.attempts_extended === false) {
+                    this.gameData.attempts_extended_count = 0
+                    this.gameData.attempts_extended_frequency_minutes = 0
+                    this.gameData.attempts_extended_max_count = 0
+                }
+            },
+            'gameData.switchPaidAttempts': function () {
+                if (this.gameData.switchPaidAttempts === false) {
+                    this.gameData.paid_attempts_count = 0
+                    this.gameData.paid_attempt_price = 0
+                }
+            }
+        },
     }
 </script>
 
 <style scoped>
-    /*span {*/
-    /*    color: green;*/
-    /*}*/
+
 
 </style>

@@ -18,6 +18,7 @@
                             v-model.number="prize_count"
                             label="Кол-во победителей"
                             dense
+                            :rules="prize_count_rules"
                     ></v-text-field>
                 </v-col>
                 <v-btn v-if="!is_one_card" icon fab absolute right small @click="$emit('delete_prize_creator', id)">
@@ -26,7 +27,7 @@
             </v-row>
         </v-card-title>
         <v-card-text>
-            <v-row class="mb-n5" dense v-for="(prize, i) in prizes" :key="prize.id">
+            <v-row class="mb-n3" dense v-for="(prize, i) in prizes" :key="prize.id">
 
                 <v-col sm="5">
                     <v-select
@@ -41,6 +42,7 @@
                     <v-text-field
                                   v-model="prize.val"
                                   label="Название приза"
+                                  :rules="own_prize_rules"
                                   outlined
                                   dense
                     ></v-text-field>
@@ -49,6 +51,7 @@
                     <v-text-field
                             v-model="prize.val"
                             label="Кол-во валеронов"
+                            :rules="market_rating_balance_rules"
                             outlined
                             dense
                             type="number"
@@ -60,6 +63,7 @@
                             :items="api_types"
                             v-model="prize.api_type"
                             label="Тип запроса"
+                            :rules="api_types_rules"
                             outlined
                             dense
                     ></v-select>
@@ -68,6 +72,7 @@
                     <v-text-field
                             v-model="prize.val"
                             label="Url"
+                            :rules="url_rules"
                             outlined
                             dense
                     ></v-text-field>
@@ -99,7 +104,7 @@
         props: {
             prizes: Array,
             is_single_winner: {
-                default: false,
+                default: true,
                 type: Boolean
             },
             is_last_card: {
@@ -122,7 +127,23 @@
                 {value: 'get', text: 'GET'},
             ],
             prize_count: 1,
-            prize_next_id: 1
+            prize_next_id: 1,
+
+            prize_count_rules: [
+                v => (!!v || v === 0) || 'Значение не задано'
+            ],
+            own_prize_rules: [
+                v => (!!v || v === 0) || 'Значение не задано'
+            ],
+            market_rating_balance_rules: [
+                v => (!!v || v === 0) || 'Значение не задано'
+            ],
+            api_types_rules: [
+                v => (!!v || v === 0) || 'Значение не задано'
+            ],
+            url_rules: [
+                v => (!!v || v === 0) || 'Значение не задано'
+            ],
         }),
         computed: {
             prize_types: function () {

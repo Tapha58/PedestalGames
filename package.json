@@ -11,8 +11,11 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "@vkontakte/vk-bridge": "^2.1.8",
     "core-js": "^3.6.4",
+    "emoji-vue": "^0.2.4",
+    "node-sass": "^4.14.1",
     "vue": "^2.6.11",
     "vue-ctk-date-time-picker": "^2.4.0",
+    "vue-emoji-picker": "^1.0.1",
     "vuetify": "^2.2.25"
   },
   "devDependencies": {
