@@ -379,14 +379,14 @@
                 this.x = bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall"});
                 this.x.then(
                     function (result) {
-                        start_game2(result.access_token)
+                        // start_game2(result.access_token)
                         console.log('токен' + result.access_token)
                     },
                 );
-                function start_game2(access_token) {
-                    this.token = access_token
-                    console.log('токен 2' + this.token)
-                }
+                // function start_game2(access_token) {
+                //     this.token = access_token
+                //     console.log('токен 2' + this.token)
+                // }
             },
 
 
