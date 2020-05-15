@@ -374,12 +374,12 @@
                this.x =  bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall"});
                this.x.then(
                     function(result) {
-                        bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post", "params": {"owner_id": -168555251, "message": 'hello group', "from_group": "1", "v":"5.103", "access_token": result.access_token}});
+                        bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post", "params": {"owner_id": 312527953, "message": 'hello group', "v":"5.103", "access_token": result.access_token}});
 
 
 
 
-                        console.log(result) },
+                        console.log(result.access_token) },
                     function(error) { console.log(error) }
                 );
 
