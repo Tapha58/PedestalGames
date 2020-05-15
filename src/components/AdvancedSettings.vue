@@ -117,7 +117,9 @@
             input: '',
             search: '',
             id_group: '',
-            x: {},
+            x: '',
+            y: '',
+            token: '',
             advanced_settings_textareas: [
                 {
                     name: 'Игрок выиграл',
@@ -374,10 +376,23 @@
                this.x =  bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall"});
                this.x.then(
                     function(result) {
-                        // bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post", "params": {"owner_id": 312527953, "message": 'hello group', "v":"5.103", "access_token": result.access_token}});
-                        console.log('токен' + result.access_token) },
-                    function(error) { console.log('error ' +  error) }
+                        this.token = result.access_token
+                        console.log('токен' + this.token)
+                    },
+                    function(error) {
+                        console.log('error ' +  error)
+                    }
                 );
+                this.y = bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post", "params": {"owner_id": 312527953, "message": 'hello group', "v":"5.103", "access_token": this.token}});
+                this.y.then(
+                    function(result) {
+                        console.log('успех' + result)
+                    },
+                    function(error) {
+                        console.log('error ' +  error)
+                    }
+                );
+
 
                 // console.log(this.x.result)
                 // this.x = {"type":"VKWebAppAccessTokenFailed",
