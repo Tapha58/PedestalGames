@@ -373,30 +373,45 @@
                 // this.advanced_settings_textareas[index].value = this.gameData.enable_notifications_desc
             },
             start_game: function () {
-               this.x =  bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall"});
-               this.x.then(
-                    function(result) {
+                this.x = bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall"});
+
+                function start_game2(access_token) {
+                    this.token = access_token
+                    console.log('токен 2' + this.token)
+                }
+
+                this.x.then(
+                    function (result) {
+                        start_game2(result.access_token)
                         console.log('токен' + result.access_token)
-                        this.y = bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post", "params": {"owner_id": 312527953, "message": 'hello group', "v":"5.103", "access_token": result.access_token}});
-                        this.y.then(
-                            function(result) {
-                                console.log('успех' + result)
-                            },
-                            function(error) {
-                                console.log('error ' +  error)
-                            }
-                        );
                     },
-                    function(error) {
-                        console.log('error ' +  error)
+
+                    function (error) {
+                        console.log('error ' + error)
+                    }
+                );
+            },
+            start_game2: function () {
+                this.y = bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post",
+                    "params": {
+                        "owner_id": 312527953,
+                        "message": 'hello group',
+                        "v": "5.103",
+                        "access_token": this.token
+                    }
+                });
+                this.y.then(
+                    function (result) {
+                        console.log('успех' + result)
+                    },
+                    function (error) {
+                        console.log('error ' + error)
                     }
                 );
 
 
-
-
                 // console.log(this.x.result)
-                // this.x = {"type":"VKWebAppAccessTokenFailed",
+                // this.x = {"type":"VKWebAppAccessTokenFailed",Ы
                 //     "data":
                 //     {"error_type":"client_error","error_data":{"error_code":6,"error_reason":"Wrong app id"}}}
 
@@ -407,18 +422,19 @@
                 //     "from_group": "1"
                 // });
 
-            },
-        },
-        components: {
-            Emoji
-        },
-        mounted:
-            function () {
-                this.load_default_messages()
 
-                // this.id_group = document.location
-                // console.log(this.id_group)
-            }
+            },
+            components: {
+                Emoji
+            },
+            mounted:
+                function () {
+                    this.load_default_messages()
+
+                    // this.id_group = document.location
+                    // console.log(this.id_group)
+                }
+        }
     }
 
 </script>
