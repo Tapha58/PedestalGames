@@ -58,7 +58,7 @@
                 formData.append('photo', this.val);
 
                 try {
-                    const response = await fetch(this.gameData.upload_url , {
+                    const response = await fetch('https://pu.vk.com/c212820/ss2137/upload.php?act=do_add&mid=312527953&aid=-14&gid=168555251&hash=1a64eb7422a72503d54c02326ddbb373&rhash=b2af8d5815f9fe74c4a7f29ab0cf4e86&swfupload=1&api=1&wallphoto=1' , {
                         method: 'POST',
                         body: formData
                     });
