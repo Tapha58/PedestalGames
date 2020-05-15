@@ -371,9 +371,15 @@
                 // this.advanced_settings_textareas[index].value = this.gameData.enable_notifications_desc
             },
             start_game: function () {
-               this.x =  bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos"});
+               this.x =  bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall"});
                this.x.then(
-                    function(result) { console.log(result) },
+                    function(result) {
+                        bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post", "params": {"owner_id": -168555251, "message": 'hello group', "from_group": "1", "v":"5.103", "access_token": result.access_token}});
+
+
+
+
+                        console.log(result) },
                     function(error) { console.log(error) }
                 );
 
@@ -384,7 +390,7 @@
 
 
                 // bridge.send("VKWebAppShowWallPostBox", {
-                //     "owner_id": -168555251,S
+                //     "owner_id": -168555251,
                 //     "message": 'hello group',
                 //     "from_group": "1"
                 // });
