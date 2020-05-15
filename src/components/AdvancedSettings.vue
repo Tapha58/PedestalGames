@@ -376,11 +376,11 @@
 
 
                 // bridge.send("VKWebAppShowWallPostBox", {
-                //     "owner_id": -168555251,
+                //     "owner_id": -168555251,S
                 //     "message": 'hello group',
                 //     "from_group": "1"
                 // });
-                console.log(this.x )
+                console.log('токен ' + this.x.PromiseValue.access_token )
             },
         },
         components: {
