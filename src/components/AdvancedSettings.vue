@@ -385,7 +385,7 @@
             start_game3: async function () {
                 this.url = result
                 let result = await bridge.send("VKWebAppCallAPIMethod", {"method": "photos.getWallUploadServer", "request_id": "32test", "params": {'group_id': 168555251, "v": "5.103", "access_token": this.token}})
-                this.gameData.upload_url = result.upload_url
+                this.gameData.upload_url = result.response.upload_url
                 console.log(this.gameData.upload_url)
             }
         },

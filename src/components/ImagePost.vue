@@ -23,6 +23,10 @@
 
 <script>
     export default {
+        model: {
+            prop: 'gameData',
+        },
+        props: ['gameData'],
         data: () => ({
             src: '',
             file: '',
