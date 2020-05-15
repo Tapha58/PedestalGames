@@ -386,7 +386,7 @@
 
 
             start_game3: async function () {
-                console.log('запускаем игру3')
+                console.log('запускаем игру3' + this.token)
                 let result = await bridge.send("VKWebAppCallAPIMethod", {
                     "method": "wall.post",
                     "params": {
