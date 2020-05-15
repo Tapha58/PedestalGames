@@ -8,15 +8,15 @@
 </template>
 
 <script>
-  import bridge from '@vkontakte/vk-bridge';
+
 
   export default {
      data: () => ({}),
-     methods: {
-        publishPost() {
-            bridge.send("VKWebAppShowWallPostBox", {"owner_id": -168555251, "message": 'hello group', "from_group": "1"});
-        },
-     },
+     // methods: {
+     //    publishPost() {
+     //        bridge.send("VKWebAppShowWallPostBox", {"owner_id": -168555251, "message": 'hello group', "from_group": "1"});
+     //    },
+     // },
   }
 
 </script>

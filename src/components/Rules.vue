@@ -177,6 +177,7 @@
                         color="primary"
                         hide-details
                         label="Периодические бесплатные попытки"
+                        :ripple="false"
 
                         v-model="gameData.attempts_extended"
                 ></v-switch>
@@ -185,7 +186,6 @@
                     <v-col cols="12" sm="4">
                         <v-text-field
                                 :rules="attempts_extended_frequency_minutes_rules" dense
-                                label="Частота выдачи попыток"
                                 md="6"
                                 min="1"
                                 id="area1"
@@ -202,7 +202,6 @@
                     <v-col cols="12" sm="4">
                         <v-text-field
                                 :rules="attempts_extended_count_rules" dense
-                                label="Кол-во попыток за одну выдачу"
                                 md="6"
                                 id="area2"
                                 prefix="начислять"
@@ -220,7 +219,6 @@
                         <v-text-field
                                 id="area3"
                                 :rules="attempts_extended_max_count_rules" dense
-                                label="Доп. попыток max"
                                 md="6"
                                 min="0"
                                 prefix="но не более"
@@ -243,7 +241,7 @@
                         color="primary"
                         hide-details
                         label="Платные попытки (баланс рейтинга активности, магазина)"
-
+                        :ripple="false"
                         v-model="gameData.switchPaidAttempts"
                 ></v-switch>
 

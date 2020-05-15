@@ -1,25 +1,29 @@
 <template>
     <v-textarea
             ref="text_emoji"
-            :height="height"
+            rows="1"
+            auto-grow
             :label='label'
             :value="value"
-            class="dense-textarea"
+            class="caption test dense-textarea mb-n2"
             no-resize
-            outlined
-
             v-on:input="$emit('input', $event)"
+
     >
-        <template v-slot:prepend-inner>
-            <v-tooltip right>
-                <template v-slot:activator="{ on }">
-                    <v-icon class="pt-0" v-on="on">{{mdi}}</v-icon>
-                </template>
-                <span>{{ tooltip }}</span>
-            </v-tooltip>
+<!--        <template v-slot:prepend>-->
+<!--            <v-tooltip right>-->
+<!--                <template v-slot:activator="{ on }">-->
+<!--                    <v-icon class="pt-0" v-on="on">{{mdi}}</v-icon>-->
+<!--                </template>-->
+<!--                <span>{{ tooltip }}</span>-->
+<!--            </v-tooltip>-->
+<!--        </template>-->
+        <template v-slot:label>
+            <p><b>{{ label }}</b></p>
         </template>
-        <template v-slot:append>
-            <emoji-picker @emoji="append">
+        <template v-slot:append-outer>
+            <div>
+            <emoji-picker  @emoji="append">
                 <div
                         @click.stop="clickEvent"
                         class="emoji-invoker"
@@ -32,7 +36,7 @@
                     </svg>
                 </div>
                 <div slot="emoji-picker" slot-scope="{ emojis, insert,  }">
-                    <div :style="{ top: 1 + 'px', left: 450 + 'px' }" class="emoji-picker">
+                    <div  class="emoji-picker">
                         <div :key="category" v-for="(emojiGroup, category) in emojis">
 <!--                            <h5>{{ category }}</h5>-->
                             <div class="emojis">
@@ -47,6 +51,7 @@
                     </div>
                 </div>
             </emoji-picker>
+            </div>
         </template>
     </v-textarea>
 </template>
@@ -57,14 +62,14 @@
     export default {
         props: ['label', 'value', 'tooltip'],
         data: () => ({
-            height: 90,
+            height: 80,
             mdi: 'mdi-alert-circle-outline',
 
         }),
         methods: {
             append(emoji) {
                 let area=this.$refs.text_emoji.$el.querySelector('textarea')
-                if ((area.selectionStart)||(area.selectionStart==='0')) {
+                if ((area.selectionStart)||(area.selectionStart === 0)) {
                     let p_start=area.selectionStart;
                     let p_end=area.selectionEnd;
                     // area.value=area.value.substring(0,p_start)+emoji+area.value.substring(p_end,area.value.length);
@@ -97,6 +102,11 @@
 
 
 <style scoped>
+    .test {
+        position: relative;
+    }
+
+
 
        .regular-input {
         padding: 0.5rem 1rem;
@@ -111,7 +121,8 @@
     }
 
     .emoji-invoker {
-        position: absolute;
+        /*position: absolute;*/
+
         top: 0.5rem;
         right: 0.5rem;
         width: 1.5rem;
@@ -126,15 +137,18 @@
     }
 
     .emoji-invoker > svg {
-        fill: #b1c6d0;
+        fill: #d3deed;
     }
 
     .emoji-picker {
         position: absolute;
+        right: 0px;
+        top: -15rem;
+
         z-index: 1;
         border: 1px solid #ccc;
-        width: 15rem;
-        height: 20rem;
+        width: 20rem;
+        height: 15rem;
         overflow: scroll;
         padding: 1rem;
         box-sizing: border-box;
