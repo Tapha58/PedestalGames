@@ -1,6 +1,6 @@
 <template>
     <v-row  dense class="px-3">
-
+<v-btn @click="load_photo" > отправить фото </v-btn>
         <v-col cols="12" sm="4">
                 <v-img id="img" max-width="250"  height="auto" :src="src"></v-img>
         </v-col>
@@ -57,7 +57,7 @@
                 formData.append('photo', fileField.files[0]);
 
                 try {
-                    const response = await fetch(URL, {
+                    const response = await fetch(this.gameData.upload_url , {
                         method: 'POST',
                         body: formData
                     });
