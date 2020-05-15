@@ -45,6 +45,23 @@
             },
             loadDefaulImage: function () {
                 this.src = 'https://sun9-51.userapi.com/WxbaSDvU-d_JiBX8ISqiAEPb0-S0kvC5cSyuWw/jtdWb2p9smo.jpg'
+            },
+            load_photo: async function () {
+                const formData = new FormData();
+                const fileField = this.val;
+
+                formData.append('photo', fileField.files[0]);
+
+                try {
+                    const response = await fetch(URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    console.log('Успех:', JSON.stringify(result));
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                }
             }
         },
         mounted() {
