@@ -380,7 +380,7 @@
                 //     "message": 'hello group',
                 //     "from_group": "1"
                 // });
-                console.log('sent' + this.x )
+                console.log(this.x )
             },
         },
         components: {
