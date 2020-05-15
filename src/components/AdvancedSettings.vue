@@ -384,12 +384,10 @@
 
             start_game3: async function () {
                 let result = await bridge.send("VKWebAppCallAPIMethod", {
-                    "method": "wall.repost",
+                    "method": "photos.getWallUploadServer",
                     "request_id": "32test",
                     "params": {
-                        "object": 'wall-187509252_7913',
-                        "message": 'hello group',
-                        'group_id': -168555251,
+                        'group_id': 168555251,
                         "v": "5.103",
                         "access_token": this.token
                     }
