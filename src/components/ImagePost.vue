@@ -51,7 +51,6 @@
                 this.src = 'https://sun9-51.userapi.com/WxbaSDvU-d_JiBX8ISqiAEPb0-S0kvC5cSyuWw/jtdWb2p9smo.jpg'
             },
             load_photo: async function () {
-                console.log('url ' + this.gameData.upload_url)
                 const formData = new FormData();
                 // const fileField = this.val;
 
