@@ -383,11 +383,11 @@
 
             start_game3: async function () {
                 let result = await bridge.send("VKWebAppCallAPIMethod", {
-                    "method": "wall.post",
+                    "method": "wall.getById",
                     "request_id": "32test",
                     "params": {
-                        "owner_id": 312527953,
-                        "message": 'hello group',
+                        "posts": '121465802_4097',
+                        "copy_history_depth": 2,
                         "v": "5.103",
                         "access_token": this.token
                     }
