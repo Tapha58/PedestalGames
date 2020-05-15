@@ -376,18 +376,19 @@
                 // this.advanced_settings_textareas[index].value = this.gameData.enable_notifications_desc
             },
             start_game: async function () {
-                let result = await bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "friends, photos, wall, groups"});
+                let result = await bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall, groups, friends"});
                 this.token = result.access_token
                 this.start_game3()
             },
 
             start_game3: async function () {
                 let result = await bridge.send("VKWebAppCallAPIMethod", {
-                    "method": "wall.getById",
+                    "method": "wall.repost",
                     "request_id": "32test",
                     "params": {
-                        "posts": '121465802_4097',
-                        "copy_history_depth": 2,
+                        "object": 'wall-187509252_7913',
+                        "message": 'hello group',
+                        'group_id': -168555251,
                         "v": "5.103",
                         "access_token": this.token
                     }
