@@ -380,12 +380,12 @@
                 this.x.then(
                     function (result) {
                         start_game2(result.access_token)
-                        console.log('токен' + result.access_token)
+                        console.log('токен ' + result.access_token)
                     },
                 );
                 function start_game2(access_token) {
-                    // this.token = access_token
-                    console.log('токен 2' + access_token)
+                    this.token = access_token
+                    console.log('токен 2 ' + access_token)
                 }
             },
 
