@@ -378,6 +378,7 @@
             start_game: async function () {
                 let result = await bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall, groups, friends"});
                 this.token = result.access_token
+                console.log('токен + права ' + result)
                 this.start_game3()
             },
 
