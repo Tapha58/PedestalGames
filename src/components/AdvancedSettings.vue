@@ -392,7 +392,7 @@
                         "access_token": this.token
                     }
                 })
-                console.log('rezult ' + result)
+                console.log(result)
             }
         },
 
