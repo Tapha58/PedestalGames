@@ -380,15 +380,11 @@
                 this.token = result.access_token
                 this.start_game3()
             },
-            start_game2: function (access_token) {
-                this.token = access_token
-            },
-
 
             start_game3: async function () {
-                console.log('запускаем игру3' + this.token)
                 let result = await bridge.send("VKWebAppCallAPIMethod", {
                     "method": "wall.post",
+                    "request_id": "32test",
                     "params": {
                         "owner_id": 312527953,
                         "message": 'hello group',
