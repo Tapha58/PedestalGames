@@ -370,11 +370,12 @@
                 // this.advanced_settings_textareas[index].value = this.gameData.enable_notifications_desc
             },
             start_game: function () {
-                bridge.send("VKWebAppShowWallPostBox", {
-                    "owner_id": -168555251,
-                    "message": 'hello group',
-                    "from_group": "1"
-                });
+                bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos"});
+                // bridge.send("VKWebAppShowWallPostBox", {
+                //     "owner_id": -168555251,
+                //     "message": 'hello group',
+                //     "from_group": "1"
+                // });
                 console.log('sent')
             },
         },
