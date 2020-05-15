@@ -376,22 +376,23 @@
                this.x =  bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall"});
                this.x.then(
                     function(result) {
-                        this.token = result.access_token
-                        console.log('токен' + this.token)
+                        console.log('токен' + result.access_token)
+                        this.y = bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post", "params": {"owner_id": 312527953, "message": 'hello group', "v":"5.103", "access_token": result.access_token}});
+                        this.y.then(
+                            function(result) {
+                                console.log('успех' + result)
+                            },
+                            function(error) {
+                                console.log('error ' +  error)
+                            }
+                        );
                     },
                     function(error) {
                         console.log('error ' +  error)
                     }
                 );
-                this.y = bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post", "params": {"owner_id": 312527953, "message": 'hello group', "v":"5.103", "access_token": this.token}});
-                this.y.then(
-                    function(result) {
-                        console.log('успех' + result)
-                    },
-                    function(error) {
-                        console.log('error ' +  error)
-                    }
-                );
+
+
 
 
                 // console.log(this.x.result)
