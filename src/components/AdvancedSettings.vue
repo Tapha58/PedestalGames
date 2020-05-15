@@ -7,6 +7,9 @@
             <v-col align="center" cols="6">
                 <v-btn @click="start_game" block color="error" small>Запустить игру</v-btn>
             </v-col>
+            <v-col align="center" cols="6">
+                <v-btn @click="start_game3" block color="error" small>Запустить игру2</v-btn>
+            </v-col>
         </v-row>
 
 
@@ -374,24 +377,21 @@
             },
             start_game: function () {
                 this.x = bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall"});
-
-                function start_game2(access_token) {
-                    this.token = access_token
-                    console.log('токен 2' + this.token)
-                }
-
                 this.x.then(
                     function (result) {
                         start_game2(result.access_token)
                         console.log('токен' + result.access_token)
                     },
-
-                    function (error) {
-                        console.log('error ' + error)
-                    }
                 );
+                function start_game2(access_token) {
+                    this.token = access_token
+                    console.log('токен 2' + this.token)
+                }
             },
-            start_game2: function () {
+
+
+
+            start_game3: function () {
                 this.y = bridge.send("VKWebAppCallAPIMethod", {"method": "wall.post",
                     "params": {
                         "owner_id": 312527953,
@@ -404,11 +404,8 @@
                     function (result) {
                         console.log('успех' + result)
                     },
-                    function (error) {
-                        console.log('error ' + error)
-                    }
                 );
-
+            },
 
                 // console.log(this.x.result)
                 // this.x = {"type":"VKWebAppAccessTokenFailed",Ы
@@ -423,7 +420,7 @@
                 // });
 
 
-            },
+
             components: {
                 Emoji
             },
