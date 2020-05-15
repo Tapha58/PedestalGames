@@ -380,7 +380,7 @@
                 //     "message": 'hello group',
                 //     "from_group": "1"
                 // });
-                console.log('токен ' + this.x.PromiseValue.access_token )
+                console.log(this.x.data)
             },
         },
         components: {
