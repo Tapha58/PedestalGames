@@ -372,6 +372,7 @@
             },
             start_game: function () {
                this.x =  bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos"});
+                console.log(this.x.result)
                 // this.x = {"type":"VKWebAppAccessTokenFailed",
                 //     "data":
                 //     {"error_type":"client_error","error_data":{"error_code":6,"error_reason":"Wrong app id"}}}
@@ -382,7 +383,7 @@
                 //     "message": 'hello group',
                 //     "from_group": "1"
                 // });
-                console.log(this.x)
+
             },
         },
         components: {
