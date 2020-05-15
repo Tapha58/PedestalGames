@@ -373,8 +373,8 @@
             start_game: function () {
                this.x =  bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos"});
                this.x.then(
-                    function(result) { console.log('успешно ' + result) },
-                    function(error) { console.log('успешно ' + error) }
+                    function(result) { console.log(result) },
+                    function(error) { console.log(error) }
                 );
 
                 // console.log(this.x.result)
