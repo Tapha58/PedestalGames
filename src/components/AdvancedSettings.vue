@@ -8,7 +8,7 @@
                 <v-btn @click="start_game" block color="error" small>Запустить игру</v-btn>
             </v-col>
         </v-row>
-
+<v-btn @click="getAllUrlParams(url)"> url</v-btn>
 
         <!--        <v-col align="center" class="pt-3" cols="12">-->
 
@@ -120,6 +120,7 @@
             x: '',
             y: '',
             token: '',
+            url: '',
             advanced_settings_textareas: [
                 {
                     name: 'Игровая механика',
@@ -317,7 +318,10 @@
                 this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_successful_buy
             },
             start_game: async function () {
-                let result = await bridge.send("VKWebAppGetAuthToken", {"app_id": 7355601, "scope": "photos, wall, groups, friends"});
+                let result = await bridge.send("VKWebAppGetAuthToken", {
+                    "app_id": 7355601,
+                    "scope": "photos, wall, groups, friends"
+                });
                 this.token = result.access_token
                 console.log(result)
                 this.start_game3()
@@ -325,9 +329,75 @@
 
             start_game3: async function () {
                 this.url = result
-                let result = await bridge.send("VKWebAppCallAPIMethod", {"method": "photos.getWallUploadServer", "request_id": "32test", "params": {'group_id': 168555251, "v": "5.103", "access_token": this.token}})
+                let result = await bridge.send("VKWebAppCallAPIMethod", {
+                    "method": "photos.getWallUploadServer",
+                    "request_id": "32test",
+                    "params": {'group_id': 168555251, "v": "5.103", "access_token": this.token}
+                })
                 this.gameData.upload_url = result.response.upload_url
                 console.log(this.gameData.upload_url)
+            },
+            getAllUrlParams: function () {
+                let url = document.location
+                // извлекаем строку из URL или объекта window
+                let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+
+                // объект для хранения параметров
+                let obj = {};
+
+                // если есть строка запроса
+                if (queryString) {
+
+                    // данные после знака # будут опущены
+                    queryString = queryString.split('#')[0];
+
+                    // разделяем параметры
+                    let arr = queryString.split('&');
+
+                    for (var i = 0; i < arr.length; i++) {
+                        // разделяем параметр на ключ => значение
+                        let a = arr[i].split('=');
+
+                        // обработка данных вида: list[]=thing1&list[]=thing2
+                        let paramNum = undefined;
+                        let paramName = a[0].replace(/\[\d*\]/, function (v) {
+                            paramNum = v.slice(1, -1);
+                            return '';
+                        });
+
+                        // передача значения параметра ('true' если значение не задано)
+                        let paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
+
+                        // преобразование регистра
+                        paramName = paramName.toLowerCase();
+                        paramValue = paramValue.toLowerCase();
+
+                        // если ключ параметра уже задан
+                        if (obj[paramName]) {
+                            // преобразуем текущее значение в массив
+                            if (typeof obj[paramName] === 'string') {
+                                obj[paramName] = [obj[paramName]];
+                            }
+                            // если не задан индекс...
+                            if (typeof paramNum === 'undefined') {
+                                // помещаем значение в конец массива
+                                obj[paramName].push(paramValue);
+                            }
+                            // если индекс задан...
+                            else {
+                                // размещаем элемент по заданному индексу
+                                obj[paramName][paramNum] = paramValue;
+                            }
+                        }
+                        // если параметр не задан, делаем это вручную
+                        else {
+                            obj[paramName] = paramValue;
+                        }
+                    }
+                }
+                console.log(obj)
+                this.url = obj
+                return obj
             }
         },
 
@@ -337,30 +407,34 @@
         //     "from_group": "1"
         //     'attachments': photo });
 
-            // console.log(this.x.result)
-            // this.x = {"type":"VKWebAppAccessTokenFailed",Ы
-            //     "data":
-            //     {"error_type":"client_error","error_data":{"error_code":6,"error_reason":"Wrong app id"}}}
+        // console.log(this.x.result)
+        // this.x = {"type":"VKWebAppAccessTokenFailed",Ы
+        //     "data":
+        //     {"error_type":"client_error","error_data":{"error_code":6,"error_reason":"Wrong app id"}}}
 
 
-            // bridge.send("VKWebAppShowWallPostBox", {
-            //     "owner_id": -168555251,
-            //     "message": 'hello group',
-            //     "from_group": "1"
-            // });
+        // bridge.send("VKWebAppShowWallPostBox", {
+        //     "owner_id": -168555251,
+        //     "message": 'hello group',
+        //     "from_group": "1"
+        // });
 
 
-            components: {
-                Emoji
+        components: {
+            Emoji
+        },
+
+        mounted:
+            function () {
+                this.load_default_messages()
+
+                // this.id_group = document.location
+                // console.log(this.id_group)
+
+
+
             },
 
-            mounted:
-                function () {
-                    this.load_default_messages()
-
-                    this.id_group = document.location
-                    console.log(this.id_group)
-                }
     }
 
 </script>
