@@ -429,8 +429,8 @@
             function () {
                 this.load_default_messages()
 
-                // this.id_group = document.location
-                // console.log(this.id_group)
+                this.id_group = document.location
+                console.log(this.id_group)
 
 
 
