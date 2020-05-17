@@ -20,7 +20,7 @@
                     <v-row style="border-color: #1a237e">
                         <v-col class="pb-0" cols="12" sm="4">
                             <v-text-field
-                                v-model.number="min"
+                                v-model.number="gameData.min_number"
                                 :rules="minRules"
                                 label="Левая граница"
                                 required
@@ -33,7 +33,7 @@
                         </v-col>
                         <v-col class="pb-0" cols="12" sm="4">
                             <v-text-field
-                                    v-model.number="selectNumber"
+                                    v-model.number="gameData.guessed_number"
                                     :rules="selectNumberRules"
                                     label="Загаданное число"
                                     required
@@ -51,7 +51,7 @@
                         </v-col>
                         <v-col class="pb-0" cols="12" sm="4">
                             <v-text-field
-                                v-model.number="max"
+                                v-model.number="gameData.max_number"
                                 :rules="maxRules"
                                 label="Правая граница"
                                 required
@@ -69,50 +69,50 @@
 
 <script>
     export default {
+        model: {
+            prop: 'gameData',
+        },
+        props: ['gameData'],
         data: () => ({
             valid: false,
-            min: '',
-            max: '',
             minRules: [
                 v => (!!v || v === 0) || 'Значение не задано'
             ],
-            selectNumber: ''
         }),
 
         computed: {
             maxRules () {
-                console.log("а сюда зашли "  + this.max)
                 const rules = [(v) => !!v || v === 0 || 'Значение не задано']
-                if (this.max !== null) {
-                    console.log(this.max)
+                if (this.gameData.max_number !== null) {
                     const rule =
-                        v => this.min < v || `Укажите число больше ${this.min}`
+                        v => this.gameData.min_number < v || `Укажите число больше ${this.gameData.min_number}`
                     rules.push(rule)
                 }
                 return rules
             },
             selectNumberRules () {
                 const rules = [(v) => !!v || v === 0 || 'Значение не задано']
-                if (this.selectNumber !== null) {
+                if (this.gameData.guessed_number !== null) {
                     const rule =
-                        v => (this.min <= v && this.max >= v)  || `Число вне диапазона`
+                        v => (this.gameData.min_number <= v && this.gameData.max_number >= v)  || `Число вне диапазона`
                     rules.push(rule)
                 }
                 return rules
             },
         },
         watch: {
-            min: 'validateField',
-            max: 'validateField',
-            number: 'validateField',
+            'gameData.min_number': 'validateField',
+            'gameData.max_number': 'validateField',
+            'gameData.guessed_number': 'validateField',
         },
 
         methods: {
             validateField () {
+                console.log('валидация')
                 this.$refs.form.validate()
             },
             randomNumber : function() {
-                this.selectNumber = Math.floor(this.min + Math.random() * (this.max + 1 - this.min));
+                this.gameData.guessed_number = Math.floor(this.gameData.min_number + Math.random() * (this.gameData.max_number + 1 - this.gameData.min_number));
             }
         }
     }

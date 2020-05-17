@@ -1,5 +1,6 @@
 <template>
 <v-row dense class="px-3">
+    <v-btn @click="transform_prizes_array" >array</v-btn>
     <v-col>
         <v-alert
                 border="left"
@@ -36,11 +37,16 @@
 <script>
     import PrizeCreator from "@/components/PrizeCreator";
     export default {
+        model: {
+            prop: 'gameData',
+        },
+        props: ['gameData'],
         components: {PrizeCreator},
         data: () => ({
             prizes: [
                 {
                     id: 1,
+                    prize_count: 1,
                     prizes: [{ type: 'own_prize' }]
                 }
             ],
@@ -64,9 +70,26 @@
             delete_prize(id) {
                 let x = this.prizes.findIndex(item => item.id === id)
                 this.prizes.splice(x, 1)
+            },
+            transform_prizes_array() {
+                for (let i = 0; i < this.prizes.length; i++) {
+                    let array_games = {}
+                    for (let j = 0; j < this.prizes[i].prizes.length; j++) {
+                        if (this.prizes[i].prizes[j].type === 'own_prize')
+                            Object.assign(array_games, {'prize_text' : this.prizes[i].prizes[j].val})
+                        if (this.prizes[i].prizes[j].type === 'market_balance')
+                            Object.assign(array_games, {'prize_balance_shop_min' : this.prizes[i].prizes[j].val})
+                        if (this.prizes[i].prizes[j].type === 'rating_balance')
+                            Object.assign(array_games, {'prize_balance_rating_max' : this.prizes[i].prizes[j].val})
+                    }
+                    Object.assign(array_games, {'prize_count' : this.prizes[i].prizes[0].prize_count})
+                    this.gameData.prizes.push(array_games)
+                }
+            }
+
             }
         }
-    }
+
 </script>
 
 <style scoped>

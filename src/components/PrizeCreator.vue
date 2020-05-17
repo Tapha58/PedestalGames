@@ -15,7 +15,7 @@
                     <v-text-field
                             type="number"
                             min="1"
-                            v-model.number="prize_count"
+                            v-model.number="prizes[0].prize_count"
                             label="Кол-во победителей"
                             dense
                             :rules="prize_count_rules"
@@ -28,7 +28,6 @@
         </v-card-title>
         <v-card-text>
             <v-row class="mb-n3" dense v-for="(prize, i) in prizes" :key="prize.id">
-
                 <v-col sm="5">
                     <v-select
                             :items="prize_types"
@@ -40,11 +39,11 @@
                 </v-col>
                 <v-col sm="6" v-if="prize.type === 'own_prize'">
                     <v-text-field
-                                  v-model="prize.val"
-                                  label="Название приза"
-                                  :rules="own_prize_rules"
-                                  outlined
-                                  dense
+                              v-model="prize.val"
+                              label="Название приза"
+                              :rules="own_prize_rules"
+                              outlined
+                              dense
                     ></v-text-field>
                 </v-col>
                 <v-col sm="6" v-if="prize.type === 'market_balance' || prize.type === 'rating_balance'">
@@ -144,14 +143,33 @@
             url_rules: [
                 v => (!!v || v === 0) || 'Значение не задано'
             ],
+            n: {},
         }),
         computed: {
             prize_types: function () {
                 return [
-                    {value: 'own_prize', text: 'Свой приз', disabled: this.prizes.find(item => item.type === 'own_prize')},
-                    {value: 'market_balance', text: 'Увеличение баланса магазина', disabled: this.prizes.find(item => item.type === 'market_balance')},
-                    {value: 'rating_balance', text: 'Увеличение баланса рейтинга', disabled: this.prizes.find(item => item.type === 'rating_balance')},
-                    {value: 'api', text: 'Выполнить POST/GET запрос', disabled: this.prizes.find(item => item.type === 'api')}
+                    {
+                        value: 'own_prize',
+                        text: 'Свой приз',
+                        name: "prize_text",
+                        disabled: this.prizes.find(item => item.type === 'own_prize')
+                    },
+                    {
+                        value: 'market_balance',
+                        text: 'Увеличение баланса магазина',
+                        name: "prize_balance_shop",
+                        disabled: this.prizes.find(item => item.type === 'market_balance')
+                    },
+                    {
+                        value: 'rating_balance',
+                        text: 'Увеличение баланса рейтинга',
+                        disabled: this.prizes.find(item => item.type === 'rating_balance')
+                    },
+                    {
+                        value: 'api',
+                        text: 'Выполнить POST/GET запрос',
+                        disabled: this.prizes.find(item => item.type === 'api')
+                    }
                 ]
             }
         },
@@ -161,8 +179,21 @@
                     type: this.prize_types.find(type => !type.disabled).value
                 })
             },
+            // create_array_prizes() {
+            //     if (this.prizes[0].prizes.type === 'own_prize')
+            //         this.n = {'prize_text': this.prize.val}
+                // this.gameData.prizes.push()
+            // }
         },
-
+        watch: {
+            // prizes: function () {
+            //     // create_array_prizes() {
+            //         console.log('vvvv')
+            //         if (this.prizes[0].type === 'own_prize')
+            //             console.log('zzzz')
+            //             this.n = {'prize_text': this.prizes[0].val}
+            //     }
+        }
     }
 </script>
 

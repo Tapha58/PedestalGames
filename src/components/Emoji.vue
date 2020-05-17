@@ -72,17 +72,18 @@
                 if ((area.selectionStart)||(area.selectionStart === 0)) {
                     let p_start=area.selectionStart;
                     let p_end=area.selectionEnd;
-                    // area.value=area.value.substring(0,p_start)+emoji+area.value.substring(p_end,area.value.length);
                     this.$emit('input', this.value.substring(0,p_start) + emoji + this.value.substring(p_end,area.value.length))
                 }
-                if (document.selection) {
-                    area.focus();
-                let sel=document.selection.createRange();
-                sel.text=emoji;
-                }
-                if (this.value === '') {
-                    this.$emit('input', this.value + emoji)
-                }
+                area.setRangeText(emoji, area.selectionStart, area.selectionEnd, "end");
+                area.focus();
+                // if (document.selection) {
+                //     area.focus();
+                // let sel=document.selection.createRange();
+                // sel.text=emoji;
+                // }
+                // if (this.value === '') {
+                //     this.$emit('input', this.value + emoji)
+                // }
 
             },
         },

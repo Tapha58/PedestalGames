@@ -1,24 +1,21 @@
 <template>
     <v-row  dense class="px-3">
-<v-btn @click="load_photo" > отправить фото </v-btn>
         <v-col cols="12" sm="4">
-                <v-img id="img" max-width="250"  height="auto" :src="src"></v-img>
+            <v-img id="img" max-width="250"  height="auto" :src="src"></v-img>
         </v-col>
-
+        <v-btn @click="load_photo">отправить фото</v-btn>
         <v-col cols="12" sm="5">
-                    <v-file-input
-                        v-model="val"
-                        @change="create"
-                        accept="image/png, image/jpeg, image/bmp"
-                        prepend-icon="mdi-camera"
-                        label="Своя картинка для поста"
-                        id="fileItem"
-                        hint="Загрузите картинку размером не более 2Mb"
-                        persistent-hint
-                    ></v-file-input>
-                </v-col>
+            <v-file-input
+                v-model="val"
+                @change="create"
+                accept="image/png, image/jpeg, image/bmp"
+                prepend-icon="mdi-camera"
+                label="Своя картинка для поста"
+                id="fileItem"
 
-    </v-row>
+            ></v-file-input>
+                </v-col>
+         </v-row>
 </template>
 
 <script>
@@ -39,7 +36,6 @@
                     let reader = new FileReader();
                     reader.onload = this.onload
                     reader.readAsDataURL(this.val);
-                    console.log('привет2 ' + this.val)
                 } else {
                     this.loadDefaulImage()
                 }
@@ -57,7 +53,7 @@
                 formData.append('photo', this.val);
 
                 try {
-                    const response = await fetch('https://pu.vk.com/c212820/ss2137/upload.php?act=do_add&mid=312527953&aid=-14&gid=168555251&hash=1a64eb7422a72503d54c02326ddbb373&rhash=b2af8d5815f9fe74c4a7f29ab0cf4e86&swfupload=1&api=1&wallphoto=1' , {
+                    const response = await fetch('wallgames/upload_url' , {
                         method: 'POST',
                         body: formData
                     });

@@ -37,7 +37,7 @@
                                 outlined
                                 required
                                 type="number"
-                                v-model.number="gameData.repost_count_attempts"
+                                v-model.number="gameData.game.repost_count_attempts"
                                 v-show="this.gameData.required_repost_abc === 'c'"
                         ></v-text-field>
                     </v-col>
@@ -64,7 +64,7 @@
                                 outlined
                                 required
                                 type="number"
-                                v-model.number="gameData.join_group_count_attempts"
+                                v-model.number="gameData.game.join_group_count_attempts"
                                 v-show="!(this.gameData.required_join_group_abc === 'a' || this.gameData.required_join_group_abc === 'b' || this.gameData.required_join_group_abc === '')"
                                 xs="6"
                         ></v-text-field>
@@ -92,7 +92,7 @@
                                 outlined
                                 required
                                 type="number"
-                                v-model.number="gameData.enable_notifications_count_attempts"
+                                v-model.number="gameData.game.enable_notifications_count_attempts"
                                 v-show="(this.gameData.required_enable_notifications_abc === 'c')"
                                 xs="6"
                         ></v-text-field>
@@ -120,7 +120,7 @@
                                 label="URL на партнерскую группу"
                                 outlined
                                 required
-                                v-model.number="gameData.partner_group_id"
+                                v-model.number="gameData.game.partner_group_id"
                                 v-show="(this.gameData.required_join_partner_group_abc === 'b' || this.gameData.required_join_partner_group_abc === 'c')"
                         ></v-text-field>
                     </v-col>
@@ -134,7 +134,7 @@
                                 outlined
                                 required
                                 type="number"
-                                v-model.number="gameData.join_partner_group_count_attempts"
+                                v-model.number="gameData.game.join_partner_group_count_attempts"
                                 v-show="this.gameData.required_join_partner_group_abc === 'c'"
                         ></v-text-field>
 
@@ -153,7 +153,7 @@
                                 outlined
                                 required
                                 type="number"
-                                v-model.number="gameData.free_attempts_count"
+                                v-model.number="gameData.game.free_attempts_count"
                         ></v-text-field>
                     </v-col>
 
@@ -167,7 +167,7 @@
                                 required
                                 suffix="минут"
                                 type="number"
-                                v-model.number="gameData.attempts_interval"
+                                v-model.number="gameData.game.attempts_interval"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -179,7 +179,7 @@
                         label="Периодические бесплатные попытки"
                         :ripple="false"
 
-                        v-model="gameData.attempts_extended"
+                        v-model="gameData.show_attempts_extended"
                 ></v-switch>
 
                 <v-row class="mt-1">
@@ -194,14 +194,15 @@
                                 required
                                 suffix="минут"
                                 type="number"
-                                v-model.number="gameData.attempts_extended_frequency_minutes"
-                                v-show="gameData.attempts_extended"
+                                v-model.number="gameData.game.attempts_extended_frequency_minutes"
+                                v-show="gameData.show_attempts_extended"
                                 xs="6"
                         ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-text-field
-                                :rules="attempts_extended_count_rules" dense
+                                :rules="attempts_extended_count_rules"
+                                dense
                                 md="6"
                                 id="area2"
                                 prefix="начислять"
@@ -210,8 +211,8 @@
                                 outlined
                                 required
                                 type="number"
-                                v-model.number="gameData.attempts_extended_count"
-                                v-show="gameData.attempts_extended"
+                                v-model.number="gameData.game.attempts_extended_count"
+                                v-show="gameData.show_attempts_extended"
                                 xs="6"
                         ></v-text-field>
                     </v-col>
@@ -225,8 +226,8 @@
                                 outlined
                                 required
                                 type="number"
-                                v-model.number="gameData.attempts_extended_max_count"
-                                v-show="gameData.attempts_extended"
+                                v-model.number="gameData.game.attempts_extended_max_count"
+                                v-show="gameData.show_attempts_extended"
                                 xs="6"
                         >
                             <template v-slot:append>
@@ -248,11 +249,11 @@
                 <v-row class="mt-1">
                     <v-col cols="12" sm="4">
                         <v-select
-                                :items="itemsGameWallet"
+                                :items="items_balance_type"
                                 dense
                                 label="Кошелек"
                                 outlined
-                                v-model="gameData.gameWallet"
+                                v-model="gameData.game.balance_type"
                                 v-show="this.gameData.switchPaidAttempts"
                         ></v-select>
                     </v-col>
@@ -266,7 +267,7 @@
                                 outlined
                                 required
                                 type="number"
-                                v-model.number="gameData.paid_attempts_count"
+                                v-model.number="gameData.game.paid_attempts_count"
                                 v-show="this.gameData.switchPaidAttempts"
                         ></v-text-field>
                     </v-col>
@@ -279,7 +280,7 @@
                                 outlined
                                 required
                                 type="number"
-                                v-model.number="gameData.paid_attempt_price"
+                                v-model.number="gameData.game.paid_attempt_price"
                                 v-show="this.gameData.switchPaidAttempts"
                         ></v-text-field>
                     </v-col>
@@ -326,39 +327,56 @@
                 {value: 'a', text: 'Не выдаются'},
                 {value: 'b', text: 'Выдаются бесплатные'},
             ],
-            itemsGameWallet: [
-                {value: 'a', text: 'Рейтинг активности'},
-                {value: 'b', text: 'Магазин'},
+            items_balance_type: [
+                {value: 1, text: 'Рейтинг активности'},
+                {value: 0, text: 'Магазин'},
             ]
         }),
         watch: {
             'gameData.required_repost_abc': function () {
                 if (this.gameData.required_repost_abc !== 'c')
-                    this.gameData.repost_count_attempts = 0
+                    this.gameData.game.repost_count_attempts = 0
+                if (this.gameData.required_repost_abc === 'b')
+                    this.gameData.game.required_repost = true
+                if (this.gameData.required_repost_abc !== 'b')
+                    this.gameData.game.required_repost = false
             },
             'gameData.required_enable_notifications_abc': function () {
                 if (this.gameData.required_enable_notifications_abc !== 'c')
-                    this.gameData.enable_notifications_count_attempts = 0
+                    this.gameData.game.enable_notifications_count_attempts = 0
+                if (this.gameData.required_enable_notifications_abc === 'b')
+                    this.gameData.game.required_enable_notifications = true
+                if (this.gameData.required_enable_notifications_abc !== 'b')
+                    this.gameData.game.required_enable_notifications = false
             },
             'gameData.required_join_group_abc': function () {
                 if (this.gameData.required_join_group_abc !== 'c')
-                    this.gameData.join_group_count_attempts = 0
+                    this.gameData.game.join_group_count_attempts = 0
+                if (this.gameData.required_join_group_abc === 'b')
+                    this.gameData.game.required_join_group = true
+                if (this.gameData.required_join_group_abc !== 'b')
+                    this.gameData.game.required_join_group = false
             },
             'gameData.required_join_partner_group_abc': function () {
                 if (this.gameData.required_join_partner_group_abc !== 'c')
-                    this.gameData.join_partner_group_count_attempts = 0
+                    this.gameData.game.join_partner_group_count_attempts = 0
+                if (this.gameData.required_join_partner_group_abc === 'b')
+                    this.gameData.game.required_join_partner_group = true
+                if (this.gameData.required_join_partner_group_abc !== 'b')
+                    this.gameData.game.required_join_partner_group = false
             },
-            'gameData.attempts_extended': function () {
-                if (this.gameData.attempts_extended === false) {
-                    this.gameData.attempts_extended_count = 0
-                    this.gameData.attempts_extended_frequency_minutes = 0
-                    this.gameData.attempts_extended_max_count = 0
+            'gameData.show_attempts_extended': function () {
+                if (this.gameData.show_attempts_extended === false) {
+                    this.gameData.game.attempts_extended_count = 0
+                    this.gameData.game.attempts_extended_frequency_minutes = 0
+                    this.gameData.game.attempts_extended_max_count = 0
                 }
             },
             'gameData.switchPaidAttempts': function () {
                 if (this.gameData.switchPaidAttempts === false) {
-                    this.gameData.paid_attempts_count = 0
-                    this.gameData.paid_attempt_price = 0
+                    this.gameData.game.paid_attempts_count = 0
+                    this.gameData.game.paid_attempt_price = 0
+                    this.gameData.game.balance_type = null
                 }
             }
         },

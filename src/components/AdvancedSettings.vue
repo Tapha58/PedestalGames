@@ -7,9 +7,6 @@
             <v-col align="center" cols="6">
                 <v-btn @click="start_game" block color="error" small>Запустить игру</v-btn>
             </v-col>
-            <v-col align="center" cols="6">
-                <v-btn @click="start_game3" block color="error" small>Запустить игру2</v-btn>
-            </v-col>
         </v-row>
 
 
@@ -125,6 +122,13 @@
             token: '',
             advanced_settings_textareas: [
                 {
+                    name: 'Игровая механика',
+                    textarea_content: [
+                        {id: 'message_number_greater', value: '', label: 'Загаданное число больше'},
+                        {id: 'message_number_less', value: '', label: 'Загаданное число меньше'},
+                    ]
+                },
+                {
                     name: 'Игрок выиграл',
                     textarea_content: [
                         {id: 'message_win', value: '', label: 'Игрок выигрывает и получает приз'},
@@ -222,161 +226,98 @@
                 else this.name_button = 'Показать настройки ответов бота'
             },
             load_default_messages: function () {
+                // Игровая механика
+                let index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_number_greater')
+                this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_number_greater
+
+                index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_number_less')
+                this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_number_less
+
+
                 // Игрок выиграл
-                let index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_win')
-                this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_win
+                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win')
+                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win
 
-                index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_win_balance')
-                this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_win_balance
+                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win_balance')
+                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win_balance
 
-                index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_win_rating')
-                this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_win_rating
+                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win_rating')
+                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win_rating
 
-                index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_win_API')
-                this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_win_API
+                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win_API')
+                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win_API
 
-                index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_win_API_fail')
-                this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_win_API_fail
-
-                // Общие ответы
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_already_win')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.message_already_win
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_attempts_timeout')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.message_attempts_timeout
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_invalid_format')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.message_invalid_format
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_game_end')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.message_game_end
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_comment_edited')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.message_comment_edited
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_requirement_violated')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.message_requirement_violated
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'repost_desc')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.repost_desc
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'enable_notifications_desc')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.enable_notifications_desc
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'join_group_desc')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.join_group_desc
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'join_partner_group_desc')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.join_partner_group_desc
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_private_profile')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.message_private_profile
+                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win_API_fail')
+                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win_API_fail
 
                 // Общие ответы
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_has_attempts')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.message_has_attempts
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_already_win')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_already_win
 
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_attempts_out')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.message_attempts_out
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_attempts_timeout')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_attempts_timeout
 
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_attempts_can_be_bought')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.message_attempts_can_be_bought
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_invalid_format')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_invalid_format
 
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_attempts_can_be_extended')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.message_attempts_can_be_extended
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_game_end')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_game_end
 
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_attempts_can_be_added')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.message_attempts_can_be_added
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_comment_edited')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_comment_edited
 
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_not_available_attempts')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.message_not_available_attempts
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_requirement_violated')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_requirement_violated
+
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'repost_desc')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.repost_desc
+
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'enable_notifications_desc')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.enable_notifications_desc
+
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'join_group_desc')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.join_group_desc
+
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'join_partner_group_desc')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.join_partner_group_desc
+
+                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_private_profile')
+                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_private_profile
+
+                // Общие ответы
+                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_has_attempts')
+                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_has_attempts
+
+                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_attempts_out')
+                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_attempts_out
+
+                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_attempts_can_be_bought')
+                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_attempts_can_be_bought
+
+                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_attempts_can_be_extended')
+                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_attempts_can_be_extended
+
+                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_attempts_can_be_added')
+                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_attempts_can_be_added
+
+                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_not_available_attempts')
+                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_not_available_attempts
 
                 // Покупка попыток
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_bought_max_attempts')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.message_bought_max_attempts
+                index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_bought_max_attempts')
+                this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_bought_max_attempts
 
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_wants_too_many_attempts')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.message_wants_too_many_attempts
+                index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_wants_too_many_attempts')
+                this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_wants_too_many_attempts
 
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_not_enough_money')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.message_not_enough_money
+                index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_not_enough_money')
+                this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_not_enough_money
 
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_successful_buy')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.message_successful_buy
-
-
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_win_rating')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_win_rating
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_win_API')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_win_API
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_win_API_fail')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_win_API_fail
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_already_win')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_already_win
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_attempts_timeout')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_attempts_timeout
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_invalid_format')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_invalid_format
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_game_end')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_game_end
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_comment_edited')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_comment_edited
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_requirement_violated')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_requirement_violated
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_has_attempts')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_has_attempts
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_attempts_out')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_attempts_out
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_attempts_can_be_bought')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_attempts_can_be_bought
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_attempts_can_be_extended')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_attempts_can_be_extended
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_attempts_can_be_added')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_attempts_can_be_added
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_not_available_attempts')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_not_available_attempts
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_bought_max_attempts')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_bought_max_attempts
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_wants_too_many_attempts')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_wants_too_many_attempts
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_not_enough_money')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_not_enough_money
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'message_successful_buy')
-                // this.advanced_settings_textareas[index].value = this.gameData.message_successful_buy
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'repost_desc')
-                // this.advanced_settings_textareas[index].value = this.gameData.repost_desc
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'join_group_desc')
-                // this.advanced_settings_textareas[index].value = this.gameData.join_group_desc
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'join_partner_group_desc')
-                // this.advanced_settings_textareas[index].value = this.gameData.join_partner_group_desc
-                //
-                // index = this.advanced_settings_textareas.findIndex(item => item.id === 'enable_notifications_desc')
-                // this.advanced_settings_textareas[index].value = this.gameData.enable_notifications_desc
+                index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_successful_buy')
+                this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_successful_buy
             },
             start_game: async function () {
-                let result = await bridge.send("VKWebAppGetAuthToken", {"app_id": 7413476, "scope": "photos, wall, groups, friends"});
+                let result = await bridge.send("VKWebAppGetAuthToken", {"app_id": 7355601, "scope": "photos, wall, groups, friends"});
                 this.token = result.access_token
                 console.log(result)
                 this.start_game3()
@@ -390,6 +331,11 @@
             }
         },
 
+        // bridge.send("VKWebAppShowWallPostBox", {
+        //     "owner_id": -168555251,
+        //     "message": 'hello group',
+        //     "from_group": "1"
+        //     'attachments': photo });
 
             // console.log(this.x.result)
             // this.x = {"type":"VKWebAppAccessTokenFailed",Ы
@@ -412,8 +358,8 @@
                 function () {
                     this.load_default_messages()
 
-                    // this.id_group = document.location
-                    // console.log(this.id_group)
+                    this.id_group = document.location
+                    console.log(this.id_group)
                 }
     }
 
