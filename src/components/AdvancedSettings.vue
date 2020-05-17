@@ -338,7 +338,7 @@
                 console.log(this.gameData.upload_url)
             },
             getAllUrlParams: function () {
-                let url = document.location
+                let url = document.location.search
                 console.log(url)
                 // извлекаем строку из URL или объекта window
                 let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
