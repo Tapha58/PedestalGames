@@ -339,6 +339,7 @@
             },
             getAllUrlParams: function () {
                 let url = document.location
+                console.log(url)
                 // извлекаем строку из URL или объекта window
                 let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
 
