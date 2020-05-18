@@ -3,8 +3,8 @@
         <ChoicePrize v-model="gameData"></ChoicePrize>
         <MakeNumber v-model="gameData"></MakeNumber>
         <Rules v-model="gameData"></Rules>
-        <PostSettings></PostSettings>
-        <ImagePost></ImagePost>
+        <PostSettings v-model="gameData"></PostSettings>
+        <ImagePost v-model="gameData"></ImagePost>
         <TimePost></TimePost>
         <AdvancedSettings v-model="gameData"></AdvancedSettings>
     </div>
@@ -22,7 +22,7 @@
     export default {
         name: "GuessNumber",
         components: {
-            ChoicePrize, MakeNumber, Rules, PostSettings, ImagePost, AdvancedSettings, TimePost
+            ChoicePrize, MakeNumber, Rules, PostSettings, ImagePost, AdvancedSettings, TimePost,
         },
         data: () => ({
             gameData: {
@@ -84,11 +84,28 @@
                     "enable_notifications_desc": "разрешение получать сообщения от нашего сообщества"
                 },
                 "prizes": [],
-                'min_number': 0,
-                "max_number": 100,
-                "guessed_number": 34,
+                "prizes_front": [
+                    {
+                    id: 1,
+                    prize_count: 1,
+                    prizes: [{type: 'own_prize'}]
+                }
+                ],
+                'auth_data': null,
+                'image': null,
+                'min_number': '',
+                "max_number": '',
+                "guessed_number": '',
                 "message_number_greater": "Greather",
                 "message_number_less": "Less",
+                'post_text':
+                    "У нас конкурс 🎁\n" +
+                    "Мы загадали число от {min} до {max}. Угадавший получит приз.\n" +
+                    "Правила конкурса: вам нужно угадать число, которое мы загадали. Для этого в комментариях под этим постом напишите ваш вариант. Например, !15.\n" +
+                    "Наш бот в ответном сообщении сообщит вам угадали вы или нет.\n" +
+                    "Каждый участник имеет 3 попытки с минимальным интервалом в 1 минуту.\n" +
+                    "Чтобы участвовать вступите в нашу группу и сделайте репост этой записи.\n" +
+                    "Проверить бота на честность: {ссылка}",
 
                 required_join_group_abc: '',
                 required_repost_abc: '',
@@ -98,58 +115,21 @@
                 switchPaidAttempts: false,
                 delayedLaunch: false,
             },
-            def_settings: {
-            "free_attempts_count": 31,
-            "paid_attempts_count": 0,
-            "required_join_group": true,
-            "required_enable_notifications": false,
-            "required_repost": false,
-            "required_join_partner_group": false,
-            "join_group_count_attempts": 0,
-            "enable_notifications_count_attempts": 0,
-            "repost_count_attempts": 2,
-            "join_partner_group_count_attempts": 11,
-            "attempts_interval": 60,
-            "attempts_extended_count": 6,
-            "attempts_extended_frequency_minutes": 7,
-            "attempts_extended_max_count": 8,
-            "disable_comments_after_end": true,
-            "win_per_participant_limit": 1,
-            "message_win": "{profile}, поздравляем, Вы выиграли! {текст приза} {начисление_на_баланс} {начисление рейтинга} {API}.",
-            "message_win_balance": "На баланс зачислено {count_win_balance) {balance_name}.",
-            "message_win_rating": "На рейтинг зачислено {count_win_rating} {rating_name}",
-            "message_win_API": "",
-            "message_win_API_fail": "",
-            "message_already_win": "{profile}, вы уже выиграли в этой игре.",
-            "message_attempts_timeout": "{profile}, слишком часто. Попробуйте через {timeout}.",
-            "message_invalid_format": "{profile}, неверный формат сообщения.",
-            "message_game_end": "{profile}, игра уже завершена. Число угадано, а может и нет.",
-            "message_comment_edited": "{profile}, отредактированные комментарии не учитываются. Напишите новый.",
-            "message_requirement_violated": "{profile}, Вы не выполнили следующее условие для участия: {fail_conditions}.",
-            "message_has_attempts": "у Вас осталось попыток: {count_attempts}",
-            "message_attempts_out": "у Вас закончились попытки",
-            "message_attempts_can_be_bought": "у Вас закончились попытки, но Вы можете купить еще {count_can_pay_attempts) попыток",
-            "message_attempts_can_be_extended": "Дополнительные попытки будут начислены через {next_attempts_periodic} в количестве: {count_attempts_periodic}шт.",
-            "message_attempts_can_be_added": "Вы можете получить дополнительные попытки за {action_for_attempts}.",
-            "message_not_available_attempts": "у Вас закончились все попытки. Игра для Вас завершена.",
-            "message_bought_max_attempts": "{profile}, Вы уже купили все доступные платные попытки. Больше купить нельзя.",
-            "message_wants_too_many_attempts": "{profile}, Вы пытаетесь купить слишком много попыток. Доступно для покупки: {count_can_pay_attempts).",
-            "message_not_enough_money": "{profile}, не хватает ресурсов для покупки. ",
-            "message_successful_buy": "{profile}, успешная покупка! Доступно попыток {count_attempts}. Продолжайте битву!",
-            "repost_desc": "репост этого поста",
-            "join_group_desc": "вступление в нашу группу",
-            "join_partner_group_desc": "вступление в партнёрскую группу {external}",
-            "enable_notifications_desc": "разрешение получать сообщения от нашего сообщества"
-        },
+            def_settings: null,
         }),
         created:
             function () {
-                this.apply_def_settings ()
+
+            },
+        mounted:
+            async function () {
+                await this.load_def_settings ()
+                await this.load_def_settings_guess_number()
+                this.apply_def_settings()
             },
         methods: {
             apply_def_settings: function () {
-                this.gameData.game = {...this.gameData.game, ...this.def_settings}
-
+                console.log('apply_def_settings')
                 if (this.gameData.game.required_join_group === false && this.gameData.game.join_group_count_attempts === 0)
                     this.gameData.required_join_group_abc = 'a'
                 if (this.gameData.game.required_join_group === true)
@@ -180,8 +160,29 @@
 
                 if (this.gameData.game.join_partner_group_count_attempts !== 0)
                     this.gameData.show_attempts_extended = true
+            },
+            load_def_settings: async function () {
+                console.log('load_def_settings')
+                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/default_settings/1")
+                if (response.ok) {
+                    this.gameData.game = await response.json()
+                    console.log('all ok')
+                }
+                else {
+                    console.log("Ошибка HTTP: " + response.status)
+                }
+            },
+            load_def_settings_guess_number: async function () {
+                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/guess_number/default_settings")
+                if (response.ok) {
+                    this.def_settings1 = await response.json()
+                    console.log('all ok')
+                }
+                else {
+                    console.log("Ошибка HTTP: " + response.status)
+                }
             }
-        }
+        },
     }
 </script>
 

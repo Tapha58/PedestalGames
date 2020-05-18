@@ -47,7 +47,7 @@
                 {
                     id: 1,
                     prize_count: 1,
-                    prizes: [{ type: 'own_prize' }]
+                    prizes: [{type: 'own_prize'}]
                 }
             ],
             ix: 1,
@@ -64,7 +64,7 @@
             add_prize() {
                 this.prizes.push({
                     id: ++this.ix,
-                    prizes: [{ type: 'own_prize' }]
+                    prizes: [{type: 'own_prize'}]
                 })
             },
             delete_prize(id) {
@@ -76,19 +76,33 @@
                     let array_games = {}
                     for (let j = 0; j < this.prizes[i].prizes.length; j++) {
                         if (this.prizes[i].prizes[j].type === 'own_prize')
-                            Object.assign(array_games, {'prize_text' : this.prizes[i].prizes[j].val})
+                            Object.assign(array_games, {'prize_text': this.prizes[i].prizes[j].val})
                         if (this.prizes[i].prizes[j].type === 'market_balance')
-                            Object.assign(array_games, {'prize_balance_shop_min' : this.prizes[i].prizes[j].val})
+                            Object.assign(array_games, {'prize_balance_shop_min': this.prizes[i].prizes[j].val})
                         if (this.prizes[i].prizes[j].type === 'rating_balance')
-                            Object.assign(array_games, {'prize_balance_rating_max' : this.prizes[i].prizes[j].val})
+                            Object.assign(array_games, {'prize_balance_rating_max': this.prizes[i].prizes[j].val})
                     }
-                    Object.assign(array_games, {'prize_count' : this.prizes[i].prizes[0].prize_count})
+                    Object.assign(array_games, {'prize_count': this.prizes[i].prizes[0].prize_count})
                     this.gameData.prizes.push(array_games)
                 }
-            }
-
-            }
-        }
+            },
+            // this.$on('test', function () {
+            //     for (let i = 0; i < this.prizes.length; i++) {
+            //         let array_games = {}
+            //         for (let j = 0; j < this.prizes[i].prizes.length; j++) {
+            //             if (this.prizes[i].prizes[j].type === 'own_prize')
+            //                 Object.assign(array_games, {'prize_text': this.prizes[i].prizes[j].val})
+            //             if (this.prizes[i].prizes[j].type === 'market_balance')
+            //                 Object.assign(array_games, {'prize_balance_shop_min': this.prizes[i].prizes[j].val})
+            //             if (this.prizes[i].prizes[j].type === 'rating_balance')
+            //                 Object.assign(array_games, {'prize_balance_rating_max': this.prizes[i].prizes[j].val})
+            //         }
+            //         Object.assign(array_games, {'prize_count': this.prizes[i].prizes[0].prize_count})
+            //         this.gameData.prizes.push(array_games)
+            //     }
+            // }),
+        },
+    }
 
 </script>
 

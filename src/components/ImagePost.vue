@@ -3,10 +3,10 @@
         <v-col cols="12" sm="4">
             <v-img id="img" max-width="250"  height="auto" :src="src"></v-img>
         </v-col>
-        <v-btn @click="load_photo">отправить фото</v-btn>
+<!--        <v-btn @click="load_photo">отправить фото</v-btn>-->
         <v-col cols="12" sm="5">
             <v-file-input
-                v-model="val"
+                v-model="gameData.image"
                 @change="create"
                 accept="image/png, image/jpeg, image/bmp"
                 prepend-icon="mdi-camera"
@@ -27,15 +27,14 @@
         data: () => ({
             src: '',
             file: '',
-            val: null
          }),
         methods: {
             create: function () {
 
-                if (this.val) {
+                if (this.gameData.image) {
                     let reader = new FileReader();
                     reader.onload = this.onload
-                    reader.readAsDataURL(this.val);
+                    reader.readAsDataURL(this.gameData.image);
                 } else {
                     this.loadDefaulImage()
                 }
@@ -46,23 +45,7 @@
             loadDefaulImage: function () {
                 this.src = 'https://sun9-51.userapi.com/WxbaSDvU-d_JiBX8ISqiAEPb0-S0kvC5cSyuWw/jtdWb2p9smo.jpg'
             },
-            load_photo: async function () {
-                const formData = new FormData();
-                // const fileField = this.val;
 
-                formData.append('photo', this.val);
-
-                try {
-                    const response = await fetch('wallgames/upload_url' , {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const result = await response.json();
-                    console.log('Успех:', JSON.stringify(result));
-                } catch (error) {
-                    console.error('Ошибка:', error);
-                }
-            }
         },
         mounted() {
             this.loadDefaulImage()

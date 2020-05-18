@@ -182,37 +182,17 @@
                     textarea_content: [
                         {id: 'message_has_attempts', value: '', label: 'Что пишем, если еще есть попытки'},
                         {id: 'message_attempts_out', value: '', label: 'Что пишем, если закончились попытки'},
-                        {
-                            id: 'message_attempts_can_be_bought',
-                            value: '',
-                            label: 'Что пишем, если закончились, но может купить еще'
-                        },
-                        {
-                            id: 'message_attempts_can_be_extended',
-                            value: '',
-                            label: 'Что пишем, если есть выдача попыток по таймеру'
-                        },
-                        {
-                            id: 'message_attempts_can_be_added',
-                            value: '',
-                            label: 'Что пишем, если есть выдача по действию'
-                        },
-                        {
-                            id: 'message_not_available_attempts',
-                            value: '',
-                            label: 'Что пишем, если закончились все попытки (игра завершена)'
-                        },
+                        {id: 'message_attempts_can_be_bought', value: '', label: 'Что пишем, если закончились, но может купить еще'},
+                        {id: 'message_attempts_can_be_extended', value: '', label: 'Что пишем, если есть выдача попыток по таймеру'},
+                        {id: 'message_attempts_can_be_added', value: '', label: 'Что пишем, если есть выдача по действию'},
+                        {id: 'message_not_available_attempts', value: '', label: 'Что пишем, если закончились все попытки (игра завершена)'},
                     ]
                 },
                 {
                     name: 'Покупка попыток',
                     textarea_content: [
                         {id: 'message_bought_max_attempts', value: '', label: 'Купил максимум попыток'},
-                        {
-                            id: 'message_wants_too_many_attempts',
-                            value: '',
-                            label: 'Пробует купить больше, чем можно купить (по кол-ву)'
-                        },
+                        {id: 'message_wants_too_many_attempts', value: '', label: 'Пробует купить больше, чем можно купить (по кол-ву)'},
                         {id: 'message_not_enough_money', value: '', label: 'Не хватает баланса для покупки'},
                         {id: 'message_successful_buy', value: '', label: 'Успешная покупка'},
                     ]
@@ -317,14 +297,11 @@
                 index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_successful_buy')
                 this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_successful_buy
             },
-            start_game: async function () {
-                let result = await bridge.send("VKWebAppGetAuthToken", {
-                    "app_id": 7355601,
-                    "scope": "photos, wall, groups, friends"
-                });
-                this.token = result.access_token
-                console.log(result)
-                this.start_game3()
+
+            start_game: function () {
+                this.getAllUrlParams()
+                this.load_photo_and_auth_data()
+
             },
 
             start_game3: async function () {
@@ -337,9 +314,27 @@
                 this.gameData.upload_url = result.response.upload_url
                 console.log(this.gameData.upload_url)
             },
+
+            load_photo_and_auth_data: async function () {
+                const formData = new FormData();
+
+                formData.append('photo', this.gameData.image);
+                formData.append('auth_data', this.gameData.auth_data);
+
+                try {
+                    const response = await fetch('wallgames/upload_url/1' , {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    console.log('Успех:', JSON.stringify(result));
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                }
+            },
+
             getAllUrlParams: function () {
                 let url = document.location.href
-                console.log(url)
                 // извлекаем строку из URL или объекта window
                 let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
 
@@ -397,15 +392,17 @@
                     }
                 }
                 console.log(obj)
-                this.url = obj
-            }
+                this.gameData.auth_data = obj
+            },
         },
+        //     sent_post_vk: async function() {
+        //         bridge.send("VKWebAppShowWallPostBox", {
+        //             "owner_id": - +this.gameData.auth_data.vk_group_id,
+        //             "message": this.gameData.post_text,
+        //             "from_group": "1",
+        //             'attachments': photo });
+        // },
 
-        // bridge.send("VKWebAppShowWallPostBox", {
-        //     "owner_id": -168555251,
-        //     "message": 'hello group',
-        //     "from_group": "1"
-        //     'attachments': photo });
 
         // console.log(this.x.result)
         // this.x = {"type":"VKWebAppAccessTokenFailed",Ы
@@ -427,12 +424,6 @@
         mounted:
             function () {
                 this.load_default_messages()
-
-                this.id_group = document.location
-                console.log(this.id_group)
-
-
-
             },
 
     }

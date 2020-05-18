@@ -18,7 +18,7 @@
             </v-alert>
 
                 <v-textarea
-                        v-model="text1"
+                        v-model="gameData.post_text"
                         solo
                         background-color="blue lighten-5"
                         ref="post_text"
@@ -72,21 +72,14 @@
 <script>
     import EmojiPicker from 'vue-emoji-picker'
     export default {
+        model: {
+            prop: 'gameData',
+        },
+        props: ['gameData'],
         data() {
             return {
                 min: "10",
                 text: '',
-                text1:
-                    "У нас конкурс 🎁\n" +
-                    "Мы загадали число от {min} до {max}. Угадавший получит приз.\n" +
-                    "Правила конкурса: вам нужно угадать число, которое мы загадали. Для этого в комментариях под этим постом напишите ваш вариант. Например, !15.\n" +
-                    "Наш бот в ответном сообщении сообщит вам угадали вы или нет.\n" +
-                    "Каждый участник имеет 3 попытки с минимальным интервалом в 1 минуту.\n" +
-                    "Чтобы участвовать вступите в нашу группу и сделайте репост этой записи.\n" +
-                    "Проверить бота на честность: {ссылка}",
-
-
-
             }
         },
         components: {
@@ -102,10 +95,10 @@
         methods: {
             append(emoji) {
                 let area=this.$refs.post_text.$el.querySelector('textarea')
-                if ((area.selectionStart)||(area.selectionStart==='0')) {
+                if ((area.selectionStart)||(area.selectionStart === 0)) {
                     let p_start=area.selectionStart;
                     let p_end=area.selectionEnd;
-                    this.text1 = this.text1.substring(0,p_start) + emoji + this.text1.substring(p_end,area.value.length)
+                    this.gameData.post_text = this.gameData.post_text.substring(0,p_start) + emoji + this.gameData.post_text.substring(p_end,area.value.length)
                 }
                 area.setRangeText(emoji, area.selectionStart, area.selectionEnd, "end");
                 area.focus();
@@ -114,8 +107,8 @@
                     let sel = document.selection.createRange();
                     sel.text = emoji;
                 }
-                if (this.text1 === '') {
-                    this.text1 += emoji
+                if (this.gameData.post_text === '') {
+                    this.gameData.post_text += emoji
                 }
             }
         }
