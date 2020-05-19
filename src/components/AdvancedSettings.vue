@@ -421,7 +421,7 @@
                     const result = await response.json();
                     console.log('Успех:', JSON.stringify(result));
                 } catch(err) {
-                    alert(err); // TypeError: failed to fetch
+                    console.log(err); // TypeError: failed to fetch
                 }
             },
         },
