@@ -413,7 +413,7 @@
             sent_post_vk: async function() {
                 try {
                     let response  = await bridge.send("VKWebAppShowWallPostBox", {
-                        "owner_id": -195496572,
+                        "owner_id": this.gameData.game.id_group_vk,
                         "message": this.gameData.post_text,
                         "from_group": "1",
                         "attachments": "photo312527953_457244201"
@@ -425,29 +425,14 @@
                 }
             },
         },
-
-
-
-        // console.log(this.x.result)
-        // this.x = {"type":"VKWebAppAccessTokenFailed",Ы
-        //     "data":
-        //     {"error_type":"client_error","error_data":{"error_code":6,"error_reason":"Wrong app id"}}}
-
-
-        // bridge.send("VKWebAppShowWallPostBox", {
-        //     "owner_id": -168555251,
-        //     "message": 'hello group',
-        //     "from_group": "1"
-        // });
-
-
         components: {
             Emoji
         },
 
         mounted:
             function () {
-                this.load_default_messages()
+                this.getAllUrlParams()
+                // this.load_default_messages()
             },
 
     }
