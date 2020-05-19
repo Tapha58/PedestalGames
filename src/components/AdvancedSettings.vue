@@ -413,7 +413,7 @@
             sent_post_vk: async function() {
                 try {
                     let response  = await bridge.send("VKWebAppShowWallPostBox", {
-                        "owner_id": -86801408,
+                        "owner_id": -195496572,
                         "message": this.gameData.post_text,
                         "from_group": "1",
                         "attachments": "photo312527953_457244201"

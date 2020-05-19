@@ -27,8 +27,8 @@
         data: () => ({
             gameData: {
                 "game": {
-                    "id_group_vk": 106581421,
-                    "id_post_vk": 956,
+                    "id_group_vk": null,
+                    "id_post_vk": null,
                     "is_active": true,
                     "post_publication_date": "2020-05-12T22:59:44+03:00",
                     "is_random_giveaway": false,
