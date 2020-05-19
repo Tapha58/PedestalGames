@@ -83,6 +83,7 @@
                     "join_partner_group_desc": "вступление в партнёрскую группу {external}",
                     "enable_notifications_desc": "разрешение получать сообщения от нашего сообщества"
                 },
+                "game1": null,
                 "prizes": [],
                 "prizes_front": [
                     {
@@ -95,7 +96,7 @@
                 'image': null,
                 'min_number': '',
                 "max_number": '',
-                "guessed_number": '',
+                "guessed_number": 33,
                 "message_number_greater": "Greather",
                 "message_number_less": "Less",
                 'post_text':
@@ -165,18 +166,20 @@
                 console.log('load_def_settings')
                 let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/default_settings/1")
                 if (response.ok) {
-                    this.gameData.game = await response.json()
-                    console.log('all ok')
+                    let result = await response.json()
+                    this.gameData.game = {...this.gameData.game, ...result}
+                    console.log('all ok - 1')
                 }
                 else {
                     console.log("Ошибка HTTP: " + response.status)
                 }
             },
             load_def_settings_guess_number: async function () {
-                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/guess_number/default_settings")
+                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/guess_number/default_settings/1")
                 if (response.ok) {
-                    this.def_settings1 = await response.json()
-                    console.log('all ok')
+                    let result = await response.json()
+                    this.gameData = {...this.gameData, ...result}
+                    console.log('all ok - 2')
                 }
                 else {
                     console.log("Ошибка HTTP: " + response.status)

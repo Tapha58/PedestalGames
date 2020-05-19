@@ -8,7 +8,7 @@
                 <v-btn @click="start_game" block color="error" small>Запустить игру</v-btn>
             </v-col>
         </v-row>
-<v-btn @click="getAllUrlParams(url)"> url</v-btn>
+<!--<v-btn @click="getAllUrlParams(url)"> url</v-btn>-->
 
         <!--        <v-col align="center" class="pt-3" cols="12">-->
 
@@ -109,6 +109,8 @@
         },
         props: ['gameData'],
         data: () => ({
+            xx: '',
+            result: null,
             mdi: 'mdi-alert-circle-outline',
             height: 90,
             name_button: 'Показать настройки ответов бота',
@@ -142,43 +144,20 @@
                 {
                     name: 'Общие ответы',
                     textarea_content: [
-                        {
-                            id: 'message_already_win',
-                            value: '',
-                            label: 'Уже победил в игре',
-                            tooltip: 'я новая подсказка'
-                        },
-                        {
-                            id: 'message_attempts_timeout',
-                            value: '',
-                            label: 'Время между попытками не истекло',
-                            tooltip: 'подсказка'
-                        },
+                        {id: 'message_already_win', value: '', label: 'Уже победил в игре', tooltip: 'я новая подсказка'},
+                        {id: 'message_attempts_timeout', value: '', label: 'Время между попытками не истекло', tooltip: 'подсказка'},
                         {id: 'message_invalid_format', value: '', label: 'Не верный формат сообщения'},
                         {id: 'message_game_end', value: '', label: 'Игра завершена'},
                         {id: 'message_comment_edited', value: '', label: 'Пользователь отредактировал комментарий'},
                         {id: 'message_requirement_violated', value: '', label: 'Не выполнил условие для участия'},
                         {id: 'repost_desc', value: '', label: 'Описание действия для репоста'},
-                        {
-                            id: 'enable_notifications_desc',
-                            value: '',
-                            label: 'Описание действия для включения уведомлений'
-                        },
+                        {id: 'enable_notifications_desc', value: '', label: 'Описание действия для включения уведомлений'},
                         {id: 'join_group_desc', value: '', label: 'Описание действия для вступления в группу'},
-                        {
-                            id: 'join_partner_group_desc',
-                            value: '',
-                            label: 'Описание действия для вступления в партнёрскую группу'
-                        },
-                        {
-                            id: 'message_private_profile',
-                            value: '',
-                            label: 'Невозможно проверить наличие репоста (стена закрыта), для выдачи дополнительных попыток'
-                        },
+                        {id: 'join_partner_group_desc', value: '', label: 'Описание действия для вступления в партнёрскую группу'},
+                        {id: 'message_private_profile', value: '', label: 'Невозможно проверить наличие репоста (стена закрыта), для выдачи дополнительных попыток'},
                     ]
                 },
-                {
-                    name: 'Попытки',
+                {name: 'Попытки',
                     textarea_content: [
                         {id: 'message_has_attempts', value: '', label: 'Что пишем, если еще есть попытки'},
                         {id: 'message_attempts_out', value: '', label: 'Что пишем, если закончились попытки'},
@@ -299,11 +278,28 @@
             },
 
             start_game: function () {
-                this.getAllUrlParams()
-                this.load_photo_and_auth_data()
+                // this.getAllUrlParams()
+                // this.load_photo_and_auth_data()
+                // this.load_name()
+                this.sent_post_vk()
+
+
+
+                // let url = document.location.href
+                // console.log(url)
+                // this.transform_prizes_array()
 
             },
-
+            load_name: async function () {
+                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE&game_name=guess_number")
+                if (response.ok) {
+                   this.xx = await response.json()
+                    console.log(this.xx )
+                }
+                else {
+                    console.log("Ошибка HTTP: " + response.status)
+                }
+            },
             start_game3: async function () {
                 this.url = result
                 let result = await bridge.send("VKWebAppCallAPIMethod", {
@@ -319,14 +315,15 @@
                 const formData = new FormData();
 
                 formData.append('photo', this.gameData.image);
-                formData.append('auth_data', this.gameData.auth_data);
+                // formData.append('auth_data', this.gameData.auth_data);
 
                 try {
-                    const response = await fetch('wallgames/upload_url/1' , {
+                    const response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE' , {
                         method: 'POST',
                         body: formData
                     });
                     const result = await response.json();
+                    // this.result = `'photo' + this.result.owner_id + '_' + this.result.id`
                     console.log('Успех:', JSON.stringify(result));
                 } catch (error) {
                     console.error('Ошибка:', error);
@@ -394,14 +391,41 @@
                 console.log(obj)
                 this.gameData.auth_data = obj
             },
+            transform_prizes_array() {
+                for (let i = 0; i < this.gameData.prizes_front.length; i++) {
+                    let array_games = {}
+                    for (let j = 0; j < this.gameData.prizes_front[i].prizes.length; j++) {
+                        if (this.gameData.prizes_front[i].prizes[j].type === 'own_prize')
+                            Object.assign(array_games, {'prize_text': this.gameData.prizes_front[i].prizes[j].val})
+                        if (this.gameData.prizes_front[i].prizes[j].type === 'market_balance') {
+                            Object.assign(array_games, {'prize_balance_shop_min': this.gameData.prizes_front[i].prizes[j].val})
+                            Object.assign(array_games, {'prize_balance_shop_max': this.gameData.prizes_front[i].prizes[j].val})
+                        }
+                        if (this.gameData.prizes_front[i].prizes[j].type === 'rating_balance') {
+                            Object.assign(array_games, {'prize_balance_rating_min': this.gameData.prizes_front[i].prizes[j].val})
+                            Object.assign(array_games, {'prize_balance_rating_max': this.gameData.prizes_front[i].prizes[j].val})
+                        }
+                    }
+                    Object.assign(array_games, {'prize_count': this.gameData.prizes_front[i].prizes[0].prize_count})
+                    this.gameData.prizes.push(array_games)
+                }
+            },
+            sent_post_vk: async function() {
+                try {
+                    let response  = await bridge.send("VKWebAppShowWallPostBox", {
+                        "owner_id": -195496572,
+                        "message": this.gameData.post_text,
+                        "from_group": "1",
+                        "attachments": "photo312527953_457244201"
+                    });
+                    const result = await response.json();
+                    console.log('Успех:', JSON.stringify(result));
+                } catch(err) {
+                    alert(err); // TypeError: failed to fetch
+                }
+            },
         },
-        //     sent_post_vk: async function() {
-        //         bridge.send("VKWebAppShowWallPostBox", {
-        //             "owner_id": - +this.gameData.auth_data.vk_group_id,
-        //             "message": this.gameData.post_text,
-        //             "from_group": "1",
-        //             'attachments': photo });
-        // },
+
 
 
         // console.log(this.x.result)
