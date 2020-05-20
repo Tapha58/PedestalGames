@@ -8,17 +8,9 @@
                 <v-btn @click="start_game" block color="error" small>Запустить игру</v-btn>
             </v-col>
         </v-row>
-<!--<v-btn @click="getAllUrlParams(url)"> url</v-btn>-->
-
-        <!--        <v-col align="center" class="pt-3" cols="12">-->
-
-
-        <!--        </v-col>-->
         <v-row v-show="visible">
             <v-col cols="7">
                 <v-expansion-panels accordion class="px-0" dense>
-                    <!--                    <div :key="name" v-for="(advanced_settings_textare, name) in advanced_settings_textareas">-->
-
                     <v-expansion-panel :key="name"
                                        v-for="(advanced_settings_textare, name) in advanced_settings_textareas">
                         <v-expansion-panel-header :ripple="{ class: 'primary--text' }" class="mb-0">
@@ -109,7 +101,8 @@
         },
         props: ['gameData'],
         data: () => ({
-            xx: '',
+            media_id: null,
+            number_callback_server: '',
             result: null,
             mdi: 'mdi-alert-circle-outline',
             height: 90,
@@ -120,9 +113,10 @@
             search: '',
             id_group: '',
             x: '',
-            y: '',
+            attachments_photo: '',
             token: '',
             url: '',
+            src: 'https://pedestal-test2.aiva-studio.ru/app/?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE',
             advanced_settings_textareas: [
                 {
                     name: 'Игровая механика',
@@ -179,6 +173,17 @@
             ],
         }),
         methods: {
+            start_game: async function () {
+                const media_id = await this.upload_photo()
+                if (media_id)
+                    await this.activating_callback_server()
+                else
+                    return
+                if (this.number_callback_server) {
+                    await this.send_post_vk()
+                } else return
+                await this.create_game()
+            },
             change_name_button: function () {
                 this.visible = !this.visible
                 if (this.name_button === 'Показать настройки ответов бота')
@@ -276,62 +281,43 @@
                 index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_successful_buy')
                 this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_successful_buy
             },
-
-            start_game: function () {
-                // this.getAllUrlParams()
-                // this.load_photo_and_auth_data()
-                // this.load_name()
-                this.sent_post_vk()
-
-
-
-                // let url = document.location.href
-                // console.log(url)
-                // this.transform_prizes_array()
-
-            },
-            load_name: async function () {
-                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE&game_name=guess_number")
-                if (response.ok) {
-                   this.xx = await response.json()
-                    console.log(this.xx )
+            upload_photo: async function() {
+                if (this.gameData.image === null) {
+                    console.log('this.gameData.image 1 - ' + this.gameData.image)
+                    return await this.upload_def_photo()
                 }
                 else {
-                    console.log("Ошибка HTTP: " + response.status)
+                    console.log('this.gameData.image 2 - ' + this.gameData.image)
+                    return await this.upload_user_photo()
                 }
-            },
-            start_game3: async function () {
-                this.url = result
-                let result = await bridge.send("VKWebAppCallAPIMethod", {
-                    "method": "photos.getWallUploadServer",
-                    "request_id": "32test",
-                    "params": {'group_id': 168555251, "v": "5.103", "access_token": this.token}
-                })
-                this.gameData.upload_url = result.response.upload_url
-                console.log(this.gameData.upload_url)
-            },
 
-            load_photo_and_auth_data: async function () {
+            },
+            upload_def_photo: async function() {
+                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/" + document.location.search + "&game_name=guess_number")
+                if (response.ok)
+                    return (await response.json()).id;
+                else
+                    console.log("Ошибка HTTP: " + response.status)
+            },
+            upload_user_photo: async function() {
                 const formData = new FormData();
-
                 formData.append('photo', this.gameData.image);
-                // formData.append('auth_data', this.gameData.auth_data);
-
                 try {
-                    const response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE' , {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const result = await response.json();
-                    // this.result = `'photo' + this.result.owner_id + '_' + this.result.id`
-                    console.log('Успех:', JSON.stringify(result));
+                    const response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/' + document.location.search,
+                        {
+                            method: 'POST',
+                            body: formData
+                        });
+                    return (await response.json()).id;
                 } catch (error) {
                     console.error('Ошибка:', error);
                 }
             },
-
-            getAllUrlParams: function () {
+            getAllUrlParams: function() {
                 let url = document.location.href
+                // let url = this.url
+                // let url = this.src
+                console.log(url)
                 // извлекаем строку из URL или объекта window
                 let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
 
@@ -388,8 +374,9 @@
                         }
                     }
                 }
-                console.log(obj)
+
                 this.gameData.auth_data = obj
+                console.log(this.gameData.auth_data)
             },
             transform_prizes_array() {
                 for (let i = 0; i < this.gameData.prizes_front.length; i++) {
@@ -410,31 +397,62 @@
                     this.gameData.prizes.push(array_games)
                 }
             },
-            sent_post_vk: async function() {
+            activating_callback_server: async function() {
+
+                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/activate_callback" + document.location.search)
+                if (response.ok) {
+                    this.number_callback_server = await response.json();
+                    console.log('запуск сервера успех - ' + this.number_callback_server)
+                }
+                else {
+                    console.log("запуск сервера ошибка" + response.status)
+                }
+
+            },
+            send_post_vk: async function() {
+                console.log('id_group_vk - ' + this.gameData.auth_data.vk_group_id)
+                console.log('this.media_id - ' + this.media_id)
+
                 try {
                     let response  = await bridge.send("VKWebAppShowWallPostBox", {
-                        "owner_id": this.gameData.game.id_group_vk,
+                        "owner_id": - this.gameData.auth_data.vk_group_id,
                         "message": this.gameData.post_text,
                         "from_group": "1",
-                        "attachments": "photo312527953_457244201"
+                        "attachments": "photo" + this.gameData.auth_data.vk_user_id + '_' + this.media_id
                     });
-                    const result = await response.json();
-                    console.log('Успех:', JSON.stringify(result));
-                } catch(err) {
-                    console.log(err); // TypeError: failed to fetch
+                    this.gameData.game.id_post_vk = JSON.stringify(response);
+                    // const result = await response.json();
+                    console.log('Успех:', this.gameData.game.id_post_vk);
+                } catch (error) {
+                    console.err('Ошибка:', error); // TypeError: failed to fetch
                 }
             },
+            create_game: async function() {
+                try {
+                    const response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/guess_number',
+                        {
+                            method: 'POST',
+                            body: this.gameData
+                        });
+                    let answer = await response.json();
+                    // this.attachments_photo = "photo" + this.gameData.auth_data.vk_user_id + '_' + result.id
+                    // console.log('Успех:', JSON.stringify(result));
+                    console.log('Успех тправка данных', answer);
+
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                }
+
+            }
         },
         components: {
             Emoji
         },
-
         mounted:
             function () {
                 this.getAllUrlParams()
-                // this.load_default_messages()
+                this.load_default_messages()
             },
-
     }
 
 </script>

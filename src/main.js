@@ -5,14 +5,16 @@ import GameGuessNumber from './components/GameGuessNumber.vue'
 import vuetify from '@/plugins/vuetify' // path to vuetify export
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
+import router from "@/router"
 
 Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
-Vue.component('app-GameGuessNumber', GameGuessNumber)
-Vue.component('app-MakeNumber', MakeNumber)
+Vue.component('app-GameGuessNumber', GameGuessNumber);
+Vue.component('app-MakeNumber', MakeNumber);
 
 Vue.config.productionTip = false
 
 new Vue({
   vuetify,
+  router,
   render: h => h(App),
 }).$mount('#app')

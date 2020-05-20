@@ -1,26 +1,28 @@
 <template>
   <v-app id="inspire">
-
-    <form name="test" action="https://pedestal-test2.aiva-studio.ru/check.php" method="post">
-        <MainPage v-model="main_obj" v-show="main_obj.show_main_page_tab"></MainPage>
-        <MyGames v-show="main_obj.show_my_games"></MyGames>
-        <app--game-guess-number v-show="main_obj.show_game_guess_number"></app--game-guess-number>
-<!--        <v-divider class="mt-1"></v-divider>-->
-    </form>
+    <v-btn>Назад</v-btn>
+    <router-view></router-view>
+<!--    <form name="test" action="https://pedestal-test2.aiva-studio.ru/check.php" method="post">-->
+<!--        <MainPage v-model="main_obj" v-show="main_obj.show_main_page_tab"></MainPage>-->
+<!--        <MyGames v-show="main_obj.show_my_games"></MyGames>-->
+<!--        <app&#45;&#45;game-guess-number v-show="main_obj.show_game_guess_number"></app&#45;&#45;game-guess-number>-->
+<!--        -->
+<!--&lt;!&ndash;        <v-divider class="mt-1"></v-divider>&ndash;&gt;-->
+<!--    </form>-->
   </v-app>
 </template>
 
 <script>
 
-import MyGames from "@/components/MyGames";
-import MainPage from "@/components/MainPage";
+// import MyGames from "@/components/MyGames";
+// import MainPage from "@/components/MainPage";
 
 
 
   export default {
-      components: {
-          MainPage, MyGames
-      },
+      // components: {
+      //     MainPage, MyGames
+      // },
      data: () => ({
          main_obj: {
              show_game_guess_number: false,

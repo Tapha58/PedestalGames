@@ -61,7 +61,7 @@
                                 size="80"
                                 color="grey"
                         ><img
-                                src="https://klonvk.ucoz.ru/_bd/5/551.jpg"
+                                src="/static/wallgames/image/dog.jpg"
                                 alt="John"
                         ></v-list-item-avatar>
                     </v-list-item>
@@ -97,7 +97,7 @@
                             size="80"
                             color="grey"
                     ><img
-                            src="https://klonvk.ucoz.ru/_bd/5/551.jpg"
+                            src="/static/wallgames/image/dog.jpg"
                             alt="John"
                     ></v-list-item-avatar>
                 </v-list-item>
@@ -129,7 +129,7 @@
                             size="80"
                             color="grey"
                     ><img
-                            src="https://klonvk.ucoz.ru/_bd/5/551.jpg"
+                            src="/static/wallgames/image/dog.jpg"
                             alt="John"
                     ></v-list-item-avatar>
                 </v-list-item>

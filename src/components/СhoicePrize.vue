@@ -1,7 +1,7 @@
 <template>
 <v-row dense class="px-3">
     <v-col cols="2">
-        <v-btn @click="show_main_page" color="primary" small>
+        <v-btn @click="show_main_page" outlined  text color="primary" small>
             <v-icon small>mdi-arrow-left-thick</v-icon>
             Назад
         </v-btn>
@@ -45,7 +45,7 @@
         <PrizeCreator
                 v-for="(prize, index) in gameData.prizes_front"
                 :key="prize.id"
-                :is_single_winner="false"
+                :is_single_winner="true"
                 :is_last_card="index+1 === gameData.prizes_front.length"
                 :is_one_card="1 === gameData.prizes_front.length"
                 :id="prize.id"

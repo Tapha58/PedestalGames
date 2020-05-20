@@ -1,6 +1,10 @@
 // webpack.config.js
 
 module.exports = {
+    entry: './main.js',
+    output: {
+        filename: 'bundle.js'
+    },
     rules: [
         {
             test: /\.s(c|a)ss$/,

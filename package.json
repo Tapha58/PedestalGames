@@ -16,6 +16,7 @@
     "vue": "^2.6.11",
     "vue-ctk-date-time-picker": "^2.4.0",
     "vue-emoji-picker": "^1.0.1",
+    "vue-router": "^3.2.0",
     "vuetify": "^2.2.25"
   },
   "devDependencies": {
@@ -29,7 +30,8 @@
     "fibers": "^5.0.0",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "webpack-cli": "^3.3.11"
   },
   "eslintConfig": {
     "root": true,

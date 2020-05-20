@@ -87,10 +87,10 @@
                 "prizes": [],
                 "prizes_front": [
                     {
-                    id: 1,
-                    prize_count: 1,
-                    prizes: [{type: 'own_prize'}]
-                }
+                        id: 1,
+                        prize_count: 1,
+                        prizes: [{type: 'own_prize'}]
+                    }
                 ],
                 'auth_data': null,
                 'image': null,
