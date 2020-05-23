@@ -27,8 +27,8 @@
         data: () => ({
             gameData: {
                 "game": {
-                    "id_post_vk": '',
-                    "post_id": null,
+                    "prizes": [],
+                    "id_post_vk": 77,
                     "is_active": true,
                     "post_publication_date": "2020-05-12T22:59:44+03:00",
                     "is_random_giveaway": false,
@@ -36,7 +36,7 @@
                     "free_attempts_count": 0,
                     "paid_attempts_count": 0,
                     "paid_attempt_price": 0,
-                    "balance_type": null,
+                    "balance_type": 0,
                     "required_join_group": null,
                     "required_enable_notifications": null,
                     "required_repost": false,
@@ -51,8 +51,7 @@
                     "attempts_extended_frequency_minutes": 0,
                     "attempts_extended_max_count": 0,
                     "start_date": "2020-05-12T18:59:44+03:00",
-                    "end_date": null,
-                    "partner_group_members_start": null,
+                    "partner_group_members_start": 0,
                     "group_members_start": 0,
                     "disable_comments_after_end": true,
                     "win_per_participant_limit": 0,
@@ -83,13 +82,12 @@
                     "join_partner_group_desc": "вступление в партнёрскую группу {external}",
                     "enable_notifications_desc": "разрешение получать сообщения от нашего сообщества"
                 },
-                "game1": null,
-                "prizes": [],
+
                 "prizes_front": [
                     {
                         id: 1,
                         prize_count: 1,
-                        prizes: [{type: 'own_prize'}]
+                        prizes: [{type: 'own_prize', prize_count: 1}]
                     }
                 ],
                 'auth_data': null,
@@ -127,6 +125,7 @@
                 await this.load_def_settings ()
                 await this.load_def_settings_guess_number()
                 this.apply_def_settings()
+
             },
         methods: {
             apply_def_settings: function () {

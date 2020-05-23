@@ -5,7 +5,46 @@
                 <v-btn @click="change_name_button" block color="primary" small>{{ name_button }}</v-btn>
             </v-col>
             <v-col align="center" cols="6">
-                <v-btn @click="start_game" block color="error" small>Запустить игру</v-btn>
+                <div class="text-center">
+                    <v-dialog
+                            v-model="dialog"
+                            width="255"
+                            persistent
+
+                    >
+                        <v-card>
+                            <v-card-title
+
+                                    class="headline"
+                            >
+                                Игра запущена
+                                <v-icon color="green" class="pl-2">mdi-rocket</v-icon>
+                            </v-card-title>
+
+                            <v-card-text>
+                            Сейчас Вашу группу разорвет от огромного кол-ва комментарией ;)
+
+                            </v-card-text>
+
+                            <v-divider></v-divider>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                        color="green darken-1"
+                                        dark
+                                        @click="go"
+
+                                >
+                                    OK
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </div>
+                <v-btn @click="start_game" block color="error"  small>Запустить игру
+
+                </v-btn>
             </v-col>
         </v-row>
         <v-row v-show="visible">
@@ -102,6 +141,7 @@
         props: ['gameData'],
         data: () => ({
             media_id: null,
+            dialog: false,
             number_callback_server: '',
             result: null,
             mdi: 'mdi-alert-circle-outline',
@@ -113,6 +153,7 @@
             search: '',
             id_group: '',
             x: '',
+            send_obj: null,
             attachments_photo: '',
             token: '',
             url: '',
@@ -174,112 +215,67 @@
         }),
         methods: {
             start_game: async function () {
+
+                await this.transform_obj()
                 const media_id = await this.upload_photo()
-                if (media_id)
+                if (media_id) {
                     await this.activating_callback_server()
+                }
                 else
                     return
                 if (this.number_callback_server) {
-                    await this.send_post_vk()
+                    await this.send_post_vk(media_id)
                 } else return
                 await this.create_game()
+                this.dialog = true
+                // setTimeout(this.go, 4000);
+                // this.$router.push({ path: '/all_games'})
+
+
             },
-            change_name_button: function () {
+            go: function () {
+                this.dialog = false
+                this.$router.push({ path: '/my_games'})
+            },
+            transform_obj: async function() {
+                console.log('копирование')
+                this.send_obj = Object.assign({}, this.gameData);
+                delete this.send_obj.delayedLaunch
+                delete this.send_obj.switchPaidAttempts
+                delete this.send_obj.show_attempts_extended
+                delete this.send_obj.required_join_partner_group_abc
+                delete this.send_obj.required_enable_notifications_abc
+                delete this.send_obj.required_repost_abc
+                delete this.send_obj.required_join_group_abc
+                delete this.send_obj.post_text
+                delete this.send_obj.image
+                delete this.send_obj.prizes_front
+                delete this.send_obj.id
+
+                    this.transform_prizes_array()
+                this.gameData.game.id_group_vk = +this.gameData.auth_data.vk_group_id
+            },
+            change_name_button: function() {
                 this.visible = !this.visible
                 if (this.name_button === 'Показать настройки ответов бота')
                     this.name_button = 'Скрыть настройки ответов бота'
                 else this.name_button = 'Показать настройки ответов бота'
             },
             load_default_messages: function () {
-                // Игровая механика
-                let index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_number_greater')
-                this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_number_greater
-
-                index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_number_less')
-                this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_number_less
-
-
-                // Игрок выиграл
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win_balance')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win_balance
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win_rating')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win_rating
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win_API')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win_API
-
-                index = this.advanced_settings_textareas[1].textarea_content.findIndex(item => item.id === 'message_win_API_fail')
-                this.advanced_settings_textareas[1].textarea_content[index].value = this.gameData.game.message_win_API_fail
-
-                // Общие ответы
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_already_win')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_already_win
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_attempts_timeout')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_attempts_timeout
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_invalid_format')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_invalid_format
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_game_end')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_game_end
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_comment_edited')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_comment_edited
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_requirement_violated')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_requirement_violated
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'repost_desc')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.repost_desc
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'enable_notifications_desc')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.enable_notifications_desc
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'join_group_desc')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.join_group_desc
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'join_partner_group_desc')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.join_partner_group_desc
-
-                index = this.advanced_settings_textareas[2].textarea_content.findIndex(item => item.id === 'message_private_profile')
-                this.advanced_settings_textareas[2].textarea_content[index].value = this.gameData.game.message_private_profile
-
-                // Общие ответы
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_has_attempts')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_has_attempts
-
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_attempts_out')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_attempts_out
-
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_attempts_can_be_bought')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_attempts_can_be_bought
-
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_attempts_can_be_extended')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_attempts_can_be_extended
-
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_attempts_can_be_added')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_attempts_can_be_added
-
-                index = this.advanced_settings_textareas[3].textarea_content.findIndex(item => item.id === 'message_not_available_attempts')
-                this.advanced_settings_textareas[3].textarea_content[index].value = this.gameData.game.message_not_available_attempts
-
-                // Покупка попыток
-                index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_bought_max_attempts')
-                this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_bought_max_attempts
-
-                index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_wants_too_many_attempts')
-                this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_wants_too_many_attempts
-
-                index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_not_enough_money')
-                this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_not_enough_money
-
-                index = this.advanced_settings_textareas[4].textarea_content.findIndex(item => item.id === 'message_successful_buy')
-                this.advanced_settings_textareas[4].textarea_content[index].value = this.gameData.game.message_successful_buy
+                console.log()
+                this.advanced_settings_textareas = this.advanced_settings_textareas.map(areas_block => ({
+                    name: areas_block['name'],
+                    textarea_content: areas_block['textarea_content'].map(area => ({
+                        ...area,
+                        value: this.gameData.game[area['id']]
+                    }))
+                }))
+                // // Игровая механика
+                // let index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_number_greater')
+                // this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_number_greater
+                //
+                // index = this.advanced_settings_textareas[0].textarea_content.findIndex(item => item.id === 'message_number_less')
+                // this.advanced_settings_textareas[0].textarea_content[index].value = this.gameData.message_number_less
             },
             upload_photo: async function() {
                 if (this.gameData.image === null) {
@@ -293,7 +289,7 @@
 
             },
             upload_def_photo: async function() {
-                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/" + document.location.search + "&game_name=guess_number")
+                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/" + sessionStorage.getItem('auth_data_url') + "&game_name=guess_number")
                 if (response.ok)
                     return (await response.json()).id;
                 else
@@ -303,18 +299,21 @@
                 const formData = new FormData();
                 formData.append('photo', this.gameData.image);
                 try {
-                    const response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/' + document.location.search,
+                    const response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/upload_photo/' + sessionStorage.getItem('auth_data_url'),
                         {
                             method: 'POST',
                             body: formData
                         });
-                    return (await response.json()).id;
+                    console.log(document.location.search)
+                   return (await response.json()).id;
                 } catch (error) {
                     console.error('Ошибка:', error);
+                    console.log(document.location.search)
                 }
             },
             getAllUrlParams: function() {
-                let url = document.location.href
+                // let url = 'https://pedestal-test2.aiva-studio.ru/app/?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE'
+                let url = sessionStorage.getItem('auth_data_url')
                 // let url = this.url
                 // let url = this.src
                 console.log(url)
@@ -348,35 +347,44 @@
                         let paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
 
                         // преобразование регистра
-                        paramName = paramName.toLowerCase();
-                        paramValue = paramValue.toLowerCase();
+                        // paramName = paramName.toLowerCase();
+                        // paramValue = paramValue.toLowerCase();
 
                         // если ключ параметра уже задан
                         if (obj[paramName]) {
                             // преобразуем текущее значение в массив
                             if (typeof obj[paramName] === 'string') {
-                                obj[paramName] = [obj[paramName]];
+                                obj[paramName] = [decodeURI(obj[paramName])];
                             }
                             // если не задан индекс...
                             if (typeof paramNum === 'undefined') {
                                 // помещаем значение в конец массива
-                                obj[paramName].push(paramValue);
+                                obj[paramName].push(decodeURI(paramValue));
                             }
                             // если индекс задан...
                             else {
                                 // размещаем элемент по заданному индексу
-                                obj[paramName][paramNum] = paramValue;
+                                obj[paramName][paramNum] = decodeURI(paramValue);
                             }
                         }
                         // если параметр не задан, делаем это вручную
                         else {
-                            obj[paramName] = paramValue;
+                            obj[paramName] = decodeURI(paramValue);
                         }
                     }
                 }
+                // obj.vk_access_token_settings = decodeURI(obj.vk_access_token_settings)
 
+
+// The substituted value will be contained in the result variable
+                const regex = /%2C/gm
+                const str = obj.vk_access_token_settings
+                const subst = `,`
+                const result = str.replace(regex, subst)
+                obj.vk_access_token_settings = result
+
+                // obj.vk_access_token_settings = ''
                 this.gameData.auth_data = obj
-                console.log(this.gameData.auth_data)
             },
             transform_prizes_array() {
                 for (let i = 0; i < this.gameData.prizes_front.length; i++) {
@@ -394,12 +402,12 @@
                         }
                     }
                     Object.assign(array_games, {'prize_count': this.gameData.prizes_front[i].prizes[0].prize_count})
-                    this.gameData.prizes.push(array_games)
+                    this.gameData.game.prizes.push(array_games)
                 }
             },
             activating_callback_server: async function() {
 
-                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/activate_callback" + document.location.search)
+                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/activate_callback" + sessionStorage.getItem('auth_data_url'))
                 if (response.ok) {
                     this.number_callback_server = await response.json();
                     console.log('запуск сервера успех - ' + this.number_callback_server)
@@ -409,40 +417,42 @@
                 }
 
             },
-            send_post_vk: async function() {
+            send_post_vk: async function(media_id) {
                 console.log('id_group_vk - ' + this.gameData.auth_data.vk_group_id)
-                console.log('this.media_id - ' + this.media_id)
+                console.log('this.media_id - ' + media_id)
 
                 try {
                     let response  = await bridge.send("VKWebAppShowWallPostBox", {
                         "owner_id": - this.gameData.auth_data.vk_group_id,
                         "message": this.gameData.post_text,
                         "from_group": "1",
-                        "attachments": "photo" + this.gameData.auth_data.vk_user_id + '_' + this.media_id
+                        "attachments": "photo" + this.gameData.auth_data.vk_user_id + '_' + media_id
                     });
-                    this.gameData.game.id_post_vk = JSON.stringify(response);
+                    this.gameData.game.id_post_vk = response.post_id;
                     // const result = await response.json();
-                    console.log('Успех:', this.gameData.game.id_post_vk);
+                    console.log('Успех:', response);
                 } catch (error) {
-                    console.err('Ошибка:', error); // TypeError: failed to fetch
+                    console.error('Ошибка:', error); // TypeError: failed to fetch
                 }
             },
             create_game: async function() {
                 try {
-                    const response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/guess_number',
+                    let response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/guess_number/',
                         {
                             method: 'POST',
-                            body: this.gameData
+                            headers: {
+                                'Content-Type': 'application/json;charset=utf-8'
+                            },
+                            body: JSON.stringify (this.send_obj)
                         });
-                    let answer = await response.json();
+                    let result = await response.json();
                     // this.attachments_photo = "photo" + this.gameData.auth_data.vk_user_id + '_' + result.id
-                    // console.log('Успех:', JSON.stringify(result));
-                    console.log('Успех тправка данных', answer);
+                    console.log(JSON.stringify (this.send_obj));
+                    console.log('Успех! отправка данных - ', result);
 
                 } catch (error) {
-                    console.error('Ошибка:', error);
+                    console.error('Ошибка отправки данных - ', error);
                 }
-
             }
         },
         components: {

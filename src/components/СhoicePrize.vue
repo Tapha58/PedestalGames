@@ -1,7 +1,7 @@
 <template>
 <v-row dense class="px-3">
     <v-col cols="2">
-        <v-btn @click="show_main_page" outlined  text color="primary" small>
+        <v-btn to="/all_games" outlined text color="primary" small>
             <v-icon small>mdi-arrow-left-thick</v-icon>
             Назад
         </v-btn>
@@ -109,9 +109,24 @@
                             Object.assign(array_games, {'prize_balance_rating_max': this.prizes[i].prizes[j].val})
                     }
                     Object.assign(array_games, {'prize_count': this.prizes[i].prizes[0].prize_count})
-                    this.gameData.prizes.push(array_games)
+                    this.gameData.game.prizes.push(array_games)
                 }
             },
+            // transform_prizes_array() {
+            //     for (let i = 0; i < this.prizes.length; i++) {
+            //         let array_games = {}
+            //         for (let j = 0; j < this.prizes[i].prizes.length; j++) {
+            //             if (this.prizes[i].prizes[j].type === 'own_prize')
+            //                 Object.assign(array_games, {'prize_text': this.prizes[i].prizes[j].val})
+            //             if (this.prizes[i].prizes[j].type === 'market_balance')
+            //                 Object.assign(array_games, {'prize_balance_shop_min': this.prizes[i].prizes[j].val})
+            //             if (this.prizes[i].prizes[j].type === 'rating_balance')
+            //                 Object.assign(array_games, {'prize_balance_rating_max': this.prizes[i].prizes[j].val})
+            //         }
+            //         Object.assign(array_games, {'prize_count': this.prizes[i].prizes[0].prize_count})
+            //         this.gameData.prizes.push(array_games)
+            //     }
+            // },
             // this.$on('test', function () {
             //     for (let i = 0; i < this.prizes.length; i++) {
             //         let array_games = {}

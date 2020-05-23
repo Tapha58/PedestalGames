@@ -1,34 +1,26 @@
-// webpack.config.js
+const path = require('path');
 
 module.exports = {
-    entry: './main.js',
-    output: {
-        filename: 'bundle.js'
-    },
-    rules: [
-        {
-            test: /\.s(c|a)ss$/,
-            use: [
-                'vue-style-loader',
-                'css-loader',
-                {
-                    loader: 'sass-loader',
-                    // Requires sass-loader@^7.0.0
-                    options: {
-                        implementation: require('sass'),
-                        fiber: require('fibers'),
-                        indentedSyntax: true // optional
-                    },
-                    // Requires sass-loader@^8.0.0
-                    options: {
-                        implementation: require('sass'),
-                        sassOptions: {
-                            fiber: require('fibers'),
-                            indentedSyntax: true // optional
-                        },
-                    },
-                },
-            ],
-        },
+    entry: [
+        './src/main.js',
     ],
-}
+    output: {
+        filename: './js/bundle.js'
+    },
+    devtool: "source-map",
+    module: {
+        rules: [{
+            test: /\.js$/,
+            include: path.resolve(__dirname, 'src/js'),
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: 'env'
+                }
+            }
+        },
+        ]
+    },
+    plugins: [
+    ]
+};

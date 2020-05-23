@@ -2,10 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import MakeNumber from './components/MakeNumber.vue'
 import GameGuessNumber from './components/GameGuessNumber.vue'
-import vuetify from '@/plugins/vuetify' // path to vuetify export
+import vuetify from './plugins/vuetify' // path to vuetify export
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
-import router from "@/router"
+import router from "./router"
 
 Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 Vue.component('app-GameGuessNumber', GameGuessNumber);
