@@ -1,5 +1,6 @@
 <template>
     <div id="xx">
+<!--        hello-->
         <div id='war_info'  class="mt-3 pb-3">
             <v-col class="pb-0">
 <!--                <span v-bind:style="{ color: 'red' }">Внимание! </span>-->
