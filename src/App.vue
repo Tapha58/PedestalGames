@@ -1,5 +1,6 @@
 <template>
     <v-app id="app">
+
         <v-btn id="square" depressed block dark color="#4a76a8" @click="go_widget_page">Вернуться в основное меню</v-btn>
         <router-view class="px-3"></router-view>
 <!--        <router-view v-on:auto_resize="auto_resize" class="px-3"></router-view>-->
@@ -38,7 +39,8 @@
                 sessionStorage.setItem('auth_data_url', document.location.search)
                 // this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
                 // this.auto_resize ()
-             }
+                console.log('hi')
+             },
     }
 
 </script>
