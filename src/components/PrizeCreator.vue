@@ -1,13 +1,15 @@
 <template>
+
     <v-card
-            class="mx my-2"
+            class="mx my-2 border_top_bottom"
             width="100%"
             outlined
+            flat
     >
         <v-card-title class="pb-0">
             <v-row dense v-if="!is_single_winner">
 
-                <v-col cols="6" class="pl-4">
+                <v-col cols="6" class="pl-0">
                     Подарок № {{number_gift}}
                 </v-col>
                 <v-col cols="2"></v-col>
@@ -15,93 +17,122 @@
                     <v-text-field
                             type="number"
                             min="1"
-                            v-model.number="prizes[0].prize_count"
+                            v-model.number="prizes_front_index.count"
                             label="Кол-во победителей"
                             dense
+                            validate-on-blur
                             :rules="prize_count_rules"
+                            :disabled="/^[0-9]+$/.test($route.params.id)"
                     ></v-text-field>
                 </v-col>
-                <v-btn v-if="!is_one_card" icon fab absolute right small @click="$emit('delete_prize_creator', id)">
+                <v-btn v-if="!is_one_card && !/^[0-9]+$/.test($route.params.id)" icon fab absolute right small @click="$emit('delete_prize_creator', id)">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-row>
         </v-card-title>
-        <v-card-text>
-            <v-row class="mb-n3" dense v-for="(prize, i) in prizes" :key="prize.id">
-                <v-col sm="5">
-                    <v-select
-                            :items="prize_types"
-                            v-model="prize.type"
-                            label="Тип приза"
-                            outlined
-                            dense
-                    ></v-select>
-                </v-col>
-                <v-col sm="6" v-if="prize.type === 'own_prize'">
-                    <v-text-field
-                              v-model="prize.val"
-                              label="Название приза"
-                              :rules="own_prize_rules"
-                              outlined
-                              dense
-                    ></v-text-field>
-                </v-col>
-                <v-col sm="6" v-if="prize.type === 'market_balance' || prize.type === 'rating_balance'">
-                    <v-text-field
-                            v-model="prize.val"
-                            label="Кол-во валеронов"
-                            :rules="market_rating_balance_rules"
-                            outlined
-                            dense
-                            type="number"
-                            min="1"
-                    ></v-text-field>
-                </v-col>
-                <v-col sm="2" v-if="prize.type === 'api'">
-                    <v-select
-                            :items="api_types"
-                            v-model="prize.api_type"
-                            label="Тип запроса"
-                            :rules="api_types_rules"
-                            outlined
-                            dense
-                    ></v-select>
-                </v-col>
-                <v-col sm="4" v-if="prize.type === 'api'">
-                    <v-text-field
-                            v-model="prize.val"
-                            label="Url"
-                            :rules="url_rules"
-                            outlined
-                            dense
-                    ></v-text-field>
-                </v-col>
-                <v-col sm="1">
-                    <v-btn v-if="prizes.length - 1 === i && prizes.length !== prize_types.length" class="mx-2" fab dark small color="indigo" @click="add_prize">
-                        <v-icon>mdi-plus</v-icon>
-                    </v-btn>
-                    <v-btn v-else class="mx-2" fab dark small color="error" @click="prizes.splice(i, 1)">
-                        <v-icon>mdi-minus</v-icon>
-                    </v-btn>
-                </v-col>
-            </v-row>
 
+        <v-card-text class="pl-0">
+
+            <div class="mb-0 p-0"  v-for="(prize, i) in prizes_front_index.card_prizes" :key="prize.id">
+
+                <v-row class="mb-0 p-0" dense>
+                    <v-col class="pb-0 mb-n4" cols="10" xs="10" sm="5">
+                        <v-select
+                                :items="say_name(prize.type)"
+                                v-model="prize.type"
+                                label="Тип приза"
+                                outlined
+                                dense
+                                :disabled="show_edit"
+                        ></v-select>
+                    </v-col>
+                    <v-col class="pb-0" cols="10" xs="10" sm="6" v-if="prize.type === 'text'">
+                        <v-text-field
+                                v-model="prize.val"
+                                label="Название приза"
+                                :rules="[rules.required, rules.max_length_200]"
+                                required
+                                validate-on-blur
+                                outlined
+                                dense
+                                :disabled="show_edit"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col class="pb-0" cols="10" xs="10" sm="6" v-if="prize.type === 'balance_shop' || prize.type === 'balance_rating'">
+                        <v-text-field
+                                v-model="prize.val"
+                                label="Кол-во баллов"
+                                :rules="[rules.required, rules.zero, rules.range]"
+                                type="text"
+                                outlined
+                                required
+                                dense
+                                validate-on-blur
+                                :disabled="show_edit"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col class="pb-0" sm="2" v-if="prize.type === 'api'">
+                        <v-select
+                                :items="api_types"
+                                v-model="prize.api_type"
+                                label="Тип запроса"
+                                :rules="[rules.required]"
+                                outlined
+                                dense
+                                :disabled="show_edit"
+                        ></v-select>
+                    </v-col>
+                    <v-col class="pb-0" sm="4" v-if="prize.type === 'api'">
+                        <v-text-field
+                                v-model="prize.val"
+                                label="Url"
+                                :rules="[rules.required]"
+                                outlined
+                                dense
+                                :disabled="show_edit"
+
+                        ></v-text-field>
+                    </v-col>
+                    <v-col class="pb-0" v-bind:class="{ 'mt-n6': $vuetify.breakpoint.name === 'xs' }" cols="1" xs="1" v-show="!show_edit">
+                        <!--                <v-col class="pb-0"  cols="1" xs="1" v-show="!show_edit">-->
+                        <!--                    <v-btn v-if="prizes.length - 1 === i && prizes.length !== types.length" class="mx-2" fab dark small color="indigo" @click="add_prize">-->
+                        <!--                        <v-icon>mdi-plus</v-icon>-->
+                        <!--                    </v-btn>-->
+                        <v-btn depressed v-show="prizes_front_index.card_prizes.length !== 1" class="mx-2 pb-0" fab dark small color="error" @click="prizes_front_index.card_prizes.splice(i, 1), $emit('auto_resize')">
+                            <v-icon>mdi-minus</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+
+                <v-row class="mt-n3" v-show="!show_edit" dense>
+                    <!--                    <v-col sm="10">-->
+                    <!--                    </v-col>-->
+                    <v-col sm="1">
+                        <v-btn depressed v-show="prizes_front_index.card_prizes.length - 1 === i && prizes_front_index.card_prizes.length !== types.length" class="mx-2" fab dark small color="green" @click="add_prize">
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </div>
         </v-card-text>
-        <v-btn v-if="!is_single_winner && is_last_card" fab absolute left bottom dark small color="indigo" @click="$emit('add_prize_creator')">
+
+        <v-btn class="mr-n2" v-if="!is_single_winner && is_last_card" fab absolute right bottom small dark color="#4a76a8" @click="$emit('add_prize_creator')">
             <v-icon>mdi-plus</v-icon>
         </v-btn>
-
     </v-card>
 </template>
 
 <script>
+    import auto_resize from "@/mixins/auto_resize";
+
     export default {
+        mixins: [auto_resize],
         name: "PrizeCreator",
         model: {
-            prop: 'prizes',
+            prop: 'prizes_front_index',
         },
         props: {
-            prizes: Array,
+            prizes_front_index: Object,
             is_single_winner: {
                 default: true,
                 type: Boolean
@@ -110,6 +141,9 @@
                 type: Boolean
             },
             is_one_card: {
+                type: Boolean
+            },
+            show_edit: {
                 type: Boolean
             },
             id: {
@@ -131,72 +165,66 @@
             prize_count_rules: [
                 v => (!!v || v === 0) || 'Значение не задано'
             ],
-            own_prize_rules: [
-                v => (!!v || v === 0) || 'Значение не задано'
-            ],
-            market_rating_balance_rules: [
-                v => (!!v || v === 0) || 'Значение не задано'
-            ],
-            api_types_rules: [
-                v => (!!v || v === 0) || 'Значение не задано'
-            ],
-            url_rules: [
-                v => (!!v || v === 0) || 'Значение не задано'
-            ],
-            n: {},
+            rules: {
+                required: v => !!v  || 'Недопустимый формат',
+                zero: v => (v !== '0')  || 'Недопустимый формат',
+                max_length_200: v => (v && v.length <= 200) || 'Максимально допустимо 200 символов',
+                max_length_12: v => (v && v.length <= 12) || 'Максимально допустимо 12 символов',
+                range: v => (/^[0-9]{1,6}$/.test(v) || /^[0-9]{1,6}[-]{1}[0-9]{1,6}$/.test(v)) || 'Недопустимый формат'
+            },
+            // n: {},
         }),
         computed: {
-            prize_types: function () {
+            types: function () {
                 return [
                     {
-                        value: 'own_prize',
+                        value: 'text',
                         text: 'Свой приз',
-                        name: "prize_text",
-                        disabled: this.prizes.find(item => item.type === 'own_prize')
+                        name: "text",
+                        disabled: this.prizes_front_index.card_prizes.find(item => item.type === 'text')
                     },
                     {
-                        value: 'market_balance',
-                        text: 'Увеличение баланса магазина',
-                        name: "prize_balance_shop",
-                        disabled: this.prizes.find(item => item.type === 'market_balance')
+                        value: 'balance_shop',
+                        text: 'Начислить баланс магазина',
+                        name: "balance_shop",
+                        disabled: this.prizes_front_index.card_prizes.find(item => item.type === 'balance_shop')
                     },
                     {
-                        value: 'rating_balance',
-                        text: 'Увеличение баланса рейтинга',
-                        disabled: this.prizes.find(item => item.type === 'rating_balance')
+                        value: 'balance_rating',
+                        text: 'Начислить баланс рейтинга',
+                        disabled: this.prizes_front_index.card_prizes.find(item => item.type === 'balance_rating')
                     },
-                    {
-                        value: 'api',
-                        text: 'Выполнить POST/GET запрос',
-                        disabled: this.prizes.find(item => item.type === 'api')
-                    }
+                    // {
+                    //     value: 'api',
+                    //     text: 'Выполнить POST/GET запрос',
+                    //     disabled: this.prizes_front_index.card_prizes.find(item => item.type === 'api')
+                    // }
                 ]
-            }
+            },
         },
         methods: {
-            add_prize() {
-                this.prizes.push({
-                    type: this.prize_types.find(type => !type.disabled).value
+            async add_prize() {
+                await this.prizes_front_index.card_prizes.push({
+                    type: this.types.find(type => !type.disabled).value
                 })
             },
-            // create_array_prizes() {
-            //     if (this.prizes[0].prizes.type === 'own_prize')
-            //         this.n = {'prize_text': this.prize.val}
-                // this.gameData.prizes.push()
-            // }
+            say_name: function(type) {
+                return this.types.map(item => ({
+                    ...item,
+                    disabled: item.value === type? false: item.disabled
+                }))
+            },
         },
-        watch: {
-            // prizes: function () {
-            //     // create_array_prizes() {
-            //         console.log('vvvv')
-            //         if (this.prizes[0].type === 'own_prize')
-            //             console.log('zzzz')
-            //             this.n = {'prize_text': this.prizes[0].val}
-            //     }
-        }
     }
 </script>
 
-<style scoped>
+<style>
+    .border_top_bottom {
+        border-left: hidden !important;
+        border-right: hidden !important;
+        border-top: hidden !important;
+        border-bottom: 1px solid #edeef0 !important;
+        border-radius: 0 !important;
+    }
 
 </style>

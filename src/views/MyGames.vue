@@ -1,124 +1,139 @@
 <template>
-    <v-data-table
-            :headers="headers"
-            :items="games"
-            sort-by="name"
-            class="elevation-1"
+    <div>
+        <v-data-table
+                :headers="headers"
+                :items="games"
+                sort-by="start_date"
+                sortDesc
+                :footerProps="{itemsPerPageText: 'Строк на странице', pageText: '{0} из {1}', itemsPerPageAllText: 'все'}"
+        >
+            <template v-slot:item.actions="{ item }">
+                <v-icon
+                        small
+                        @click="go_post_page(item)"
+                        color="#4872a3"
+                >
+                    mdi-vk
+                </v-icon>
+                <v-icon
+                        class="mx-5"
+                        small
+                        @click="copy_game(item.id, item.route)"
+                >
+                    mdi-content-copy
+                </v-icon>
+                <v-icon
+                        v-show="item.is_active"
+                        small
+                        @click="editItem(item.id, item.route)"
+                >
+                    mdi-pencil
+                </v-icon>
+            </template>
 
-    >
-        <template v-slot:item.actions="{ item }">
-            <v-icon
-                    small
-                    class="mr-2"
-                    @click="editItem(item)"
-            >
-                mdi-pencil
-            </v-icon>
-<!--            <v-icon-->
-<!--                    small-->
-<!--                    @click="deleteItem(item)"-->
-<!--            >-->
-<!--                mdi-delete-->
-<!--            </v-icon>-->
-        </template>
-<!--        <template v-slot:no-data>-->
-<!--            <v-btn color="primary" @click="initialize">Reset</v-btn>-->
-<!--        </template>-->
-    </v-data-table>
+            <template v-slot:item.start_date="{ item }">
+                <span>{{ transform_start_date (item) }}</span>
+            </template>
+            <template v-slot:item.end_date="{ item }">
+                <span>{{ transform_end_date (item) }}</span>
+            </template> :
+            <template v-slot:item.is_active="{ item }">
+                <span>{{ !!item.is_active ? 'активна': 'завершена'}}</span>
+            </template>
+            <template v-slot:no-data>
+                    Нет данных для отображения
+            </template>
+        </v-data-table>
+    </div>
+
 </template>
 
 <script>
+    import bridge from "@vkontakte/vk-bridge";
+
     export default {
+
         name: "MyGames",
         data: () => ({
             headers: [
-                { text: 'Игра', align: 'start', sortable: false, value: 'name',},
+                // { text: 'Id', value: 'id'},
+                { text: 'Игра', value: 'name', sortable: false},
                 { text: 'Статус', value: 'is_active' },
-                { text: 'Дата создания', value: 'start_date' },
-                { text: 'Дата окончания', value: 'end_date' },
+                { text: 'Дата создания', value: 'start_date', sortable: true },
+                { text: 'Дата окончания', value: 'end_date', sortable: false },
                 { text: '', value: 'actions', sortable: false },
             ],
             games: [],
-            editedIndex: -1,
-            editedItem: {
-                name: '',
-                is_active: 0,
-                fat: 0,
-                carbs: 0,
-                protein: 0,
-            },
-            defaultItem: {
-                name: '',
-                is_active: 0,
-                fat: 0,
-                carbs: 0,
-                protein: 0,
-            },
+            name_route_obj: {
+                1: {name: 'Угадай число', route: '/guess_number_settings/'},
+                2: {name: 'Анаграмма', route: '/anagram_settings/'},
+                3: {name: 'Слова на букву', route: '/words_with_letter_settings/'}
+            }
         }),
 
-        computed: {
-            formTitle () {
-                return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-            },
-        },
-
         methods: {
-            initialize () {
-                this.desserts = [
-                    {
-                        name: 1,
-                        is_active: 2,
-                        start_date: 3,
-                        end_date: 4,
-
-                    },
-                ]
+            go_post_page: function (item) {
+                window.open('https://vk.com/wall-' + item.id_group_vk + '_' + item.id_post_vk, '_blank')
             },
             load_info_list: async function () {
-                console.log('load_def_settings')
-                // let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/info_list" + sessionStorage.getItem('auth_data_url'))
-                let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/info_list" + '?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE')
+                // console.log('load_info_list')
+                let response = await fetch("/app/wallgames/info_list" + sessionStorage.getItem('auth_data_url'))
+                // let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/info_list" + '?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE')
                 if (response.ok) {
-                    this.games = await response.json()
-                    // this.gameData.game = {...this.gameData.game, ...result}
-                    console.log( this.games)
+                    this.games =  await response.json()
+                    this.games = this.games.map(item => Object.assign(item, this.name_route_obj[item.type]))
                 }
                 else {
                     console.log("Ошибка HTTP: " + response.status)
                 }
             },
-            transform_date: function () {
-
+            transform_start_date: function (item) {
+                let options = {
+                                year: 'numeric',
+                                month: 'numeric',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                            }
+                let start_date = Date.parse(item.start_date)
+                start_date = new Date (start_date)
+                return start_date.toLocaleString("ru", options)
             },
-            editItem (item) {
-                console.log(item)
-                this.editedIndex = this.desserts.indexOf(item)
-                this.editedItem = Object.assign({}, item)
-
-            },
-            deleteItem (item) {
-                const index = this.games.indexOf(item)
-                confirm('Are you sure you want to delete this item?') && this.games.splice(index, 1)
-            },
-            close () {
-                this.dialog = false
-                this.$nextTick(() => {
-                    this.editedItem = Object.assign({}, this.defaultItem)
-                    this.editedIndex = -1
-                })
-            },
-            save () {
-                if (this.editedIndex > -1) {
-                    Object.assign(this.desserts[this.editedIndex], this.editedItem)
-                } else {
-                    this.desserts.push(this.editedItem)
+            transform_end_date: function (item) {
+                if (!item.end_date) return ' - '
+                let options = {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
                 }
-                this.close()
+                let end_date = Date.parse(item.end_date)
+                end_date = new Date (end_date)
+                return end_date.toLocaleString("ru", options)
             },
+            editItem (id, route) {
+                this.$router.push({ path: route + id})
+            },
+            copy_game (id, route) {
+                this.$router.push({ path: route + 'copy' + id})
+            },
+            auto_resize: function () {
+                // console.log('mygames autoresize - ' + document.body.offsetHeight)
+                bridge.send("VKWebAppResizeWindow", {"width": 795, "height": Math.max(document.body.offsetHeight, 150) + 30});
+            },
+            count_hight: function () {
+                console.log ('document.documentElement.scrollHeight - ' + document.documentElement.scrollHeight)
+                console.log ('document.body.scrollHeight - ' + document.body.scrollHeight)
+                console.log ('document.body.offsetHeight - ' + document.body.offsetHeight)
+                console.log ('document.documentElement.offsetHeight - ' + document.documentElement.offsetHeight)
+            }
         },
         mounted:
-            function () {
-                this.load_info_list()
+            async function () {
+                await this.load_info_list()
+                // await this.transform_info_list()
+                this.auto_resize()
         },
     }
 </script>

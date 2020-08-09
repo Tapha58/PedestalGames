@@ -10,7 +10,7 @@ const opts = {
         default: 'light',
         themes: {
             light: {
-                primary: '#1976D2',
+                primary: '#4a76a8',
                 secondary: '#424242',
                 accent: '#82B1FF',
                 error: '#FF5252',
@@ -19,7 +19,7 @@ const opts = {
                 warning: '#FB8C00',
             },
             dark: {
-                primary: '#2196F3',
+                primary: '#4a76a8',
                 secondary: '#424242',
                 accent: '#FF4081',
                 error: '#FF5252',

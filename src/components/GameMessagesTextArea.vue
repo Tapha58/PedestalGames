@@ -1,28 +1,23 @@
 <template>
     <v-textarea
+            id="bot_responses"
             ref="text_emoji"
             rows="1"
             auto-grow
             :label='label'
-            :value="value"
-            class="caption test dense-textarea mb-n2"
+            :value='value'
+            :rules="rules_answer"
+            validate-on-blur
+            class="caption relative dense-textarea mb-n2"
             no-resize
             v-on:input="$emit('input', $event)"
-
     >
-<!--        <template v-slot:prepend>-->
-<!--            <v-tooltip right>-->
-<!--                <template v-slot:activator="{ on }">-->
-<!--                    <v-icon class="pt-0" v-on="on">{{mdi}}</v-icon>-->
-<!--                </template>-->
-<!--                <span>{{ tooltip }}</span>-->
-<!--            </v-tooltip>-->
-<!--        </template>-->
+
         <template v-slot:label>
             <p><b>{{ label }}</b></p>
         </template>
         <template v-slot:append-outer>
-            <div>
+            <div v-if="!mobile">
             <emoji-picker  @emoji="append">
                 <div
                         @click.stop="clickEvent"
@@ -35,7 +30,7 @@
                         <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
                     </svg>
                 </div>
-                <div slot="emoji-picker" slot-scope="{ emojis, insert,  }">
+                <div  slot="emoji-picker" slot-scope="{ emojis, insert,  }">
                     <div  class="emoji-picker">
                         <div :key="category" v-for="(emojiGroup, category) in emojis">
 <!--                            <h5>{{ category }}</h5>-->
@@ -60,12 +55,48 @@
     import EmojiPicker from 'vue-emoji-picker'
 
     export default {
-        props: ['label', 'value', 'tooltip'],
+        model: {
+            prop: 'value',
+        },
+        props: [
+            'label',
+            'value',
+            'tooltip',
+            'mobile',
+            'list_of_variables_for_rules',
+            'id'
+
+        ],
         data: () => ({
             height: 80,
             mdi: 'mdi-alert-circle-outline',
-
         }),
+        computed: {
+            rules_answer () {
+                // console.log(this.id)
+                if (!this.list_of_variables_for_rules.length) {
+                    return [v => (v && v.length <= 2000) || 'Не более 2000 символов']
+                }
+                let result = this.value.matchAll(/\{([0-9A-Za-z_]+)\}/g)
+                result = Array.from(result)
+                result = result.map(match => match[1])
+                result = new Set(result)
+                let list_of_variables_for_rules = new Set(this.list_of_variables_for_rules)
+                let outcome = [...result].filter(x => !list_of_variables_for_rules.has(x))
+                if (this.id === 'message_repost_desc' || this.id === 'message_join_group_desc' ||
+                    this.id === 'message_join_partner_group_desc' || this.id === 'message_enable_notifications_desc') {
+                    return [
+                        v => (v && v.length <= 300) || 'Не более 300 символов',
+                        () => !outcome.length || `Переменную ${outcome[0]} нельзя использовать в данном поле`
+                    ]
+                } else {
+                    return [
+                        v => (v && v.length <= 2000) || 'Не более 2000 символов',
+                        () => !outcome.length || `Переменную ${outcome[0]} нельзя использовать в данном поле`
+                    ]
+                }
+            },
+        },
         methods: {
             append(emoji) {
                 let area=this.$refs.text_emoji.$el.querySelector('textarea')
@@ -102,12 +133,10 @@
 </script>
 
 
-<style scoped>
-    .test {
+<style>
+    .relative {
         position: relative;
     }
-
-
 
        .regular-input {
         padding: 0.5rem 1rem;
@@ -194,6 +223,10 @@
     .emoji-picker .emojis span:hover {
         background: #ececec;
         cursor: pointer;
+    }
+
+    #bot_responses {
+        max-width: 95% !important;
     }
 
 </style>

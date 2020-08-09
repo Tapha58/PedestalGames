@@ -1,45 +1,44 @@
 <template>
-    <v-app id="inspire">
-        <v-btn @click="go_widget_page">Назад</v-btn>
-        <router-view></router-view>
-        <!--    <form name="test" action="https://pedestal-test2.aiva-studio.ru/check.php" method="post">-->
-        <!--        <MainPage v-model="main_obj" v-show="main_obj.show_main_page_tab"></MainPage>-->
-        <!--        <MyGames v-show="main_obj.show_my_games"></MyGames>-->
-        <!--        <app&#45;&#45;game-guess-number v-show="main_obj.show_game_guess_number"></app&#45;&#45;game-guess-number>-->
-        <!--        -->
-        <!--&lt;!&ndash;        <v-divider class="mt-1"></v-divider>&ndash;&gt;-->
-        <!--    </form>-->
+    <v-app id="app">
+        <v-btn id="square" depressed block dark color="#4a76a8" @click="go_widget_page">Вернуться в основное меню</v-btn>
+        <router-view class="px-3"></router-view>
+<!--        <router-view v-on:auto_resize="auto_resize" class="px-3"></router-view>-->
     </v-app>
 </template>
 
 <script>
-
-    // import MyGames from "@/components/MyGames";
-    // import MainPage from "@/components/MainPage";
-
+    // import bridge from "@vkontakte/vk-bridge";
 
     export default {
-        // components: {
-        //     MainPage, MyGames
-        // },
+
         data: () => ({
-            main_obj: {
-                show_game_guess_number: false,
-                show_my_games: false,
-                show_main_page: true,
-                show_main_page_tab: true,
-            }
+            // mobile: '',
+            // main_obj: {
+            //     show_game_guess_number: false,
+            //     show_my_games: false,
+            //     show_main_page: true,
+            //     show_main_page_tab: true,
+            // }
+
         }),
+
         methods: {
             go_widget_page: function () {
-                // let link = document.getElementById("w");
-                document.location.href = 'https://pedestal-test2.aiva-studio.ru/app/' + sessionStorage.getItem('auth_data_url')
+                document.location.href = '/app/' + sessionStorage.getItem('auth_data_url')
             },
+            // auto_resize: function () {
+            //     if (!this.mobile) {
+            //         console.log('autoresize')
+            //         bridge.send("VKWebAppResizeWindow", {"width": 795, "height": Math.max(document.body.offsetHeight, 150) + 20});
+            //     }
+            // },
         },
         mounted:
             function () {
                 sessionStorage.setItem('auth_data_url', document.location.search)
-            }
+                // this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
+                // this.auto_resize ()
+             }
     }
 
 </script>
@@ -48,27 +47,26 @@
 <style>
     .dense-textarea textarea {
         line-height: 1.4rem !important;
+        /*margin: 1rem !important;*/
     }
 
-    #inspire {
-        width: 795px;
+
+
+    html {
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+        /*width: 795px;*/
     }
 
-    #area1 {
-        text-align: center !important;
+    #square {
+        border-radius: 0 !important;
     }
 
-    #area2 {
-        text-align: center !important;
+    .compact-form {
+        transform: scale(0.875);
+        transform-origin: left;
     }
 
-    #area3 {
-        text-align: center !important;
-    }
-
-    #primary {
-        color: #1976D2;
-    }
 
 
 </style>
