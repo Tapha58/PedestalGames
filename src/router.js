@@ -59,7 +59,7 @@ export default new Router({
         {
             path: '/covers_home_view',
             name: 'covers_home_view',
-            component: () => import('./views/CoversHomeView'),
+            component: () => import('./views/covers/CoversHomeView'),
         },
     ]
 })
