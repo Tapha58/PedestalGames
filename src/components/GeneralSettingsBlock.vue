@@ -469,7 +469,7 @@
         <div id='token' v-if="!group_token" class="mt-3">
             <v-col class="pb-0">
                 <span v-bind:style="{ color: 'red' }">Для запуска игры необходимо предоставить ключ доступа. </span>
-                <a href="https://vk.com/@pedestal-wallgames?anchor=kak-predostavit-klyuch-dostupa" target="_blank">Открыть инструкцию.</a>
+                <a href="https://vk.com/@pedestal-kluch-dostupa" target="_blank">Открыть инструкцию.</a>
             </v-col>
             <v-col cols="12">
                 <v-row dense>
