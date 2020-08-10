@@ -57,10 +57,6 @@ export default new Router({
             component: () => import('./views/games/WordStartsWith'),
         },
 
-        {
-            path: '/covers_home_view',
-            name: 'covers_home_view',
-            component: () => import('./views/CoversHomeView'),
-        },
+
     ]
 })
