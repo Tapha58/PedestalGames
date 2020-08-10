@@ -56,5 +56,11 @@ export default new Router({
             name: 'words_with_letter_settings_id',
             component: () => import('./views/games/WordStartsWith'),
         },
+
+        {
+            path: '/covers_home_view',
+            name: 'covers_home_view',
+            component: () => import('./views/CoversHomeView'),
+        },
     ]
 })

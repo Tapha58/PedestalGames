@@ -14,35 +14,17 @@
 
         data: () => ({
             // auth_data_url_test: '',
-            // mobile: '',
-            // main_obj: {
-            //     show_game_guess_number: false,
-            //     show_my_games: false,
-            //     show_main_page: true,
-            //     show_main_page_tab: true,
-            // }
-
         }),
 
         methods: {
             go_widget_page: function () {
                 document.location.href = '/app/' + sessionStorage.getItem('auth_data_url')
-
-
             },
-            // auto_resize: function () {
-            //     if (!this.mobile) {
-            //         console.log('autoresize')
-            //         bridge.send("VKWebAppResizeWindow", {"width": 795, "height": Math.max(document.body.offsetHeight, 150) + 20});
-            //     }
-            // },
         },
         mounted:
             function () {
                 sessionStorage.setItem('auth_data_url', document.location.search)
                 // this.auth_data_url_test = document.location.search
-                // this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
-                // this.auto_resize ()
                 // console.log(this.auth_data_url_test)
              },
     }
@@ -53,7 +35,6 @@
 <style>
     .dense-textarea textarea {
         line-height: 1.4rem !important;
-        /*margin: 1rem !important;*/
     }
 
 

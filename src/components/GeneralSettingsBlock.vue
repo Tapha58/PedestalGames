@@ -817,16 +817,15 @@
                     await this.load_individual_settings()
                     this.gameData = this.def_settings
                     this.loadDefaulImage ()
+                    if (this.name_game === 'guess_number') {
+                        this.$emit('randomNumber')
+                    }
                     this.auto_resize (250)
                 }
 
                 await this.load_balance ()
                 await this.load_free_attempts ()
 
-
-                if (this.name_game === 'guess_number') {
-                    this.$emit('randomNumber')
-                }
 
                 await this.check_group_token ()
 

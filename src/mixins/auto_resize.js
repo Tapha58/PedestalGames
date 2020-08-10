@@ -9,5 +9,11 @@
                     bridge.send("VKWebAppResizeWindow", {"width": 795, "height": Math.max(document.body.offsetHeight, 150) + size});
                 }
             },
-        }
+        },
+        // mounted: {
+        //     function () {
+        //         this.auth_data_url_test = document.location.search
+        //         console.log(this.auth_data_url_test)
+        //     }
+        // }
     }
