@@ -47,6 +47,7 @@
                                         required
                                         type="number"
                                         v-model.number="settings.min_number"
+                                        validate-on-blur
                                 ></v-text-field>
                             </v-col>
                             <v-col class="py-0" cols="12" sm="3">
@@ -58,6 +59,7 @@
                                         required
                                         type="number"
                                         v-model="settings.guessed_number"
+                                        validate-on-blur
                                 >
                                     <template #append>
                                         <v-btn @click="randomNumber" class="pb-1" icon small>
@@ -76,6 +78,7 @@
                                         required
                                         type="number"
                                         v-model.number="settings.max_number"
+                                        validate-on-blur
                                 ></v-text-field>
                             </v-col>
                             <v-col class="py-0" cols="12" sm="3">
@@ -85,7 +88,9 @@
                                         label="Рядом"
                                         outlined
                                         required
+                                        type="number"
                                         v-model="settings.closely_interval"
+                                        validate-on-blur
                                 >
                                     <template v-slot:append>
                                         <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
@@ -227,6 +232,7 @@
                 ]
                 if (this.settings.guessed_number !== null) {
                     const regex = /^(?!0+[0-9])\d{1,11}(?:,\d{5})*(?:\.\d{1,5})?$/
+                    // const regex = /^(?!0+[0-9])\d{1,11}(?:,\d{5})*(?:\.\d{1,5})?$/
                     const str = this.settings.guessed_number
 
                     const rule =
@@ -254,8 +260,9 @@
             },
             closelyFieldTooltipText() {
                 let left_border = Math.max(0, +(this.settings.guessed_number - this.settings.closely_interval))
-                left_border = left_border.toFixed(5)
+                left_border = +left_border.toFixed(5)
                 let right_border = +this.settings.guessed_number + +this.settings.closely_interval
+                right_border = +right_border.toFixed(5)
                 return `Игрокам будет отправляться подсказка "загаданное число рядом", если они будут вводить числа в
                 диапазонах [${left_border} - ${right_border}]  при текущем загаданном числе ${this.settings.guessed_number}
                 и диапазоне рядом ${this.settings.closely_interval}`
