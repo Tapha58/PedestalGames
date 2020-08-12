@@ -25,7 +25,8 @@
                             <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                         </template>
                         <span>Победитель может получить комбинацию призов. Свой приз - это текст, отправляемый победителю,
-                            например "Ваш приз: скидка 10% на заказ". По умолчанию победителю будет отправлен комментарий:
+                            например "Ваш приз: скидка 10% на заказ". Числа в поле "кол-во баллов" могут быть диапазоном,
+                            запись через дефис, например "10-20". По умолчанию победителю будет отправлен комментарий:
                             "Поздравляем, Вы выиграли!" + сообщение из поля "свой текст" + автоматически генерируемые
                             сообщения из полей начисления баланса / рейтинга. Все ответы бота можно редактировать.</span>
                     </v-tooltip>
@@ -292,7 +293,7 @@
             </v-row>
             <v-row class="pl-3">
                 <v-switch
-                        :label="($vuetify.breakpoint.name === 'xs') ? 'Платные попытки' : 'Платные попытки (баланс магазина)'"
+                        :label="($vuetify.breakpoint.name === 'xs') ? 'Платные попытки' : 'Платные попытки (за баллы)'"
                         :ripple="false"
                         class="mt-n3"
                         color="primary"
@@ -331,7 +332,16 @@
                             validate-on-blur
                             type="number"
                             v-model.number="common_settings.paid_attempts_count"
-                    ></v-text-field>
+                    >
+                        <template v-slot:append>
+                            <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon class="mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                </template>
+                                <span>Укажите, сколько максимум дополнительных попыток за баллы сможет купить каждый участник.</span>
+                            </v-tooltip>
+                        </template>
+                    </v-text-field>
                 </v-col>
                 <v-col class="py-0" cols="12" sm="4">
                     <v-text-field
@@ -344,7 +354,16 @@
                             required
                             type="number"
                             v-model.number="common_settings.paid_attempt_price"
-                    ></v-text-field>
+                    >
+                        <template v-slot:append>
+                            <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon class="mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                </template>
+                                <span>Цена одной попытки (сколько баллов будет списано при покупке попытки).</span>
+                            </v-tooltip>
+                        </template>
+                    </v-text-field>
                 </v-col>
             </v-row>
         </div>

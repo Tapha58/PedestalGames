@@ -56,6 +56,16 @@ export default new Router({
             name: 'words_with_letter_settings_id',
             component: () => import('./views/games/WordStartsWith'),
         },
+        {
+            path: '/max_comments',
+            name: 'max_comments',
+            component: () => import('./views/games/MaxComments'),
+        },
+        {
+            path: '/max_comments_settings/:id',
+            name: 'max_comments_settings_id',
+            component: () => import('./views/games/MaxComments'),
+        },
 
 
     ]

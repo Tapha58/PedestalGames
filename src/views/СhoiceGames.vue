@@ -114,16 +114,35 @@
             </v-col>
             <v-col>
                 <v-card
-                        class="mx-auto"
                         disabled
+                        class="mx-auto mmm"
                         max-width="380"
                         min-height=""
                 >
                     <v-list-item three-line>
                         <v-list-item-content>
-                            <div class="overline mb-4">В разработке</div>
-                            <v-list-item-title class="name_game mb-1">XXXX XXXX XXXX</v-list-item-title>
-                            <v-list-item-subtitle class="pt-2">xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
+                            <div v-if="group_status === 2" class="overline mb-4 free_color">
+                                <v-chip
+                                        class="mr-1"
+                                        color="red"
+                                        x-small
+                                        dark
+                                >
+                                    new
+                                </v-chip>
+                                {{ price_type_3 }} рублей</div>
+                            <div v-else class="overline mb-4 free_color">
+                                <v-chip
+                                        class="mr-1"
+                                        color="red"
+                                        x-small
+                                        dark
+                                >
+                                    new
+                                </v-chip>
+                                Бесплатно</div>
+                            <v-list-item-title class="name_game mb-1">Битва комментаторов</v-list-item-title>
+                            <v-list-item-subtitle class="pt-2">Выигрывают те, кто напишет максимум комментариев.
                             </v-list-item-subtitle>
                         </v-list-item-content>
 
@@ -134,14 +153,14 @@
                                 tile
                         ><img
                                 alt="Изображение"
-                                src="/static/wallgames/image/dog.jpg"
+                                src="/static/wallgames/image/promo_games/max_comments.png"
                         ></v-list-item-avatar>
                     </v-list-item>
 
                     <v-card-actions class="pt-0 d-flex justify-space-between">
-                        <v-btn color="primary" text>Создать игру</v-btn>
-                        <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" text>Пример</v-btn>
-                        <v-btn color="primary" text>Подробнее</v-btn>
+                        <v-btn color="primary" text to="/max_comments">Создать игру</v-btn>
+                        <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary"  text >Пример</v-btn>
+                        <v-btn color="primary" text @click="go_description_page ('https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-bitva-kommentatorov')">Подробнее </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -342,6 +361,7 @@
         border-style: solid;
 
     }
+
 
     /*#token {*/
     /*    border-style: solid;*/

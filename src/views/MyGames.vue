@@ -67,7 +67,8 @@
             name_route_obj: {
                 1: {name: 'Угадай число', route: '/guess_number_settings/'},
                 2: {name: 'Анаграмма', route: '/anagram_settings/'},
-                3: {name: 'Слова на букву', route: '/words_with_letter_settings/'}
+                3: {name: 'Слова на букву', route: '/words_with_letter_settings/'},
+                4: {name: 'Битва комментаторов', route: '/max_comments_settings/'}
             }
         }),
 
