@@ -78,5 +78,10 @@ export default new Router({
                 },
             ]
         },
+        {
+            path: '/add_cover',
+            name: 'add_cover',
+            component: () => import('./views/covers/AddCover'),
+        },
     ]
 })

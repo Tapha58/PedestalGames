@@ -114,7 +114,6 @@
             </v-col>
             <v-col>
                 <v-card
-                        disabled
                         class="mx-auto mmm"
                         max-width="380"
                         min-height=""
@@ -130,7 +129,7 @@
                                 >
                                     new
                                 </v-chip>
-                                {{ price_type_3 }} рублей</div>
+                                {{ price_type_4 }} рублей</div>
                             <div v-else class="overline mb-4 free_color">
                                 <v-chip
                                         class="mr-1"
@@ -324,6 +323,12 @@
                     return
                 return obj.price
             },
+            price_type_4 () {
+                let obj = this.prices.find(item => item.game_type === 4)
+                if (obj === undefined)
+                    return
+                return obj.price
+            },
             base_price_type_1 () {
                 let obj = this.prices.find(item => item.game_type === 1)
                 if (obj === undefined)
@@ -338,6 +343,12 @@
             },
             base_price_type_3 () {
                 let obj = this.prices.find(item => item.game_type === 3)
+                if (obj === undefined)
+                    return
+                return obj.base_price
+            },
+            base_price_type_4 () {
+                let obj = this.prices.find(item => item.game_type === 4)
                 if (obj === undefined)
                     return
                 return obj.base_price

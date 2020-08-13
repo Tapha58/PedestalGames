@@ -124,7 +124,7 @@
                 '<div class="pa-3 caption">\n' +
                 '                    <p>\n' +
                 '                        <strong>Переменные игровой механики:</strong><br>\n' +
-                '                        <b>{words}</b> — кол-во угаданных пользователем слов.<br>\n' +
+                '                        <b>{score}</b> — кол-во угаданных пользователем слов.<br>\n' +
                 '                    <p>\n' +
                 '                        <strong>Основные переменные:</strong><br>\n' +
                 '                        <b>{profile}</b> — имя пользователя.<br>\n' +
@@ -172,7 +172,7 @@
                 name: 'Завершение игры',
                 textarea_content: [
                     {id: 'message_results_start', value: '', label: 'Начало текста комментария с подведением итогов конкурса', list_of_variables_for_rules: ['all_allowed']},
-                    {id: 'message_results_winner_format', value: '', label: 'Формат вывода списка победителей', list_of_variables_for_rules: ['profile','prize','words', 'n']},
+                    {id: 'message_results_winner_format', value: '', label: 'Формат вывода списка победителей', list_of_variables_for_rules: ['profile','prize','score', 'n']},
                     {id: 'message_results_end', value: '', label: 'Окончание текста комментария с подвед. итогов конкурса', list_of_variables_for_rules: ['all_allowed']},
                 ]
             },

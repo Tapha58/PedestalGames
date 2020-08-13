@@ -2,7 +2,7 @@
     <v-app id="app">
 
         <v-btn id="square" depressed block dark color="#4a76a8" @click="go_widget_page">Вернуться в основное меню</v-btn>
-        <router-view class="px-3"></router-view>
+        <router-view></router-view>
 <!--        <router-view v-on:auto_resize="auto_resize" class="px-3"></router-view>-->
     </v-app>
 </template>
@@ -40,7 +40,7 @@
 
 
     html {
-        overflow-x: auto !important;
+        /*overflow-x: auto !important;*/
         overflow-y: auto !important;
         /*width: 795px;*/
     }

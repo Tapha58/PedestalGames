@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="px-3">
 <!--        <v-btn @click="transform_prizes_array">ry</v-btn>-->
         <v-row dense>
             <v-col cols="2" >
@@ -808,7 +808,7 @@
         mounted:
             async function() {
                 this.advanced_settings_textareas[0].textarea_content = this.mechanics_textarea_block
-                if (this.game_type === 2 || this.game_type === 3) {
+                if (this.game_type === 2 || this.game_type === 3 || this.game_type === 4) {
                     this.advanced_settings_textareas.push(this.ending_game_textarea_block)
                     this.advanced_settings_textareas[1].textarea_content.splice(0, 1)
                 }
