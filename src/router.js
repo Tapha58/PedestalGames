@@ -95,13 +95,6 @@ export default new Router({
             path: '/covers_home_view',
             name: 'covers_home_view',
             component: () => import('./views/covers/CoversHomeView'),
-            children: [
-                {
-                    path: '/test',
-                    component: () => import('./views/covers/Test'),
-                    name: 'test'
-                },
-            ]
         },
         {
             path: '/add_cover',

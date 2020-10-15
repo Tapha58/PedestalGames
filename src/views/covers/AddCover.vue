@@ -106,11 +106,31 @@
                             <span>Последний<br>вступивший</span>
                         </div>
                     </v-row>
-                    <v-row class="my-2 mx-2">
+                    <v-row class="my-2 mx-1" justify="space-around">
                         <div class="el_div" @click="create_text('Текст', 'text_plain')">
                             <v-icon color="primary" large>mdi-format-text-variant</v-icon>
                             <br>
                             <span>Свой<br>текст</span>
+                        </div>
+                        <div class="el_div" @click="create_text('Текст', 'text_plain')">
+                            <v-icon color="primary" disabled large>mdi-checkbox-blank-outline</v-icon>
+                            <br>
+                            <span>Своя<br>фигура</span>
+                        </div>
+                        <div class="el_div">
+                            <v-icon color="primary" disabled large>mdi-lock-clock</v-icon>
+                            <br>
+                            <span>В<br>разработке</span>
+                        </div>
+                        <div class="el_div">
+                            <v-icon color="primary" disabled large>mdi-lock-clock</v-icon>
+                            <br>
+                            <span>В<br>разработке</span>
+                        </div>
+                        <div class="el_div">
+                            <v-icon color="primary" disabled large>mdi-lock-clock</v-icon>
+                            <br>
+                            <span>В<br>разработке</span>
                         </div>
                     </v-row>
                 </div>
@@ -1414,6 +1434,22 @@
             create_avatar_and_text_group: function (name, widgets_type) {
                 this.del_cover_default_image()
 
+                let rect = new fabric.Rect({
+                    left: 100,
+                    top: 50,
+                    fill: '#D81B60',
+                    width: 50,
+                    height: 50,
+                    strokeWidth: 2,
+                    stroke: "#880E4F",
+                    rx: 10,
+                    ry: 10,
+                    angle: 45,
+                    scaleX: 3,
+                    scaleY: 3,
+                    hasControls: true
+                });
+
                 let Circle = new fabric.Circle({
                     left: 0,
                     top: 0,
@@ -1458,7 +1494,7 @@
                     stroke: '#d3d9de'
                 })
 
-                let group = new fabric.Group([Circle], {
+                let group = new fabric.Group([Circle, rect], {
                     left: 100,
                     top: 100,
                     originX: 'center',
@@ -1811,6 +1847,9 @@
 
     .mt6 {
         margin-top: 6px;
+    }
+    .ml7px {
+        margin-left: 7px !important;
     }
 
     @font-face {
