@@ -1,6 +1,6 @@
 <template>
     <div class="px-3">
-<!--        <v-btn @click="transform_prizes_array">ry</v-btn>-->
+<!--        <v-btn @click="setting_variables_in_the_post_text">setting_variables_in_the_post_text</v-btn>-->
         <v-row dense>
             <v-col cols="2" >
                 <v-btn @click="button_back" color="rgba(0, 0, 0, .6)" text dark small>
@@ -15,21 +15,28 @@
         <v-row id="prizeCreator" dense>
             <v-col cols="12" class="pt-0">
                 <v-alert
-
                         height="40"
                         :color='color_alert'
                         dense
-                >1. Сформируйте приз
-                    <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
-                        <template v-slot:activator="{ on }">
-                            <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
-                        </template>
-                        <span>Победитель может получить комбинацию призов. Свой приз - это текст, отправляемый победителю,
+                        >
+                    <v-row>
+                        <v-col class="py-0">
+                            1. Сформируйте приз
+                            <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
+                                </template>
+                                <span>Победитель может получить комбинацию призов. Свой приз - это текст, отправляемый победителю,
                             например "Ваш приз: скидка 10% на заказ". Числа в поле "кол-во баллов" могут быть диапазоном,
                             запись через дефис, например "10-20". По умолчанию победителю будет отправлен комментарий:
                             "Поздравляем, Вы выиграли!" + сообщение из поля "свой текст" + автоматически генерируемые
                             сообщения из полей начисления баланса / рейтинга. Все ответы бота можно редактировать.</span>
-                    </v-tooltip>
+                            </v-tooltip>
+                        </v-col>
+                        <v-col align="right" class="py-0">
+                            <a href="https://vk.com/@pedestal-wallgames?anchor=nastroyka-priza-2" target="_blank">Подробнее</a>
+                        </v-col>
+                    </v-row>
                 </v-alert>
                 <PrizeCreator
                         class="mt-n2"
@@ -55,17 +62,36 @@
             <v-alert
                     :color='color_alert'
                     dense
-            >3. Задайте правила игры
-                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
-                    <template v-slot:activator="{ on }">
-                        <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
-                    </template>
-                    <span>
-                        Продумайте игровую механику, чтобы игра не завершилась слишком быстро и у пользователей был
+            >
+<!--                3. Задайте правила игры-->
+<!--                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">-->
+<!--                    <template v-slot:activator="{ on }">-->
+<!--                        <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>-->
+<!--                    </template>-->
+<!--                    <span>-->
+<!--                        Продумайте игровую механику, чтобы игра не завершилась слишком быстро и у пользователей был-->
+<!--                        интерес следить за ней. Используйте ограниченные периодические бесплатные попытки и платные-->
+<!--                        попытки за баллы магазина / рейтинга.-->
+<!--                    </span>-->
+<!--                </v-tooltip>-->
+
+                <v-row>
+                    <v-col class="py-0">
+                        3. Задайте правила игры
+                        <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                            <template v-slot:activator="{ on }">
+                                <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
+                            </template>
+                            <span>Продумайте игровую механику, чтобы игра не завершилась слишком быстро и у пользователей был
                         интерес следить за ней. Используйте ограниченные периодические бесплатные попытки и платные
-                        попытки за баллы магазина / рейтинга.
-                    </span>
-                </v-tooltip>
+                        попытки за баллы магазина / рейтинга.</span>
+                        </v-tooltip>
+                    </v-col>
+                    <v-col align="right" class="py-0">
+                        <a href="https://vk.com/@pedestal-wallgames?anchor=pravila-igry-uslovia-i-popytki-2" target="_blank">Подробнее</a>
+                    </v-col>
+                </v-row>
+
             </v-alert>
             <v-row class="pt-2 mb-n3">
                 <v-col class="py-0" cols="12" sm="9">
@@ -394,6 +420,8 @@
                         label="Напишите текст поста, который появится в Вашей группе при публикации игры."
                         auto-grow
                         class="relative dense-textarea mb-0"
+                        :hint="hint_text"
+                        persistent-hint="true"
                 >
                     <template v-if="!mobile" v-slot:append>
                         <emoji-picker @emoji="append"   >
@@ -640,6 +668,7 @@
             'ending_game_textarea_block',
         ],
         data: () => ({
+            current_post_text: '',
             group_status: 1,
             balance: '',
             games_available_launches: '',
@@ -791,6 +820,7 @@
                         {id: 'message_wants_too_many_attempts', value: '', label: 'Пробует купить больше, чем можно купить (по кол-ву)', list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']},
                         {id: 'message_not_enough_money', value: '', label: 'Не хватает баланса для покупки', list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']},
                         {id: 'message_successful_buy', value: '', label: 'Успешная покупка', list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout', 'count_attempts', 'remain_attempts_to_buy']},
+                        {id: 'message_successful_buy', value: '', label: 'Успешная покупка', list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout', 'count_attempts', 'remain_attempts_to_buy']},
                     ]
                 },
 
@@ -807,11 +837,22 @@
         },
         mounted:
             async function() {
+                // блок загрузки сообщений в зависимости от типа игры
                 this.advanced_settings_textareas[0].textarea_content = this.mechanics_textarea_block
-                if (this.game_type === 2 || this.game_type === 3 || this.game_type === 4) {
+                if (this.game_type === 2 || this.game_type === 3 || this.game_type === 4 || this.game_type == 6) {
                     this.advanced_settings_textareas.push(this.ending_game_textarea_block)
+                    // удаление первого поля, которого не должно быть в играх данного типа
                     this.advanced_settings_textareas[1].textarea_content.splice(0, 1)
                 }
+                if (this.game_type === 5) {
+                    let index4 = this.advanced_settings_textareas.findIndex(item => item.name === 'Игровая механика')
+                    let index5 = this.advanced_settings_textareas[index4].textarea_content.findIndex(item => item.id === 'message_valid')
+                    if (index5 !== -1) {
+                        this.advanced_settings_textareas[index4].textarea_content.splice(index5, 1)
+                    }
+                }
+
+
                 await this.get_group_status ()
                 if (this.group_status === 1) {
                     this.payment_type = 3
@@ -830,7 +871,8 @@
                     }
                     if (/^[0-9]+$/.test(this.$route.params.id)) {
                         this.show_edit = true
-                        this.auto_resize (30)
+                        // this.auto_resize (30)
+                        this.auto_resize ()
                     }
                 } else {
                     await this.load_individual_settings()
@@ -839,7 +881,8 @@
                     if (this.name_game === 'guess_number') {
                         this.$emit('randomNumber')
                     }
-                    this.auto_resize (250)
+                    // this.auto_resize (250)
+                    this.auto_resize ()
                 }
 
                 await this.load_balance ()
@@ -852,7 +895,6 @@
                 await this.getAllUrlParams ()
                 this.common_settings.id_group_vk = +this.settings.auth_data.vk_group_id
                 this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
-
 
             },
         watch: {
@@ -912,7 +954,6 @@
                     this.common_settings.attempts_extended_frequency_minutes = 0
                     this.common_settings.attempts_extended_max_count = 0
                 }
-                // setTimeout(this.auto_resize, 400)
             },
             'switchPaidAttempts': function () {
                 if (this.switchPaidAttempts === false) {
@@ -920,7 +961,57 @@
                     this.common_settings.paid_attempt_price = 0
                     this.common_settings.balance_type = 0
                 }
-                // setTimeout(this.auto_resize, 400)
+            },
+            'prizes_front': function () {
+                if (this.game_type == 5) {
+                    if (this.prizes_front.length > 1) {
+                        this.settings.show_is_random_giveaway = true
+                    } else {
+                        this.settings.show_is_random_giveaway = false
+                    }
+                }
+            },
+            game_type: function () {
+                if (this.game_type == 6) {
+                    this.advanced_settings_textareas.push(this.ending_game_textarea_block)
+                    let index = this.advanced_settings_textareas.findIndex(item => item.name === 'Игрок выиграл')
+                    let index2 = this.advanced_settings_textareas[index].textarea_content.findIndex(item => item.id === 'message_win')
+                    if (index2 !== -1) {
+                        this.advanced_settings_textareas[index].textarea_content.splice(index2, 1)
+                    }
+                    let index4 = this.advanced_settings_textareas.findIndex(item => item.name === 'Игровая механика')
+                    let index5 = this.advanced_settings_textareas[index4].textarea_content.findIndex(item => item.id === 'message_valid')
+                    if (index5 === -1) {
+                        this.advanced_settings_textareas[index4].textarea_content.push({
+                                    id: 'message_valid',
+                                    value: '',
+                                    label: 'Сообщение при попадании',
+                                    list_of_variables_for_rules: []
+                                })
+                    }
+                }
+                if (this.game_type == 5) {
+                    let index3 = this.advanced_settings_textareas.findIndex(item => item.name === 'Завершение игры')
+                    if (index3 !== -1) {
+                        this.advanced_settings_textareas.splice(index3, 1)
+                    }
+                    let index = this.advanced_settings_textareas.findIndex(item => item.name === 'Игрок выиграл')
+                    let index2 = this.advanced_settings_textareas[index].textarea_content.findIndex(item => item.id === 'message_win')
+                    if (index2 !== -1) {
+                        this.advanced_settings_textareas[index].textarea_content.splice(index2, 1)
+                    } else {
+                        this.advanced_settings_textareas[index].textarea_content.unshift({
+                            id: 'message_win', value: '', label: 'Игрок выигрывает и получает приз', list_of_variables_for_rules:
+                                ['profile','prize','balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'count_attempts']})
+                    }
+                   // убираем сообщение 'message_valid' в game_type = 5
+                    let index4 = this.advanced_settings_textareas.findIndex(item => item.name === 'Игровая механика')
+                    let index5 = this.advanced_settings_textareas[index4].textarea_content.findIndex(item => item.id === 'message_valid')
+                    if (index5 !== -1) {
+                        this.advanced_settings_textareas[index4].textarea_content.splice(index5, 1)
+                    }
+
+                }
             },
         },
         computed: {
@@ -931,6 +1022,8 @@
                     }
                     Object.assign(res.game, this.textarea_values.common, this.common_settings)
                     res.game.game_duration = this.settings.game_duration * 3600
+                    res.game.win_per_participant_limit = this.settings.win_per_participant_limit
+                    res.game.is_random_giveaway = this.settings.is_random_giveaway
                     res.payment_type = this.payment_type
                     Object.assign(res, this.settings, this.textarea_values.mechanics)
                     return res
@@ -941,6 +1034,10 @@
                             this.$set(this.textarea_values.common, key, data.game[key])
                         }  else if (key === 'game_duration') {
                             this.$set(this.settings, key, data.game[key] / 3600)
+                        }  else if (key === 'win_per_participant_limit') {
+                            this.$set(this.settings, key, data.game[key])
+                        }  else if (key === 'is_random_giveaway') {
+                            this.$set(this.settings, key, data.game[key])
                         } else {
                             this.$set(this.common_settings, key, data.game[key])
                         }
@@ -956,8 +1053,13 @@
                     }
                 }
             },
+            hint_text () {
+              if (this.game_type === 5 || this.game_type === 6) {
+                  return '{ссылка} - подставится ссылка на игровое поле'
+              } else return ''
+            },
             no_money () {
-                if (/^[0-9]+$/.test(this.$route.params.id) || this.group_status === 1 || this.balance > this.price || this.games_available_launches !== 0) {
+                if (/^[0-9]+$/.test(this.$route.params.id) || this.group_status === 1 || this.balance >= this.price || this.games_available_launches !== 0) {
                     return false
                 } else {
                     return true
@@ -1122,8 +1224,29 @@
                     return 'Показать настройки ответов бота'
             }
         },
-
         methods: {
+            create_map: async function () {
+                let obj = {}
+                obj.auth_data = this.settings.auth_data
+                obj.game_type = this.game_type
+                obj.group_id = +this.settings.auth_data.vk_group_id
+                let response = await fetch('/app/wallgames/map/' + sessionStorage.getItem('auth_data_url'),
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(obj)
+                    })
+                if (response.ok) {
+                    response = await response.json()
+                    this.settings.map = response.id
+                    // console.log(response)
+                } else {
+                    response = await response.json()
+                    console.log(response)
+                }
+            },
             get_group_status: async function () {
                 let response = await fetch("/app/wallgames/group_status/" + sessionStorage.getItem('auth_data_url'))
                 if (response.ok) {
@@ -1147,7 +1270,6 @@
             },
             def_message_aply: async function () {
                 if (this.$route.params.id) {
-                    // await this.load_common_settings ()
                     await this.load_individual_settings ()
                 }
                 for (let key in this.def_settings.game) {
@@ -1205,7 +1327,7 @@
             check_group_token: async function () {
                 // console.log('check_group_token')
                 try {
-                    let response = await fetch("/app/wallgames/check_group_token" + sessionStorage.getItem('auth_data_url'))
+                    let response = await fetch("/app/wallgames/check_group_token/" + sessionStorage.getItem('auth_data_url'))
                     // let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/check_group_token?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE")
                     let result = await response.json()
                     this.group_token = result.data
@@ -1217,26 +1339,9 @@
                     // console.log("Ошибка HTTP: " + response.status)
                 }
             },
-            load_common_settings: async function () {
-                // console.log('load_def_settings')
-
-                try {
-                    // let response = await fetch("/app/wallgames/default_settings/1")
-                    let response = await fetch("/app/wallgames/default_settings/1")
-                    let result = await response.json()
-                    this.def_settings.game = {...this.def_settings.game, ...result}
-                    // this.gameData.game = {...this.gameData, ...result}
-                    console.log('result - ' + result)
-                    // console.log('response - ' + response)
-
-                } catch (error) {
-                    console.error('Ошибка HTTP: ', error)
-                    // console.log("Ошибка HTTP: " + response.status)
-                }
-            },
             load_individual_settings: async function () {
                 // let response = await fetch("/app/wallgames/guess_number/default_settings/1")
-                let response = await fetch('/app/wallgames/' + this.name_game + '/default_settings')
+                let response = await fetch('/app/wallgames/' + this.name_game + '/default_settings/')
                 if (response.ok) {
                     let result = await response.json()
                     this.def_settings = {...this.def_settings, ...result}
@@ -1272,7 +1377,7 @@
                 // console.log('load_user_settings')
                 try {
                     // let response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/guess_number/174?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE')
-                    let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id + sessionStorage.getItem('auth_data_url'))
+                    let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id + '/' + sessionStorage.getItem('auth_data_url'))
                     let result = await response.json()
 
                     delete result.game.start_date
@@ -1358,6 +1463,8 @@
             auto_resize_delay: function () {
                 setTimeout (this.auto_resize, 1000)
             },
+
+
             start_game: async function () {
                 if (!this.group_token) {
                     this.message_error = 'Отсутствует ключ доступа'
@@ -1398,6 +1505,19 @@
                 await this.transform_message_front_back ()
                 await this.transform_prizes_array ()
 
+                if (this.game_type == 5) {
+                    let count_prize = 0
+                    this.common_settings.prizes.forEach((item) => { count_prize += item.count})
+                    this.$emit('create_win_fields_type5', count_prize)
+                    // console.log('count_prize ' + count_prize)
+                }
+                if (this.game_type == 6) {
+                    this.$emit('create_win_fields')
+                }
+                if (this.game_type === 5 || this.game_type === 6) {
+                    await this.create_map()
+                }
+
                 const media_id = await this.upload_photo()
                 if (!media_id) {
                     this.message_error = 'Ошибка загрузки картинки'
@@ -1406,7 +1526,16 @@
                 }
                 // const number_callback_server = await this.activating_callback_server()
                 if (!(await this.activating_callback_server())) return this.loading = false
+
+                // функция замены {} на переменные
+                this.setting_variables_in_the_post_text()
+
                 if (this.timeDeferredPost) {
+                    if (Date.parse(this.timeDeferredPost) < +new Date ()) {
+                        this.message_error = 'Некорректное время отлож. поста'
+                        setTimeout(this.clear_message, 5000)
+                        return this.loading = false
+                    }
                     this.common_settings.is_postponed = true
                     await this.send_deferred_post_vk(media_id)
                 } else {
@@ -1431,10 +1560,16 @@
                 }
                 this.loading = false
             },
+
+
             submitHandler: function () {
                 if (this.$v.$invalid) {
                     this.$v.$touch()
                 }
+            },
+            setting_variables_in_the_post_text: function () {
+                this.current_post_text = this.settings.post_text
+                this.settings.post_text = this.settings.post_text.replace(/{ссылка}/ig, "[https://vk.com/app" + this.settings.auth_data.vk_app_id + '_-' + this.settings.auth_data.vk_group_id + "#map=" + this.settings.map + "|Открыть игровое поле]")
             },
             clear_message: function () {
                 this.message_error = ''
@@ -1528,86 +1663,11 @@
                     return false
                 }
             },
-            getAllUrlParams: async function() {
-                // let url = 'https://pedestal-test2.aiva-studio.ru/app/?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE'
-                let url = sessionStorage.getItem('auth_data_url')
-                // let url = this.url
-                // let url = this.src
-                // console.log(url)
-                // извлекаем строку из URL или объекта window
-                let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
-
-                // объект для хранения параметров
-                let obj = {};
-
-                // если есть строка запроса
-                if (queryString) {
-
-                    // данные после знака # будут опущены
-                    queryString = queryString.split('#')[0];
-
-                    // разделяем параметры
-                    let arr = queryString.split('&');
-
-                    for (let i = 0; i < arr.length; i++) {
-                        // разделяем параметр на ключ => значение
-                        let a = arr[i].split('=');
-
-                        // обработка данных вида: list[]=thing1&list[]=thing2
-                        let paramNum = undefined;
-                        let paramName = a[0].replace(/\[\d*\]/, function (v) {
-                            paramNum = v.slice(1, -1);
-                            return '';
-                        });
-
-                        // передача значения параметра ('true' если значение не задано)
-                        let paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
-
-                        // преобразование регистра
-                        // paramName = paramName.toLowerCase();
-                        // paramValue = paramValue.toLowerCase();
-
-                        // если ключ параметра уже задан
-                        if (obj[paramName]) {
-                            // преобразуем текущее значение в массив
-                            if (typeof obj[paramName] === 'string') {
-                                obj[paramName] = [decodeURI(obj[paramName])];
-                            }
-                            // если не задан индекс...
-                            if (typeof paramNum === 'undefined') {
-                                // помещаем значение в конец массива
-                                obj[paramName].push(decodeURI(paramValue));
-                            }
-                            // если индекс задан...
-                            else {
-                                // размещаем элемент по заданному индексу
-                                obj[paramName][paramNum] = decodeURI(paramValue);
-                            }
-                        }
-                        // если параметр не задан, делаем это вручную
-                        else {
-                            obj[paramName] = decodeURI(paramValue);
-                        }
-                    }
-                }
-                // obj.vk_access_token_settings = decodeURI(obj.vk_access_token_settings)
-
-
-// The substituted value will be contained in the result variable
-                const regex = /%2C/gm
-                const str = obj.vk_access_token_settings
-                const subst = `,`
-                const result = str.replace(regex, subst)
-                obj.vk_access_token_settings = result
-
-                // obj.vk_access_token_settings = ''
-                this.settings.auth_data = obj
-            },
             get_prices: async function () {
                 let response = await fetch("/app/wallgames/payments/prices/" + sessionStorage.getItem('auth_data_url'))
                 if (response.ok) {
                     response = await response.json()
-                    let obj = response.find(item => item.game_type === this.game_type)
+                    let obj = response.find(item => item.game_type === +this.game_type)
                     this.price = +obj.price
                 } else {
                     response = await response.json()
@@ -1663,9 +1723,8 @@
             },
             activating_callback_server: async function () {
                 try {
-                    let response = await fetch("/app/wallgames/activate_callback"
+                    let response = await fetch("/app/wallgames/activate_callback/"
                         + sessionStorage.getItem('auth_data_url'))
-                    // let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/activate_callback?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=192354390&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=3n1RvcdpgbAK93VH-mZ6eff5hZbd6HPYkZ9yvKbOOSA")
                     let answer = await response.json()
                     if (response.ok) {
                         return answer
@@ -1682,17 +1741,14 @@
                         setTimeout(this.clear_message, 5000)
                         console.log('ошибка запуска callback сервера - ' + response)
                     }
-                } catch {
+                } catch (err) {
                     this.message_error = 'Ошибка запуска callback сервера'
                     setTimeout(this.clear_message, 5000)
-                    let response = await response.json()
-                    console.log(response)
+                    // let response = await response
+                    console.log(err)
                 }
             },
             send_post_vk: async function (media_id) {
-                // console.log('id_group_vk - ' + this.settings.auth_data.vk_group_id)
-                // console.log('this.media_id - ' + media_id)
-
                 try {
                     let response  = await bridge.send("VKWebAppShowWallPostBox", {
                         "owner_id": - this.settings.auth_data.vk_group_id,
@@ -1704,6 +1760,7 @@
                     // const result = await response.json();
                     // console.log('Успех:', response);
                 } catch (error) {
+                    this.settings.post_text = this.current_post_text
                     console.error('Ошибка:', error); // TypeError: failed to fetch
                 }
             },
@@ -1729,10 +1786,10 @@
             },
             create_game: async function () {
                 // console.log(send_obj)
-                if (this.game_type === 1) {
+                if (this.game_type == 1 || this.game_type == 5) {
                     this.gameData.game.game_duration = null
                 }
-                // console.log(this.gameData)
+                console.log(this.gameData)
                 try {
                     let response = await fetch('/app/wallgames/' + this.name_game + '/',
                         {
@@ -1760,11 +1817,11 @@
             save_change_put: async function () {
                 // await this.transform_obj()
                 // console.log(send_obj)
-                if (this.game_type === 1) {
+                if (this.game_type == 1 || this.game_type == 5) {
                     this.gameData.game.game_duration = null
                 }
                 try {
-                    let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id,
+                    let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id + '/',
                         {
                             method: 'put',
                             headers: {
@@ -1834,7 +1891,7 @@
                     let response = await bridge.send("VKWebAppCallAPIMethod", {"method": "groups.getTokenPermissions", "params": {"v":"5.107", "access_token": this.token_group}})
                     let mask = response.response.mask
                     response = response.response.permissions
-                    console.log(response)
+                    // console.log(response)
                     if (response.find(item => item.setting === 262144) && response.find(item => item.setting === 8192) && response.find(item => item.setting === 4096)) {
                         try {
                             let formData = new FormData()
@@ -1854,7 +1911,7 @@
                             console.log(await response.json())
                         } catch (error) {
                             this.message_group_record_token = 'Ошибка записи токена'
-                            setTimeout(this.clear_message, 10000)
+                            setTimeout(this.clear_message, 5000)
                             console.error('ошибка - ' + error)
                             return
                         }

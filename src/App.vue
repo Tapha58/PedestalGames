@@ -1,7 +1,7 @@
 <template>
     <v-app id="app">
 
-        <v-btn id="square" depressed block dark color="#4a76a8" @click="go_widget_page">Вернуться в основное меню</v-btn>
+        <v-btn v-show="$route.path !== '/map/'" id="square" depressed  dark color="#4a76a8" @click="go_widget_page">Вернуться в основное меню</v-btn>
         <router-view></router-view>
 <!--        <router-view v-on:auto_resize="auto_resize" class="px-3"></router-view>-->
     </v-app>
@@ -13,7 +13,7 @@
     export default {
 
         data: () => ({
-            // auth_data_url_test: '',
+            // auth_data_url_test: '1',
         }),
 
         methods: {
@@ -24,6 +24,7 @@
         mounted:
             function () {
                 sessionStorage.setItem('auth_data_url', document.location.search)
+                // console.log(this.$route.path)
                 // this.auth_data_url_test = document.location.search
                 // console.log(this.auth_data_url_test)
              },
@@ -40,9 +41,9 @@
 
 
     html {
-        /*overflow-x: auto !important;*/
+        overflow-x: auto !important;
         overflow-y: auto !important;
-        /*width: 795px;*/
+        width: 795px;
     }
 
     #square {
@@ -52,6 +53,9 @@
     .compact-form {
         transform: scale(0.875);
         transform-origin: left;
+    }
+    .v-application--wrap{
+        min-height: auto!important;
     }
 
 

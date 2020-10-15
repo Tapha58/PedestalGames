@@ -13,6 +13,112 @@
             </v-col>
         </div>
         <v-row>
+            <!--            Морской бой-->
+            <v-col cols="6">
+                <v-card
+                        class="mx-auto mmm"
+                        max-width="380"
+                        min-height=""
+                >
+                    <v-list-item three-line>
+                        <v-list-item-content>
+                            <div v-if="group_status === 2" class="overline1 mb-4 free_color">
+                                <v-chip
+                                        class="mr-1"
+                                        color="red"
+                                        x-small
+                                        dark
+                                >
+                                    new
+                                </v-chip>
+                                {{ price_type_5 }} рублей</div>
+                            <div v-else class="overline1 mb-4 free_color">
+                                <v-chip
+                                        class="mr-1"
+                                        color="red"
+                                        x-small
+                                        dark
+                                >
+                                    new
+                                </v-chip>
+                                Бесплатно</div>
+                            <v-list-item-title class="name_game mb-1">Морской бой</v-list-item-title>
+                            <v-list-item-subtitle class="pt-2">Игроки стреляют в ячейки. Побеждают только меткие.
+                            </v-list-item-subtitle>
+                        </v-list-item-content>
+
+                        <v-list-item-avatar
+                                class="n"
+                                color="grey"
+                                size="80"
+                                tile
+                        ><img
+                                alt="Изображение"
+                                src="/static/wallgames/image/promo_games/sea_battle.png"
+                        ></v-list-item-avatar>
+                    </v-list-item>
+
+                    <v-card-actions class="pt-0 d-flex justify-space-between">
+                        <v-btn color="primary" text to="/sea_battle">Создать игру</v-btn>
+                        <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" text @click="go_description_page (' https://vk.com/club197375430?w=wall-197375430_152')">Пример</v-btn>
+                        <v-btn color="primary" text @click="go_description_page ('https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-morskoy-boy')">Подробнее </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+            <!--            Битва комментаторов-->
+            <v-col>
+                <v-card
+                        class="mx-auto mmm"
+                        max-width="380"
+                        min-height=""
+                >
+                    <v-list-item three-line>
+                        <v-list-item-content>
+                            <div v-if="group_status === 2" class="overline1 mb-4 free_color">
+                                <v-chip
+                                        class="mr-1"
+                                        color="red"
+                                        x-small
+                                        dark
+                                >
+                                    new
+                                </v-chip>
+                                {{ price_type_4 }} рублей</div>
+                            <div v-else class="overline1 mb-4 free_color">
+                                <v-chip
+                                        class="mr-1"
+                                        color="red"
+                                        x-small
+                                        dark
+                                >
+                                    new
+                                </v-chip>
+                                Бесплатно</div>
+                            <v-list-item-title class="name_game mb-1">Битва комментаторов</v-list-item-title>
+                            <v-list-item-subtitle class="pt-2">Выигрывают те, кто напишет максимум комментариев.
+                            </v-list-item-subtitle>
+                        </v-list-item-content>
+
+                        <v-list-item-avatar
+                                class="n"
+                                color="grey"
+                                size="80"
+                                tile
+                        ><img
+                                alt="Изображение"
+                                src="/static/wallgames/image/promo_games/max_comments.png"
+                        ></v-list-item-avatar>
+                    </v-list-item>
+
+                    <v-card-actions class="pt-0 d-flex justify-space-between">
+                        <v-btn color="primary" text to="/max_comments">Создать игру</v-btn>
+                        <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" text @click="go_description_page ('https://vk.com/club197375430?w=wall-197375430_151')">Пример</v-btn>
+                        <v-btn color="primary" text @click="go_description_page ('https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-bitva-kommentatorov')">Подробнее </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
             <v-col>
                 <v-card
                         class="mx-auto"
@@ -20,8 +126,8 @@
                 >
                     <v-list-item three-line>
                         <v-list-item-content>
-                            <div v-if="group_status === 2" class="overline mb-4 free_color">Стоимость игры - <s>{{ base_price_type_1 }}</s> {{ price_type_1 }} рублей</div>
-                            <div v-else class="overline mb-4 free_color">Бесплатно</div>
+                            <div v-if="group_status === 2" class="overline1 mb-4 free_color">Стоимость игры - <s>{{ base_price_type_1 }}</s> {{ price_type_1 }} рублей</div>
+                            <div v-else class="overline1 mb-4 free_color">Бесплатно</div>
                             <v-list-item-title class="name_game mb-1" >Угадай число</v-list-item-title>
                             <v-list-item-subtitle class="pt-2">Загадайте число. Тот из игроков, кто первым отгадает, получит приз.
                             </v-list-item-subtitle>
@@ -52,8 +158,8 @@
                 >
                     <v-list-item three-line>
                         <v-list-item-content>
-                            <div v-if="group_status === 2" class="overline mb-4 free_color">Стоимость игры - <s>{{ base_price_type_2 }}</s> {{ price_type_2 }} рублей</div>
-                            <div v-else class="overline mb-4 free_color">Бесплатно</div>
+                            <div v-if="group_status === 2" class="overline1 mb-4 free_color">Стоимость игры - <s>{{ base_price_type_2 }}</s> {{ price_type_2 }} рублей</div>
+                            <div v-else class="overline1 mb-4 free_color">Бесплатно</div>
                             <v-list-item-title class="name_game mb-1">Анаграммы</v-list-item-title>
                             <v-list-item-subtitle class="pt-2">Загадайте слово, а игроки будут составлять из него другие слова.
                             </v-list-item-subtitle>
@@ -77,7 +183,6 @@
                     </v-card-actions>
                 </v-card>
             </v-col>
-
         </v-row>
         <v-row>
             <v-col>
@@ -87,8 +192,8 @@
                 >
                     <v-list-item three-line>
                         <v-list-item-content>
-                            <div v-if="group_status === 2" class="overline mb-4 free_color">Стоимость игры - <s>{{ base_price_type_3 }}</s> {{ price_type_3 }} рублей</div>
-                            <div v-else class="overline mb-4 free_color">Бесплатно</div>
+                            <div v-if="group_status === 2" class="overline1 mb-4 free_color">Стоимость игры - <s>{{ base_price_type_3 }}</s> {{ price_type_3 }} рублей</div>
+                            <div v-else class="overline1 mb-4 free_color">Бесплатно</div>
                             <v-list-item-title class="name_game mb-1">Слова на букву(ы)</v-list-item-title>
                             <v-list-item-subtitle class="pt-2">Выигрывает тот, кто напишет больше слов на загаданную букву.
                             </v-list-item-subtitle>
@@ -112,59 +217,9 @@
                     </v-card-actions>
                 </v-card>
             </v-col>
-            <v-col>
-                <v-card
-                        class="mx-auto mmm"
-                        max-width="380"
-                        min-height=""
-                >
-                    <v-list-item three-line>
-                        <v-list-item-content>
-                            <div v-if="group_status === 2" class="overline mb-4 free_color">
-                                <v-chip
-                                        class="mr-1"
-                                        color="red"
-                                        x-small
-                                        dark
-                                >
-                                    new
-                                </v-chip>
-                                {{ price_type_4 }} рублей</div>
-                            <div v-else class="overline mb-4 free_color">
-                                <v-chip
-                                        class="mr-1"
-                                        color="red"
-                                        x-small
-                                        dark
-                                >
-                                    new
-                                </v-chip>
-                                Бесплатно</div>
-                            <v-list-item-title class="name_game mb-1">Битва комментаторов</v-list-item-title>
-                            <v-list-item-subtitle class="pt-2">Выигрывают те, кто напишет максимум комментариев.
-                            </v-list-item-subtitle>
-                        </v-list-item-content>
-
-                        <v-list-item-avatar
-                                class="n"
-                                color="grey"
-                                size="80"
-                                tile
-                        ><img
-                                alt="Изображение"
-                                src="/static/wallgames/image/promo_games/max_comments.png"
-                        ></v-list-item-avatar>
-                    </v-list-item>
-
-                    <v-card-actions class="pt-0 d-flex justify-space-between">
-                        <v-btn color="primary" text to="/max_comments">Создать игру</v-btn>
-                        <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary"  text >Пример</v-btn>
-                        <v-btn color="primary" text @click="go_description_page ('https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-bitva-kommentatorov')">Подробнее </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-col>
-
+            <v-col></v-col>
         </v-row>
+<!--        <v-btn color="primary" text to="/map">Test pole</v-btn>-->
     </div>
 </template>
 
@@ -329,6 +384,12 @@
                     return
                 return obj.price
             },
+            price_type_5 () {
+                let obj = this.prices.find(item => item.game_type === 5)
+                if (obj === undefined)
+                    return
+                return obj.price
+            },
             base_price_type_1 () {
                 let obj = this.prices.find(item => item.game_type === 1)
                 if (obj === undefined)
@@ -353,6 +414,12 @@
                     return
                 return obj.base_price
             },
+            base_price_type_5 () {
+                let obj = this.prices.find(item => item.game_type === 5)
+                if (obj === undefined)
+                    return
+                return obj.base_price
+            },
         }
     }
 </script>
@@ -370,24 +437,16 @@
         border: 1px lightgrey;
         border-radius: 5px;
         border-style: solid;
-
     }
 
-
-    /*#token {*/
-    /*    border-style: solid;*/
-    /*    border-width: 1px;*/
-    /*}*/
-
-    /*#styled-input {*/
-    /*    height: 25px;*/
-    /*    font-size: 12px;*/
-    /*}*/
-
-    /*.styled-input label[for] {*/
-    /*    height: 20px;*/
-    /*    font-size: 14px;*/
-    /*}*/
+    .overline1 {
+        font-size: .69rem !important;
+        font-weight: 500;
+        letter-spacing: .1em!important;
+        line-height: 2rem;
+        text-transform: uppercase;
+        font-family: Roboto,sans-serif!important;
+    }
 
 
 </style>

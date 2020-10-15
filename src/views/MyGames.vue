@@ -68,7 +68,9 @@
                 1: {name: 'Угадай число', route: '/guess_number_settings/'},
                 2: {name: 'Анаграмма', route: '/anagram_settings/'},
                 3: {name: 'Слова на букву', route: '/words_with_letter_settings/'},
-                4: {name: 'Битва комментаторов', route: '/max_comments_settings/'}
+                4: {name: 'Битва комментаторов', route: '/max_comments_settings/'},
+                5: {name: 'Морской бой', route: '/sea_battle_settings/'},
+                6: {name: 'Морской бой', route: '/sea_battle_with_score_settings/'}
             }
         }),
 
@@ -77,9 +79,7 @@
                 window.open('https://vk.com/wall-' + item.id_group_vk + '_' + item.id_post_vk, '_blank')
             },
             load_info_list: async function () {
-                // console.log('load_info_list')
-                let response = await fetch("/app/wallgames/info_list" + sessionStorage.getItem('auth_data_url'))
-                // let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/info_list" + '?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE')
+                let response = await fetch('/app/wallgames/game/info_list/' + sessionStorage.getItem('auth_data_url'))
                 if (response.ok) {
                     this.games =  await response.json()
                     this.games = this.games.map(item => Object.assign(item, this.name_route_obj[item.type]))

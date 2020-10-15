@@ -142,6 +142,15 @@
             is_single_winner: false,
             color_alert: '#edeef0',
         }),
+        computed: {
+            rules_game_duration() {
+                return [
+                    v => !!v || 'Недопустимый формат',
+                    v => !/[\D]/.test(v) || 'Недопустимый формат',
+                    v => /^(\d){1,3}$/g.test(v) || 'Не более 3 символов'
+                ]
+            },
+        },
         methods: {
             validateField () {
                 this.$refs.main_game_component.validate()

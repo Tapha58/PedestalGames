@@ -67,6 +67,31 @@ export default new Router({
             component: () => import('./views/games/MaxComments'),
         },
         {
+            path: '/sea_battle',
+            name: 'sea_battle',
+            component: () => import('./views/games/SeaBattle'),
+        },
+        {
+            path: '/map',
+            name: 'map',
+            component: () => import('./views/games/Map'),
+        },
+        {
+            path: '/sea_battle_settings/:id',
+            name: 'sea_battle_settings_id',
+            component: () => import('./views/games/SeaBattle'),
+        },
+        {
+            path: '/sea_battle_with_score',
+            name: 'sea_battle_with_score',
+            component: () => import('./views/games/SeaBattleWithScore'),
+        },
+        {
+            path: '/sea_battle_with_score_settings/:id',
+            name: 'sea_battle_with_score_settings_id',
+            component: () => import('./views/games/SeaBattleWithScore'),
+        },
+        {
             path: '/covers_home_view',
             name: 'covers_home_view',
             component: () => import('./views/covers/CoversHomeView'),
@@ -81,6 +106,11 @@ export default new Router({
         {
             path: '/add_cover',
             name: 'add_cover',
+            component: () => import('./views/covers/AddCover'),
+        },
+        {
+            path: '/add_cover/:id',
+            name: 'add_cover_id',
             component: () => import('./views/covers/AddCover'),
         },
     ]
