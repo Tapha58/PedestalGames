@@ -67,16 +67,16 @@
             <v-row class="mx-0">
                 <v-col cols="12" class="px-0">
                     <v-tabs class="px-3" v-model="tab">
-                        <v-tab @change="show_selected_tab('add_elem')">Добавить элемент</v-tab>
-                        <v-tab @change="show_selected_tab('tab_editor')">Редактор</v-tab>
-                        <v-tab @change="show_selected_tab('set_up_timer')">Настроить таймер</v-tab>
-                        <v-tab @change="show_selected_tab('group_catalog')">Каталог обложек</v-tab>
+                        <v-tab>Добавить элемент</v-tab>
+                        <v-tab>Редактор</v-tab>
+                        <v-tab>Настроить таймер</v-tab>
+                        <v-tab>Каталог обложек</v-tab>
                     </v-tabs>
                 </v-col>
             </v-row>
 
-            <v-row justify="center" class="mx-0" v-show="show_add_elem || show_tab_editor">
-                <div v-show="show_add_elem" class="col1">
+            <v-row justify="center" class="mx-0" v-show="tab === 0 || tab === 1">
+                <div v-show="tab === 0" class="col1">
                     <v-row justify="space-around" class="my-2 mx-1">
                         <div class="el_div" @click="create_avatar_and_text_group('Самый активный', 'user_top')">
                             <v-icon color="primary" large>mdi-run-fast</v-icon>
@@ -141,7 +141,7 @@
                         </div>
                     </v-row>
                 </div>
-                <div v-show="show_tab_editor" class="col1">
+                <div v-show="tab === 1" class="col1">
                     <h4 v-show="!show_type1_editor && !show_type2_editor" align="center">Выберите элемент для
                         редактирования</h4>
                     <div v-show="show_type1_editor">
@@ -482,7 +482,7 @@
                 </div>
             </v-row>
             <!--        настроить таймер-->
-            <div class="col3 mx-3" v-show="show_set_up_timer">
+            <div class="col3 mx-3" v-show="tab === 2">
                 <div class="mx-3 my-2">
                 <span>Укажите, в какое время обложка будет доступна для установки в сообществе.
                     По умолчанию - круглосуточно.
@@ -599,7 +599,7 @@
                 </div>
             </div>
             <!--            каталог обложек-->
-            <div v-show="show_group_catalog" class="relative" id="catalog" >
+            <div v-show="tab === 3" class="relative" id="catalog" >
                 <!--                <v-img-->
                 <!--                        v-for="cover in cover_group_catalog"-->
                 <!--                        :key="cover.id"-->
@@ -683,7 +683,7 @@
                 end: "",
             },
             src: '',
-            tab: '',
+            tab: 0,
             image: null,
             canvas: null,
             clone: '',
@@ -702,10 +702,6 @@
             mes_file_err: '',
             name: '',
             clipTo: null,
-            show_tab_editor: false,
-            show_add_elem: true,
-            show_set_up_timer: false,
-            show_group_catalog: false,
             show_type1_editor: false,
             show_type2_editor: false,
             coordinateX: '',
@@ -1032,6 +1028,12 @@
                 })
                 this.canvas.renderAll()
             },
+            tab: async function () {
+                if (this.tab === 3) {
+                    await this.coverGroupCatalogGet()
+                    this.auto_resize()
+                }
+            },
         },
         methods: {
             create_url_name_author: function (id) {
@@ -1042,11 +1044,10 @@
                 }
             },
             use_catalog_cover: function (url) {
-                // this.src = 'https://' + location.hostname + '/static/cover/catalog/images/' + id + '.jpg'
                 this.src = url
-                this.create_bac()
-                this.show_selected_tab('add_elem')
                 bridge.send("VKWebAppScroll", {"top": 0, "speed": 600})
+                this.create_bac()
+                this.tab = 0
             },
             validateField() {
                 this.$refs.covers.validate()
@@ -1340,31 +1341,6 @@
                 }).setCoords();
                 this.canvas.renderAll()
             },
-            show_selected_tab: async function (selected_tab) {
-                if (selected_tab === 'tab_editor') {
-                    this.show_tab_editor = true
-                    this.show_add_elem = false
-                    this.show_set_up_timer = false
-                    this.show_group_catalog = false
-                } else if (selected_tab === 'add_elem') {
-                    this.show_tab_editor = false
-                    this.show_add_elem = true
-                    this.show_set_up_timer = false
-                    this.show_group_catalog = false
-                } else if (selected_tab === 'set_up_timer') {
-                    this.show_tab_editor = false
-                    this.show_add_elem = false
-                    this.show_set_up_timer = true
-                    this.show_group_catalog = false
-                } else if (selected_tab === 'group_catalog') {
-                    await this.coverGroupCatalogGet()
-                    this.show_tab_editor = false
-                    this.show_add_elem = false
-                    this.show_set_up_timer = false
-                    this.show_group_catalog = true
-                    this.auto_resize()
-                }
-            },
             show_current_coordinates: function (e) {
                 this.coordinateX = Math.round(e.target.left)
                 this.coordinateY = Math.round(e.target.top)
@@ -1386,7 +1362,6 @@
                 }
                 if (e.target && e.selected.length === 1) {
                     this.tab = 1
-                    this.show_selected_tab('tab_editor')
                     this.coordinateY = Math.round(e.target.top)
                     this.coordinateX = Math.round(e.target.left)
                     // виджет текст
@@ -1462,7 +1437,6 @@
             },
             select_active_with_chip: function (id) {
                 this.tab = 1
-                this.show_selected_tab('tab_editor')
                 if (typeof id === 'number') {
                     let object = this.canvas._objects.find(item => item.id === id)
                     this.canvas.setActiveObject(object)
