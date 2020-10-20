@@ -3,7 +3,6 @@
 
         <v-btn v-show="$route.path !== '/map/'" id="square" depressed  dark color="#4a76a8" @click="go_widget_page">Вернуться в основное меню</v-btn>
         <router-view></router-view>
-<!--        <router-view v-on:auto_resize="auto_resize" class="px-3"></router-view>-->
     </v-app>
 </template>
 

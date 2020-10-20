@@ -1,6 +1,7 @@
 <template>
     <div class="px-3">
-<!--        <v-btn @click="setting_variables_in_the_post_text">setting_variables_in_the_post_text</v-btn>-->
+<!--        <v-btn @click="VKWebAppGetCommunityToken">VKWebAppGetCommunityToken</v-btn>-->
+<!--        <v-btn @click="VKWebAppOpenApp">VKWebAppOpenApp</v-btn>-->
         <v-row dense>
             <v-col cols="2" >
                 <v-btn @click="button_back" color="rgba(0, 0, 0, .6)" text dark small>
@@ -1225,6 +1226,17 @@
             }
         },
         methods: {
+            VKWebAppGetCommunityToken: async function () {
+                let response = await bridge.send("VKWebAppGetCommunityToken", {
+                    "app_id": +this.settings.auth_data.vk_app_id,
+                    "group_id": +this.settings.auth_data.vk_group_id,
+                    "scope": "messages, manage, wall"})
+                console.log(response)
+            },
+            VKWebAppOpenApp: async function () {
+                let response = await bridge.send("VKWebAppOpenApp", {"app_id": 7147757, "location": "app-pay"})
+                console.log(response)
+            },
             create_map: async function () {
                 let obj = {}
                 obj.auth_data = this.settings.auth_data

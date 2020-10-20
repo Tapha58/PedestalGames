@@ -24,7 +24,7 @@
                             v-model="image"
                             @input="create_bac"
                             @change="create"
-                            accept="image/png, image/jpeg, image/gif, image/jpg"
+                            accept="image/png, image/jpeg, image/jpg"
                             prepend-icon="mdi-download"
                             label="Загрузите изображение"
                             id="fileItem"
@@ -65,11 +65,12 @@
             <canvas id="canvas" class="relative" width="795" height="200"></canvas>
 
             <v-row class="mx-0">
-                <v-col cols="9" class="px-0">
+                <v-col cols="12" class="px-0">
                     <v-tabs class="px-3" v-model="tab">
                         <v-tab @change="show_selected_tab('add_elem')">Добавить элемент</v-tab>
                         <v-tab @change="show_selected_tab('tab_editor')">Редактор</v-tab>
                         <v-tab @change="show_selected_tab('set_up_timer')">Настроить таймер</v-tab>
+                        <v-tab @change="show_selected_tab('group_catalog')">Каталог обложек</v-tab>
                     </v-tabs>
                 </v-col>
             </v-row>
@@ -106,28 +107,34 @@
                             <span>Последний<br>вступивший</span>
                         </div>
                     </v-row>
-                    <v-row class="my-2 mx-1" justify="space-around">
+                    <v-row class="mx-1 mb-2" justify="space-around">
                         <div class="el_div" @click="create_text('Текст', 'text_plain')">
                             <v-icon color="primary" large>mdi-format-text-variant</v-icon>
                             <br>
                             <span>Свой<br>текст</span>
                         </div>
-                        <div class="el_div" @click="create_text('Текст', 'text_plain')">
-                            <v-icon color="primary" disabled large>mdi-checkbox-blank-outline</v-icon>
-                            <br>
-                            <span>Своя<br>фигура</span>
-                        </div>
-                        <div class="el_div">
+                        <!--                        <div class="el_div" @click="create_custom_shape">-->
+                        <!--                        <div class="el_div_development">-->
+                        <!--                            <v-icon color="primary" disabled large>mdi-checkbox-blank-outline</v-icon>-->
+                        <!--                            <br>-->
+                        <!--                            <span>Своя<br>фигура</span>-->
+                        <!--                        </div>-->
+                        <div class="el_div_development">
                             <v-icon color="primary" disabled large>mdi-lock-clock</v-icon>
                             <br>
                             <span>В<br>разработке</span>
                         </div>
-                        <div class="el_div">
+                        <div class="el_div_development">
                             <v-icon color="primary" disabled large>mdi-lock-clock</v-icon>
                             <br>
                             <span>В<br>разработке</span>
                         </div>
-                        <div class="el_div">
+                        <div class="el_div_development">
+                            <v-icon color="primary" disabled large>mdi-lock-clock</v-icon>
+                            <br>
+                            <span>В<br>разработке</span>
+                        </div>
+                        <div class="el_div_development">
                             <v-icon color="primary" disabled large>mdi-lock-clock</v-icon>
                             <br>
                             <span>В<br>разработке</span>
@@ -591,6 +598,56 @@
                     время. Это позволяет сделать утреннюю / дневную / вечернюю обложку.</span>
                 </div>
             </div>
+            <!--            каталог обложек-->
+            <div v-show="show_group_catalog" class="relative" id="catalog" >
+                <!--                <v-img-->
+                <!--                        v-for="cover in cover_group_catalog"-->
+                <!--                        :key="cover.id"-->
+                <!--                        :src="'/static/cover/catalog/images/' + cover.id + '-min.jpg'"-->
+                <!--                        src="https://sun9-38.userapi.com/tE-AO1xL7pSM1UhlQDb-XSpv6ATdIOJSUr4qIQ/nvjrGbyDiAQ.jpg"-->
+                <!--                >{{cover.id}}</v-img>-->
+<!--                :src="cover.show ? '/static/cover/catalog/images/' + cover.id + '_example.jpg' : '/static/cover/catalog/images/' + cover.id + '-min.jpg'"-->
+                <v-img
+                        @mouseenter="cover.show = true" @mouseleave="cover.show = false"
+                        class="mb-3"
+                        v-for="cover in cover_group_catalog"
+                        :key="cover.id"
+                        :src="cover.show ? '/static/cover/catalog/images/' + cover.id + '_example.jpg' : '/static/cover/catalog/images/' + cover.id + '-min.jpg'"
+                >
+                    <div id="catalog_line">
+
+                    </div>
+                    <v-btn
+                            v-show="cover.show"
+                            @click="create_url_name_author(+cover.id_author)"
+                            small
+                            color="#00000066"
+                            id="name_author"
+                            dark
+                    >Автор: {{cover.name_author}}
+                    </v-btn>
+                    <v-btn
+                            v-show="cover.show"
+                            @click="use_catalog_cover(cover.background_url)"
+                            id="catalog_btn_apply"
+                            small
+                            color="#00000066"
+                            dark
+                    >
+                        Применить
+                    </v-btn>
+                    <v-btn
+                            v-show="cover.show"
+                            @click="go_description_page('/static/cover/catalog/images/' + cover.id + '.rar')"
+                            id="catalog_btn_save_psd"
+                            small
+                            color="#00000066"
+                            dark
+                    >Скачать PSD
+                    </v-btn>
+                </v-img>
+
+            </div>
         </div>
     </v-form>
 </template>
@@ -599,6 +656,7 @@
     import {fabric} from 'fabric'
     import draggable from 'vuedraggable'
     import auto_resize from '@/mixins/auto_resize'
+    import bridge from "@vkontakte/vk-bridge";
 
     export default {
         display: "Simple",
@@ -608,6 +666,8 @@
         },
         mixins: [auto_resize],
         data: () => ({
+            show_catalog_btn: false,
+            cover_group_catalog: [{id: "1000", name: "", id_author: "527248538", name_author: "Айза Жакина", show: true}],
             loader: 'loading',
             loading: false,
             time_start: '00:00',
@@ -645,6 +705,7 @@
             show_tab_editor: false,
             show_add_elem: true,
             show_set_up_timer: false,
+            show_group_catalog: false,
             show_type1_editor: false,
             show_type2_editor: false,
             coordinateX: '',
@@ -684,7 +745,7 @@
                 {value: 'Times New Roman', text: 'Times New Roman'},
                 {value: 'Ticker Tape', text: 'Ticker Tape'},
                 {value: 'Victorian Gothic Two', text: 'Victorian Gothic Two'},
-                {value: 'Washington', text: 'Washington'},
+                // {value: 'Washington', text: 'Washington'},
             ],
             user_name_format_items: [
                 {value: 'all1line', text: 'Имя Фамилия 1 строка'},
@@ -723,6 +784,7 @@
         mounted:
             async function () {
                 this.getAllUrlParams()
+
                 this.canvas = new fabric.Canvas('canvas')
                 fabric.util.addListener(fabric.document, 'keyup', this.keyboard_move)
                 // fabric.Group.prototype.lockScalingX = true;
@@ -741,7 +803,6 @@
                 if (this.$route.params.id && !/^[0-9]+$/.test(this.$route.params.id)) {
                     this.cover_name += ' copy'
                 }
-
                 setTimeout(this.auto_resize, 500)
                 setTimeout(this.auto_resize, 500)
             },
@@ -973,6 +1034,20 @@
             },
         },
         methods: {
+            create_url_name_author: function (id) {
+                if (id >= 0) {
+                    this.go_description_page("https://vk.com/id" + id)
+                } else if (id < 0) {
+                    this.go_description_page("https://vk.com/club" + id)
+                }
+            },
+            use_catalog_cover: function (url) {
+                // this.src = 'https://' + location.hostname + '/static/cover/catalog/images/' + id + '.jpg'
+                this.src = url
+                this.create_bac()
+                this.show_selected_tab('add_elem')
+                bridge.send("VKWebAppScroll", {"top": 0, "speed": 600})
+            },
             validateField() {
                 this.$refs.covers.validate()
             },
@@ -1008,7 +1083,6 @@
             },
             loadAndUse(font) {
                 let FontFaceObserver = require('fontfaceobserver');
-                // let activeObject = this.canvas.getActiveObject()
                 let myfont = new FontFaceObserver(font)
                 myfont.load()
                     .then(this.upload_on_fabric
@@ -1122,8 +1196,6 @@
             },
             serialization: function () {
                 let cover_data_front = JSON.stringify(this.canvas.toJSON(["name", "hasControls", "id", "name2", "type_elem", "place", "widgets_type", "user_name_format", "user_name_align", "color"]))
-                // console.log('serialization')
-                // console.log(cover_data_front)
                 return cover_data_front
             },
             deserialization: async function () {
@@ -1139,6 +1211,19 @@
                     let answer = await response.json()
                     console.log(answer)
                 }
+            },
+            coverGroupCatalogGet: async function () {
+                let response = await fetch('/api/coverGroupCatalogGet.php' + sessionStorage.getItem('auth_data_url'))
+                if (response.ok) {
+                    let answer = await response.json()
+
+                    for (let i = 0; i < answer.covers.length; i++) {
+                        answer.covers[i].show = false
+                    }
+                    this.cover_group_catalog = answer.covers
+                    console.log(answer.covers)
+                }
+                setTimeout(this.auto_resize, 500)
             },
             coverGroupGet: async function () {
                 let id = this.$route.params.id.replace(/[^\d]/g, '')
@@ -1173,18 +1258,13 @@
             },
             define_end_id: function (cover_data_front) {
                 for (let i = 0; i < cover_data_front.objects.length; i++) {
-                    // console.log(cover_data_front.objects[i].id)
-                    // console.log(cover_data_front.objects.length)
-                    // console.log(cover_data_front.objects)
                     if (cover_data_front.objects[i].id >= this.id) {
                         this.id = cover_data_front.objects[i].id + 1
                     }
                 }
             },
-
             create_obj_for_send_server: function () {
                 let widgets = []
-                // console.log(this.canvas._objects)
                 this.canvas._objects.forEach(function (item) {
                     let obj = {}
                     // type = 1 аватар + подпись
@@ -1258,26 +1338,34 @@
                     left: this.coordinateX,
                     top: this.coordinateY,
                 }).setCoords();
-                // this.canvas.requestRenderAll();
                 this.canvas.renderAll()
             },
-            show_selected_tab: function (selected_tab) {
+            show_selected_tab: async function (selected_tab) {
                 if (selected_tab === 'tab_editor') {
                     this.show_tab_editor = true
                     this.show_add_elem = false
                     this.show_set_up_timer = false
+                    this.show_group_catalog = false
                 } else if (selected_tab === 'add_elem') {
                     this.show_tab_editor = false
                     this.show_add_elem = true
                     this.show_set_up_timer = false
+                    this.show_group_catalog = false
                 } else if (selected_tab === 'set_up_timer') {
                     this.show_tab_editor = false
                     this.show_add_elem = false
                     this.show_set_up_timer = true
+                    this.show_group_catalog = false
+                } else if (selected_tab === 'group_catalog') {
+                    await this.coverGroupCatalogGet()
+                    this.show_tab_editor = false
+                    this.show_add_elem = false
+                    this.show_set_up_timer = false
+                    this.show_group_catalog = true
+                    this.auto_resize()
                 }
             },
             show_current_coordinates: function (e) {
-                // console.log('show_current_coordinates')
                 this.coordinateX = Math.round(e.target.left)
                 this.coordinateY = Math.round(e.target.top)
             },
@@ -1287,7 +1375,6 @@
             },
             select_active_with_canvas: function (e) {
                 console.log(e)
-                // console.log(e.deselected[0].id)
                 if (e.deselected && e.deselected.length && e.deselected[0].type_elem === 1) {
                     e.deselected[0]._objects[2].set({
                         strokeDashArray: [0, 5]
@@ -1310,9 +1397,6 @@
                         this.text_font_family = e.target.fontFamily
                     } else if (e.target.type_elem === 1) {
                         // виджет аватар + текст
-                        // let activeObject = this.canvas.getActiveObjects()
-                        // console.log(e.target._objects[2])
-                        // console.log(activeObject._objects[2])
                         e.target._objects[2].set({
                             strokeDashArray: [5, 5]
                         })
@@ -1377,7 +1461,6 @@
                 }
             },
             select_active_with_chip: function (id) {
-                // console.log('id - ' + id)
                 this.tab = 1
                 this.show_selected_tab('tab_editor')
                 if (typeof id === 'number') {
@@ -1408,8 +1491,21 @@
                 img.src = e.target.result
             },
             onload_img: function (e) {
-                let width = e.path[0].width
-                let height = e.path[0].height
+                // Per the above, get the path if we can
+                let path = e.path || (e.composedPath && e.composedPath());
+
+                // Show it if we got it
+                if (path) {
+                    // console.log("Path (" + path.length + ")");
+                    Array.prototype.forEach.call(
+                        path,
+                        function (entry) {
+                            console.log(entry.nodeName);
+                        }
+                    );
+                }
+                let width = path[0].width
+                let height = path[0].height
                 if (width !== 1590 || height !== 400) {
                     this.mes_file_err = 'загружаемое изображение должно быть разрешением 1590х400'
                     this.src = ''
@@ -1420,35 +1516,46 @@
                 this.canvas._objects.splice(position, 1)
                 this.rev = this.canvas._objects.slice().reverse()
             },
-            onMoving: function () {
-                this.canvas.forEachObject(function (o) {
-                    o.setCoords()
-                })
-            },
             del_cover_default_image() {
                 if (this.cover_default_image) {
                     this.canvas.setOverlayImage('/static/cover/default/transparent.png', this.canvas.renderAll.bind(this.canvas), {excludeFromExport: true})
                     this.cover_default_image = false
                 }
             },
-            create_avatar_and_text_group: function (name, widgets_type) {
+            create_custom_shape: function () {
                 this.del_cover_default_image()
-
                 let rect = new fabric.Rect({
                     left: 100,
                     top: 50,
                     fill: '#D81B60',
-                    width: 50,
-                    height: 50,
+                    width: 25,
+                    height: 25,
                     strokeWidth: 2,
                     stroke: "#880E4F",
                     rx: 10,
                     ry: 10,
-                    angle: 45,
+                    angle: 0,
                     scaleX: 3,
                     scaleY: 3,
-                    hasControls: true
-                });
+                    hasControls: false
+                })
+                rect.toObject = (function (toObject) {
+                    return function () {
+                        return fabric.util.object.extend(toObject.call(this), {
+                            name: this.name,
+                            id: this.id,
+                        });
+                    };
+                })(rect.toObject)
+                rect.name = 'Своя фигура'
+                rect.id = this.id++
+
+                this.canvas.add(rect)
+                this.canvas.renderAll()
+                this.data_canvas()
+            },
+            create_avatar_and_text_group: function (name, widgets_type) {
+                this.del_cover_default_image()
 
                 let Circle = new fabric.Circle({
                     left: 0,
@@ -1494,7 +1601,7 @@
                     stroke: '#d3d9de'
                 })
 
-                let group = new fabric.Group([Circle, rect], {
+                let group = new fabric.Group([Circle], {
                     left: 100,
                     top: 100,
                     originX: 'center',
@@ -1527,12 +1634,6 @@
                 group.widgets_type = widgets_type
                 group.type_elem = 1
                 group.place = 1
-                // if (widgets_type === 'user_last_group_joined') {
-                //     group.place_from_last = 1
-                // } else {
-                //     group.place = 1
-                // }
-
 
                 let Text = new fabric.Text("Имя Фамилия", {
                     textAlign: 'center',
@@ -1572,6 +1673,7 @@
             },
             create_text: function (name, widgets_type) {
                 this.del_cover_default_image()
+
                 let IText = new fabric.IText("Свой текст", {
                     fontSize: 14,
                     fill: '#000000',
@@ -1755,21 +1857,13 @@
 
 <style>
 
-    .buttons {
-        margin-top: 35px;
-    }
-
     .ghost {
         opacity: 0.5;
         background: #c8ebfb;
     }
 
-
-    .bordercol {
-        border-color: #d3d9de;
-        border-radius: 3px;
-        border-style: solid;
-        border-width: 1px;
+    .relative {
+        position: relative;
     }
 
     .col1 {
@@ -1778,7 +1872,7 @@
         border-style: solid;
         border-right: none;
         border-width: 1px;
-        width: 523px;
+        width: 529px;
     }
 
     .col3 {
@@ -1796,7 +1890,7 @@
         border-radius: 3px;
         border-style: solid;
         border-width: 1px;
-        width: 248px;
+        width: 242px;
     }
 
 
@@ -1811,6 +1905,20 @@
         font-size: 12px;
         text-align: center;
         cursor: pointer;
+        background-color: #f5f7fa;
+        padding-top: 5px;
+    }
+
+    .el_div_development {
+        border-color: #d3d9de;
+        border-radius: 3px;
+        font-size: 13px !important;
+        border-style: solid;
+        border-width: 1px;
+        width: 97px;
+        height: 85px;
+        font-size: 12px;
+        text-align: center;
         background-color: #f5f7fa;
         padding-top: 5px;
     }
@@ -1835,9 +1943,35 @@
     }
 
     #chip_cover {
-        width: 238px;
+        width: 232px;
         position: relative !important;
     }
+
+    #catalog_btn_apply {
+        position: absolute;
+        right: 9px;
+        top: 164px;
+    }
+
+    #catalog_btn_save_psd {
+        position: absolute;
+        right: 126px;
+        top: 164px;
+    }
+
+    #name_author {
+        position: absolute;
+        right: 251px;
+        top: 164px;
+    }
+
+    /*#catalog_line {*/
+    /*    position: absolute;*/
+    /*    top: 164px;*/
+    /*    min-height: 28px;*/
+    /*    width: 795px;*/
+    /*    background-color: red;*/
+    /*}*/
 
     .v-chip__close {
         position: absolute !important;
@@ -1848,8 +1982,9 @@
     .mt6 {
         margin-top: 6px;
     }
-    .ml7px {
-        margin-left: 7px !important;
+
+    a {
+        text-decoration: none; /* Отменяем подчеркивание у ссылки */
     }
 
     @font-face {

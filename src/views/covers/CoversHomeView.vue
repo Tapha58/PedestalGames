@@ -7,19 +7,19 @@
                     <v-tab v-if='cover_list.length !== 0' @click="coverGroupSettingsGet">Настройка</v-tab>
                 </v-tabs>
             </v-col>
-            <v-col cols="3" align="right" class="pr-0">
-                <v-btn @click="go_description_page ('https://vk.com/@pedestal-covers')" class="mt-3" color="#e5ebf1"
+            <v-col cols="3" align="right" class="mb-1 pr-0">
+                <v-btn @click="go_description_page ('https://vk.com/@pedestal-covers')" class="mt10px" color="#e5ebf1"
                        small>Справка
                 </v-btn>
             </v-col>
             <v-col cols="3" align="right">
-                <v-btn @click="add_cover" class="mt-3" color="primary" small>Добавить обложку</v-btn>
+                <v-btn @click="add_cover" class="mt10px" color="primary" small>Добавить обложку</v-btn>
             </v-col>
         </v-row>
         <hr  id="line_vk" class="mx-3 mt-n3">
         <v-img v-if='cover_list.length === 0' src="/static/cover/default/start.png" class="mt-n3"></v-img>
-        <div v-show='cover_list.length !== 0 && !checking_cover_for_activity' class="mx-3" id="info_mes_1">
-            <div class="px-2 py-1">
+        <div v-show='cover_list.length !== 0 && !checking_cover_for_activity' class="mx-3 mt-3" id="info_mes_1">
+            <div class="px-2 pt-1">
                 <span>
                     Все обложки в статусе "не активна". Чтобы обложка в сообществе обновлялась, необходимо хотя бы одну
                     перевести в статус "активна". Частота обновления обложки сообщества задаётся в настройках.
@@ -172,7 +172,7 @@
             <div class="mx-3 my-2">
                 <span>С указанной частотой (например, каждые 5 минут) наступает событие обновления обложки. Чтобы обложка
                     в сообщества обновилась, должна быть хотя бы одна обложка в приложении, подходящая по двум условиям:
-                    1) статус "Активна" (включена), 2) индивидуальные настройки таймера подходят под текущее время.<br>
+                    1) статус "Активна" (включена) 2) индивидуальные настройки таймера подходят под текущее время.<br>
                 <a href="https://vk.com/@pedestal-covers?anchor=algoritm-obnovlenia-oblozhek" target="_blank">Подробнее в инструкции</a>
                 </span>
             </div>
@@ -389,7 +389,7 @@
                     console.error('ошибка - ' + error)
                 }
                 this.coverGroupGetListAll()
-                this.loading = true
+                this.loading = false
             },
             change_is_enabled: async function (id, is_enabled) {
                 if (is_enabled) {
@@ -503,6 +503,9 @@
 
     .mt2px {
         margin-top: 2px;
+    }
+    .mt10px {
+        margin-top: 10px !important;
     }
 
     #info_mes_1 {
