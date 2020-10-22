@@ -16,13 +16,17 @@
                 <v-btn @click="add_cover" class="mt10px" color="primary" small>Добавить обложку</v-btn>
             </v-col>
         </v-row>
-        <hr  id="line_vk" class="mx-3 mt-n3">
+        <hr id="line_vk" class="mx-3 mt-n3">
         <v-img v-if='cover_list.length === 0' src="/static/cover/default/start.png" class="mt-n3"></v-img>
-        <div v-show='cover_list.length !== 0 && !checking_cover_for_activity' class="mx-3 mt-3" id="info_mes_1">
+        <div v-show='cover_list.length !== 0 && !checking_cover_for_activity || license_expired' class="mx-3 mt-3" id="info_mes_1">
             <div class="px-2 pt-1">
-                <span>
+                <span v-if="!license_expired">
                     Все обложки в статусе "не активна". Чтобы обложка в сообществе обновлялась, необходимо хотя бы одну
                     перевести в статус "активна". Частота обновления обложки сообщества задаётся в настройках.
+                </span>
+                <span v-else>
+                    Лицензия истекла, обновление обложки приостановлено. Для продолжения работы необходимо продлить
+                    лицензию (вернитесь в основное меню в раздел Настройки -> Оплата).
                 </span>
             </div>
         </div>
@@ -81,7 +85,7 @@
                 <v-card-text class="text--primary pb-0 pt-1">
                     <div>{{cover.name}}</div>
                     <div>Статус: {{+cover.is_enabled === 0 ? 'неактивна' : 'активна'}}
-                        <v-tooltip  bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                        <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
                             <template v-slot:activator="{ on }">
                                 <v-icon size="20" v-on="on">mdi-help-circle-outline
                                 </v-icon>
@@ -89,9 +93,10 @@
                             <span>{{+cover.is_enabled === 0 ? 'Обложка не доступна для публикации в сообществе. Активируйте её, когда закончите настройку.' : 'Обложка доступна для публикации в сообществе и будет опубликована в соответствии с настройками.'}}</span>
                         </v-tooltip>
                     </div>
-                    <v-tooltip  bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                    <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
                         <template v-slot:activator="{ on }">
-                            <v-icon v-show="cover.enable_time_start != 0 || cover.enable_time_stop != 0" id='clock' size="20" color="red" v-on="on">mdi-clock-outline
+                            <v-icon v-show="cover.enable_time_start != 0 || cover.enable_time_stop != 0" id='clock'
+                                    size="20" color="red" v-on="on">mdi-clock-outline
                             </v-icon>
                         </template>
                         <span>Обложка имеет настройки таймера, время публикации ограничено.</span>
@@ -192,6 +197,7 @@
             loader: 'loading',
             loading: false,
             tab: '',
+            group_pay_covers_date_end: 2690749908,
             settings: {
                 auth_data: ''
             },
@@ -253,9 +259,19 @@
                 }
                 return show
             },
+            license_expired: function () {
+                let now = new Date()
+                now = +now / 1000
+                if (this.group_pay_covers_date_end < now) {
+                    return true
+                } else {
+                    return false
+                }
+
+            },
         },
         methods: {
-            add_cover: function() {
+            add_cover: function () {
                 if (this.cover_list.length === 0 && this.cover_frequency_minutes === 0) {
                     this.cover_frequency_minutes = 1
                     this.coverGroupSettingsSet()
@@ -338,6 +354,7 @@
                     let answer = await response.json()
                     this.cover_frequency_minutes = +answer.cover_settings.cover_frequency_minutes
                     this.cover_order_type = answer.cover_settings.cover_order_type
+                    this.group_pay_covers_date_end = +answer.cover_settings.group_pay_covers_date_end
                 } else {
                     console.log('Ошибка. Метод - coverGroupSettingsGet')
                 }
@@ -504,6 +521,7 @@
     .mt2px {
         margin-top: 2px;
     }
+
     .mt10px {
         margin-top: 10px !important;
     }
