@@ -95,7 +95,7 @@
                             </v-icon>
                         </template>
                         <span>Обложка имеет настройки таймера, время публикации ограничено.</span>
-<!--                        <span>Обложка имеет настройки таймера, время публикации ограничено c {{convert_sec_in_time(cover.enable_time_start)}} по {{convert_sec_in_time(cover.enable_time_stop)}}</span>-->
+                        <!--                        <span>Обложка имеет настройки таймера, время публикации ограничено c {{convert_sec_in_time(cover.enable_time_start)}} по {{convert_sec_in_time(cover.enable_time_stop)}}</span>-->
                     </v-tooltip>
                 </v-card-text>
 
