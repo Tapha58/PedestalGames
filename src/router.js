@@ -11,8 +11,13 @@ export default new Router({
         {
             path: '/',
             name: 'home',
+            component: () => import('./views/RoutePage'),
+        },
+        {
+            path: '/',
+            name: 'home',
             component: () => import('./views/HomeView'),
-            redirect: { name: 'choice_games' },
+            // redirect: { name: 'choice_games' },
             children: [
             {
                 path: '/choice_games',
@@ -25,6 +30,11 @@ export default new Router({
                 name: 'my_games'
             },
         ]
+        },
+        {
+            path: '/app_install_page',
+            name: 'app_install_page',
+            component: () => import('./views/AppInstallPage'),
         },
         {
             path: '/guess_number_settings',

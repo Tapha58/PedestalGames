@@ -1,9 +1,9 @@
 <template>
     <div class="px-3">
-<!--        <v-btn @click="VKWebAppGetCommunityToken">VKWebAppGetCommunityToken</v-btn>-->
-<!--        <v-btn @click="VKWebAppOpenApp">VKWebAppOpenApp</v-btn>-->
+        <!--        <v-btn @click="VKWebAppGetCommunityToken">VKWebAppGetCommunityToken</v-btn>-->
+        <!--        <v-btn @click="VKWebAppOpenApp">VKWebAppOpenApp</v-btn>-->
         <v-row dense>
-            <v-col cols="2" >
+            <v-col cols="2">
                 <v-btn @click="button_back" color="rgba(0, 0, 0, .6)" text dark small>
                     <v-icon class="pr-1" small>mdi-arrow-left-thick</v-icon>
                     Назад
@@ -19,7 +19,7 @@
                         height="40"
                         :color='color_alert'
                         dense
-                        >
+                >
                     <v-row>
                         <v-col class="py-0">
                             1. Сформируйте приз
@@ -64,17 +64,17 @@
                     :color='color_alert'
                     dense
             >
-<!--                3. Задайте правила игры-->
-<!--                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">-->
-<!--                    <template v-slot:activator="{ on }">-->
-<!--                        <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>-->
-<!--                    </template>-->
-<!--                    <span>-->
-<!--                        Продумайте игровую механику, чтобы игра не завершилась слишком быстро и у пользователей был-->
-<!--                        интерес следить за ней. Используйте ограниченные периодические бесплатные попытки и платные-->
-<!--                        попытки за баллы магазина / рейтинга.-->
-<!--                    </span>-->
-<!--                </v-tooltip>-->
+                <!--                3. Задайте правила игры-->
+                <!--                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">-->
+                <!--                    <template v-slot:activator="{ on }">-->
+                <!--                        <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>-->
+                <!--                    </template>-->
+                <!--                    <span>-->
+                <!--                        Продумайте игровую механику, чтобы игра не завершилась слишком быстро и у пользователей был-->
+                <!--                        интерес следить за ней. Используйте ограниченные периодические бесплатные попытки и платные-->
+                <!--                        попытки за баллы магазина / рейтинга.-->
+                <!--                    </span>-->
+                <!--                </v-tooltip>-->
 
                 <v-row>
                     <v-col class="py-0">
@@ -89,7 +89,8 @@
                         </v-tooltip>
                     </v-col>
                     <v-col align="right" class="py-0">
-                        <a href="https://vk.com/@pedestal-wallgames?anchor=pravila-igry-uslovia-i-popytki-2" target="_blank">Подробнее</a>
+                        <a href="https://vk.com/@pedestal-wallgames?anchor=pravila-igry-uslovia-i-popytki-2"
+                           target="_blank">Подробнее</a>
                     </v-col>
                 </v-row>
 
@@ -425,7 +426,7 @@
                         persistent-hint="true"
                 >
                     <template v-if="!mobile" v-slot:append>
-                        <emoji-picker @emoji="append"   >
+                        <emoji-picker @emoji="append">
                             <div
                                     @click.stop="clickEvent"
                                     class="emoji-invoker"
@@ -463,10 +464,12 @@
             <!--            <v-row v-if='!gameData.mobile' align="center" justify="$vuetify.breakpoint.name === 'xs' ? 'center' : 'start'" dense>-->
             <!--                <v-img max-width="250"  height="auto" :src="src"></v-img>-->
             <!--            </v-row>-->
-            <v-row align="center"  dense>
+            <v-row align="center" dense>
                 <!--                <v-col align="center" justify="start" cols="12" xs="12" sm="5" class="mr-3">-->
-                <v-col  :align="$vuetify.breakpoint.name === 'xs' ? 'center' : ''" :justify="$vuetify.breakpoint.name === 'xs' ? 'center' : 'start'" cols="12" xs="12" sm="5" class="mr-3">
-                    <v-img id="img" max-width="300"  height="auto" :src="src"></v-img>
+                <v-col :align="$vuetify.breakpoint.name === 'xs' ? 'center' : ''"
+                       :justify="$vuetify.breakpoint.name === 'xs' ? 'center' : 'start'" cols="12" xs="12" sm="5"
+                       class="mr-3">
+                    <v-img id="img" max-width="300" height="auto" :src="src"></v-img>
                 </v-col>
                 <v-col sm="5" cols="12" xs="12">
                     <v-file-input
@@ -495,7 +498,7 @@
                         class="mt-0 pt-2"
                 ></v-switch>
             </v-col>
-            <v-col  cols="12" xs="12" sm="5" v-show="delayedLaunch">
+            <v-col cols="12" xs="12" sm="5" v-show="delayedLaunch">
                 <VueCtkDateTimePicker
                         id="DateTimePicker"
                         format="YYYY-MM-DD HH:mm"
@@ -528,15 +531,17 @@
                             outlined
                             dense
                             v-model="token_group"
-                    ><template v-slot:append id="btn_token">
-                        <v-btn @click="group_record_token" id="qw1" x-small color="primary">применить</v-btn>
-                    </template>
+                    >
+                        <template v-slot:append id="btn_token">
+                            <v-btn @click="group_record_token" id="qw1" x-small color="primary">применить</v-btn>
+                        </template>
                     </v-text-field>
                 </v-row>
                 <span v-bind:style="{ color: 'red', fontSize: 14 + 'px' }">{{ message_group_record_token }}</span>
             </v-col>
         </div>
-        <div id="pay_method" v-if='!/^[0-9]+$/.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
+        <div id="pay_method"
+             v-if='!/^[0-9]+$/.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
             <v-col class="px-0 pb-0">
                 <v-alert
                         class="mb-2"
@@ -554,7 +559,8 @@
                 </v-alert>
             </v-col>
         </div>
-        <v-col cols="12" sm="6" md="6" v-if='!/^[0-9]+$/.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
+        <v-col cols="12" sm="6" md="6"
+               v-if='!/^[0-9]+$/.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
             <v-radio-group v-model="payment_type" column class="mt-0">
                 <v-radio
                         :label=label_payment_type_1
@@ -569,7 +575,7 @@
             </v-radio-group>
         </v-col>
         <v-row>
-            <v-col v-show="$vuetify.breakpoint.name !== 'xs'" align="center" sm="6" xs='12' cols="12" >
+            <v-col v-show="$vuetify.breakpoint.name !== 'xs'" align="center" sm="6" xs='12' cols="12">
                 <v-btn @click="textareas_showed = !textareas_showed" block color="primary" small>
                     {{ toggle_textareas_btn_text }}
                 </v-btn>
@@ -585,12 +591,14 @@
                 >{{ name_button_2 }}
                 </v-btn>
                 <span v-bind:style="{ color: 'red', fontSize: 14 + 'px' }">{{ message_error }}
-                    <a v-if='show_link_error_callback' v-bind:style="{ color: 'red', fontSize: 14 + 'px' }" href="https://vk.com/@pedestal-error?anchor=oshibka-2000-maximum-callback-serverov" target="_blank"> Подробнее.</a></span>
+                    <a v-if='show_link_error_callback' v-bind:style="{ color: 'red', fontSize: 14 + 'px' }"
+                       href="https://vk.com/@pedestal-error?anchor=oshibka-2000-maximum-callback-serverov"
+                       target="_blank"> Подробнее.</a></span>
                 <span v-bind:style="{ color: 'green', fontSize: 14 + 'px' }">{{ message_success }}</span>
             </v-col>
 
-            <v-col v-show="$vuetify.breakpoint.name === 'xs'" align="center" sm="6" xs='12' cols="12" >
-                <v-btn  @click="textareas_showed = !textareas_showed" block color="primary" small>
+            <v-col v-show="$vuetify.breakpoint.name === 'xs'" align="center" sm="6" xs='12' cols="12">
+                <v-btn @click="textareas_showed = !textareas_showed" block color="primary" small>
                     {{ toggle_textareas_btn_text }}
                 </v-btn>
             </v-col>
@@ -780,9 +788,24 @@
                 {
                     name: 'Игрок выиграл',
                     textarea_content: [
-                        {id: 'message_win', value: '', label: 'Игрок выигрывает и получает приз', list_of_variables_for_rules: ['profile','prize','balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'count_attempts']},
-                        {id: 'message_win_balance', value: '', label: 'Текст при начислении баланса', list_of_variables_for_rules: ['profile','balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five']},
-                        {id: 'message_win_rating', value: '', label: 'Текст при начислении рейтинга', list_of_variables_for_rules: ['profile','rating_win', 'rating_name_one', 'rating_name_two', 'rating_name_five']},
+                        {
+                            id: 'message_win',
+                            value: '',
+                            label: 'Игрок выигрывает и получает приз',
+                            list_of_variables_for_rules: ['profile', 'prize', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'count_attempts']
+                        },
+                        {
+                            id: 'message_win_balance',
+                            value: '',
+                            label: 'Текст при начислении баланса',
+                            list_of_variables_for_rules: ['profile', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five']
+                        },
+                        {
+                            id: 'message_win_rating',
+                            value: '',
+                            label: 'Текст при начислении рейтинга',
+                            list_of_variables_for_rules: ['profile', 'rating_win', 'rating_name_one', 'rating_name_two', 'rating_name_five']
+                        },
                         // {id: 'message_win_API', value: '', label: 'Текст в случае успешного API запроса', list_of_variables_for_rules: ['profile']},
                         // {id: 'message_win_API_fail', value: '', label: 'Текст если API-запрос не успешный', list_of_variables_for_rules: ['profile']},
                     ]
@@ -790,38 +813,148 @@
                 {
                     name: 'Общие ответы',
                     textarea_content: [
-                        {id: 'message_has_attempts', value: '', label: 'Еще есть попытки', list_of_variables_for_rules: ['profile','timeout','count_attempts','remain_attempts_to_buy']},
-                        {id: 'message_already_win', value: '', label: 'Уже победил в игре', list_of_variables_for_rules: ['profile']},
-                        {id: 'message_attempts_timeout', value: '', label: 'Время между попытками не истекло', list_of_variables_for_rules: ['profile','timeout']},
-                        {id: 'message_invalid_format', value: '', label: 'Не верный формат сообщения', list_of_variables_for_rules: ['profile']},
-                        {id: 'message_game_end', value: '', label: 'Игра завершена (для всех)', list_of_variables_for_rules: ['profile']},
-                        {id: 'message_not_available_attempts', value: '', label: 'Игра завершена (для игрока)', list_of_variables_for_rules: ['profile']},
-                        {id: 'message_comment_edited', value: '', label: 'Пользователь отредактировал комментарий', list_of_variables_for_rules: ['profile']},
-                        {id: 'message_requirement_violated', value: '', label: 'Не выполнил условие для участия', list_of_variables_for_rules: ['profile','fail_conditions','count_attempts']},
-                        {id: 'message_repost_desc', value: '', label: 'Описание действия для репоста', list_of_variables_for_rules: ['profile']},
-                        {id: 'message_enable_notifications_desc', value: '', label: 'Описание действия для включения уведомлений', list_of_variables_for_rules: ['profile']},
-                        {id: 'message_join_group_desc', value: '', label: 'Описание действия для вступления в группу', list_of_variables_for_rules: ['profile']},
-                        {id: 'message_join_partner_group_desc', value: '', label: 'Описание действия для вступления в партнёрскую группу', list_of_variables_for_rules: ['profile','external']},
-                        {id: 'message_private_profile', value: '', label: 'Невозможно проверить наличие репоста (стена закрыта)', list_of_variables_for_rules: ['profile']},
+                        {
+                            id: 'message_has_attempts',
+                            value: '',
+                            label: 'Еще есть попытки',
+                            list_of_variables_for_rules: ['profile', 'timeout', 'count_attempts', 'remain_attempts_to_buy']
+                        },
+                        {
+                            id: 'message_already_win',
+                            value: '',
+                            label: 'Уже победил в игре',
+                            list_of_variables_for_rules: ['profile']
+                        },
+                        {
+                            id: 'message_attempts_timeout',
+                            value: '',
+                            label: 'Время между попытками не истекло',
+                            list_of_variables_for_rules: ['profile', 'timeout']
+                        },
+                        {
+                            id: 'message_invalid_format',
+                            value: '',
+                            label: 'Не верный формат сообщения',
+                            list_of_variables_for_rules: ['profile']
+                        },
+                        {
+                            id: 'message_game_end',
+                            value: '',
+                            label: 'Игра завершена (для всех)',
+                            list_of_variables_for_rules: ['profile']
+                        },
+                        {
+                            id: 'message_not_available_attempts',
+                            value: '',
+                            label: 'Игра завершена (для игрока)',
+                            list_of_variables_for_rules: ['profile']
+                        },
+                        {
+                            id: 'message_comment_edited',
+                            value: '',
+                            label: 'Пользователь отредактировал комментарий',
+                            list_of_variables_for_rules: ['profile']
+                        },
+                        {
+                            id: 'message_requirement_violated',
+                            value: '',
+                            label: 'Не выполнил условие для участия',
+                            list_of_variables_for_rules: ['profile', 'fail_conditions', 'count_attempts']
+                        },
+                        {
+                            id: 'message_repost_desc',
+                            value: '',
+                            label: 'Описание действия для репоста',
+                            list_of_variables_for_rules: ['profile']
+                        },
+                        {
+                            id: 'message_enable_notifications_desc',
+                            value: '',
+                            label: 'Описание действия для включения уведомлений',
+                            list_of_variables_for_rules: ['profile']
+                        },
+                        {
+                            id: 'message_join_group_desc',
+                            value: '',
+                            label: 'Описание действия для вступления в группу',
+                            list_of_variables_for_rules: ['profile']
+                        },
+                        {
+                            id: 'message_join_partner_group_desc',
+                            value: '',
+                            label: 'Описание действия для вступления в партнёрскую группу',
+                            list_of_variables_for_rules: ['profile', 'external']
+                        },
+                        {
+                            id: 'message_private_profile',
+                            value: '',
+                            label: 'Невозможно проверить наличие репоста (стена закрыта)',
+                            list_of_variables_for_rules: ['profile']
+                        },
                     ]
                 },
                 {
                     name: 'Закончились попытки',
                     textarea_content: [
-                        {id: 'message_attempts_out', value: '', label: 'Закончились попытки', list_of_variables_for_rules: ['profile','remain_attempts_to_buy','next_attempts_periodic','count_attempts_periodic','action_for_attempts','more_attempts']},
-                        {id: 'message_attempts_can_be_extended', value: '', label: 'Выдача попыток по таймеру', list_of_variables_for_rules: ['profile','next_attempts_periodic','count_attempts_periodic']},
-                        {id: 'message_attempts_can_be_added', value: '', label: 'Выдача по действию', list_of_variables_for_rules: ['profile','action_for_attempts']},
-                        {id: 'message_attempts_can_be_bought', value: '', label: 'Может купить еще', list_of_variables_for_rules: ['profile','remain_attempts_to_buy']},
+                        {
+                            id: 'message_attempts_out',
+                            value: '',
+                            label: 'Закончились попытки',
+                            list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy', 'next_attempts_periodic', 'count_attempts_periodic', 'action_for_attempts', 'more_attempts']
+                        },
+                        {
+                            id: 'message_attempts_can_be_extended',
+                            value: '',
+                            label: 'Выдача попыток по таймеру',
+                            list_of_variables_for_rules: ['profile', 'next_attempts_periodic', 'count_attempts_periodic']
+                        },
+                        {
+                            id: 'message_attempts_can_be_added',
+                            value: '',
+                            label: 'Выдача по действию',
+                            list_of_variables_for_rules: ['profile', 'action_for_attempts']
+                        },
+                        {
+                            id: 'message_attempts_can_be_bought',
+                            value: '',
+                            label: 'Может купить еще',
+                            list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy']
+                        },
                     ]
                 },
                 {
                     name: 'Покупка попыток',
                     textarea_content: [
-                        {id: 'message_bought_max_attempts', value: '', label: 'Купил максимум попыток', list_of_variables_for_rules: ['profile','balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout']},
-                        {id: 'message_wants_too_many_attempts', value: '', label: 'Пробует купить больше, чем можно купить (по кол-ву)', list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']},
-                        {id: 'message_not_enough_money', value: '', label: 'Не хватает баланса для покупки', list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']},
-                        {id: 'message_successful_buy', value: '', label: 'Успешная покупка', list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout', 'count_attempts', 'remain_attempts_to_buy']},
-                        {id: 'message_successful_buy', value: '', label: 'Успешная покупка', list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout', 'count_attempts', 'remain_attempts_to_buy']},
+                        {
+                            id: 'message_bought_max_attempts',
+                            value: '',
+                            label: 'Купил максимум попыток',
+                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout']
+                        },
+                        {
+                            id: 'message_wants_too_many_attempts',
+                            value: '',
+                            label: 'Пробует купить больше, чем можно купить (по кол-ву)',
+                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']
+                        },
+                        {
+                            id: 'message_not_enough_money',
+                            value: '',
+                            label: 'Не хватает баланса для покупки',
+                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']
+                        },
+                        {
+                            id: 'message_successful_buy',
+                            value: '',
+                            label: 'Успешная покупка',
+                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout', 'count_attempts', 'remain_attempts_to_buy']
+                        },
+                        {
+                            id: 'message_successful_buy',
+                            value: '',
+                            label: 'Успешная покупка',
+                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout', 'count_attempts', 'remain_attempts_to_buy']
+                        },
                     ]
                 },
 
@@ -837,7 +970,7 @@
             },
         },
         mounted:
-            async function() {
+            async function () {
                 // блок загрузки сообщений в зависимости от типа игры
                 this.advanced_settings_textareas[0].textarea_content = this.mechanics_textarea_block
                 if (this.game_type === 2 || this.game_type === 3 || this.game_type === 4 || this.game_type == 6) {
@@ -854,16 +987,16 @@
                 }
 
 
-                await this.get_group_status ()
+                await this.get_group_status()
                 if (this.group_status === 1) {
                     this.payment_type = 3
                 }
                 if (this.group_status === 2) {
-                    await this.get_prices ()
+                    await this.get_prices()
                 }
                 if (this.$route.params.id) {
                     await this.load_user_settings()
-                    this.loadDefaulImage ()
+                    this.loadDefaulImage()
                     this.gameData = this.def_settings
                     await this.transform_prizes_back_front()
 
@@ -873,33 +1006,33 @@
                     if (/^[0-9]+$/.test(this.$route.params.id)) {
                         this.show_edit = true
                         // this.auto_resize (30)
-                        this.auto_resize ()
+                        this.auto_resize()
                     }
                 } else {
                     await this.load_individual_settings()
                     this.gameData = this.def_settings
-                    this.loadDefaulImage ()
+                    this.loadDefaulImage()
                     if (this.name_game === 'guess_number') {
                         this.$emit('randomNumber')
                     }
                     // this.auto_resize (250)
-                    this.auto_resize ()
+                    this.auto_resize()
                 }
 
-                await this.load_balance ()
-                await this.load_free_attempts ()
+                await this.load_balance()
+                await this.load_free_attempts()
 
 
-                await this.check_group_token ()
+                await this.check_group_token()
 
-                this.apply_def_settings ()
-                await this.getAllUrlParams ()
+                this.apply_def_settings()
+                await this.getAllUrlParams()
                 this.common_settings.id_group_vk = +this.settings.auth_data.vk_group_id
                 this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
 
             },
         watch: {
-            loader () {
+            loader() {
                 const l = this.loader
                 this[l] = !this[l]
                 this.loader = null
@@ -984,11 +1117,11 @@
                     let index5 = this.advanced_settings_textareas[index4].textarea_content.findIndex(item => item.id === 'message_valid')
                     if (index5 === -1) {
                         this.advanced_settings_textareas[index4].textarea_content.push({
-                                    id: 'message_valid',
-                                    value: '',
-                                    label: 'Сообщение при попадании',
-                                    list_of_variables_for_rules: []
-                                })
+                            id: 'message_valid',
+                            value: '',
+                            label: 'Сообщение при попадании',
+                            list_of_variables_for_rules: []
+                        })
                     }
                 }
                 if (this.game_type == 5) {
@@ -1002,10 +1135,14 @@
                         this.advanced_settings_textareas[index].textarea_content.splice(index2, 1)
                     } else {
                         this.advanced_settings_textareas[index].textarea_content.unshift({
-                            id: 'message_win', value: '', label: 'Игрок выигрывает и получает приз', list_of_variables_for_rules:
-                                ['profile','prize','balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'count_attempts']})
+                            id: 'message_win',
+                            value: '',
+                            label: 'Игрок выигрывает и получает приз',
+                            list_of_variables_for_rules:
+                                ['profile', 'prize', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'count_attempts']
+                        })
                     }
-                   // убираем сообщение 'message_valid' в game_type = 5
+                    // убираем сообщение 'message_valid' в game_type = 5
                     let index4 = this.advanced_settings_textareas.findIndex(item => item.name === 'Игровая механика')
                     let index5 = this.advanced_settings_textareas[index4].textarea_content.findIndex(item => item.id === 'message_valid')
                     if (index5 !== -1) {
@@ -1033,11 +1170,11 @@
                     for (let key in data.game) {
                         if (key.startsWith('message_')) {
                             this.$set(this.textarea_values.common, key, data.game[key])
-                        }  else if (key === 'game_duration') {
+                        } else if (key === 'game_duration') {
                             this.$set(this.settings, key, data.game[key] / 3600)
-                        }  else if (key === 'win_per_participant_limit') {
+                        } else if (key === 'win_per_participant_limit') {
                             this.$set(this.settings, key, data.game[key])
-                        }  else if (key === 'is_random_giveaway') {
+                        } else if (key === 'is_random_giveaway') {
                             this.$set(this.settings, key, data.game[key])
                         } else {
                             this.$set(this.common_settings, key, data.game[key])
@@ -1054,37 +1191,37 @@
                     }
                 }
             },
-            hint_text () {
-              if (this.game_type === 5 || this.game_type === 6) {
-                  return '{ссылка} - подставится ссылка на игровое поле'
-              } else return ''
+            hint_text() {
+                if (this.game_type === 5 || this.game_type === 6) {
+                    return '{ссылка} - подставится ссылка на игровое поле'
+                } else return ''
             },
-            no_money () {
+            no_money() {
                 if (/^[0-9]+$/.test(this.$route.params.id) || this.group_status === 1 || this.balance >= this.price || this.games_available_launches !== 0) {
                     return false
                 } else {
                     return true
                 }
             },
-            label_payment_type_1 () {
-                return 'Оплата балансом (на балансе: ' +  this.balance + '₽)'
+            label_payment_type_1() {
+                return 'Оплата балансом (на балансе: ' + this.balance + '₽)'
             },
-            label_payment_type_2 () {
-                return 'Оплата жетоном (доступно жетонов: ' +  this.games_available_launches + ')'
+            label_payment_type_2() {
+                return 'Оплата жетоном (доступно жетонов: ' + this.games_available_launches + ')'
             },
-            name_button_2 () {
+            name_button_2() {
                 if (/^[0-9]+$/.test(this.$route.params.id)) {
                     return 'Cохранить изменения'
                 } else if (this.payment_type == 1) {
-                        return 'Запустить игру за ' + this.price + 'р'
+                    return 'Запустить игру за ' + this.price + 'р'
                 } else if (this.payment_type == 2) {
-                        return 'Запустить игру за 1 жетон'
+                    return 'Запустить игру за 1 жетон'
                 } else if (this.payment_type == 3) {
-                        return 'Запустить игру бесплатно'
+                    return 'Запустить игру бесплатно'
                 }
                 return 'ошибка'
             },
-            url_rules () {
+            url_rules() {
                 let rules = [() => true]
                 if (this.required_join_partner_group_abc === 'b' || this.required_join_partner_group_abc === 'c') {
 
@@ -1106,7 +1243,7 @@
                 }
                 return rules
             },
-            rules_attempts_extended_max_count () {
+            rules_attempts_extended_max_count() {
                 if (this.show_attempts_extended) {
                     let rules = [
                         v => !!v || 'Недопустимый формат',
@@ -1119,7 +1256,7 @@
                 }
                 return [() => true]
             },
-            rules_attempts_extended_count () {
+            rules_attempts_extended_count() {
                 if (this.show_attempts_extended) {
                     return [
                         v => !!v || 'Недопустимый формат',
@@ -1129,7 +1266,7 @@
                 }
                 return [() => true]
             },
-            rules_attempts_extended_frequency_minutes () {
+            rules_attempts_extended_frequency_minutes() {
                 if (this.show_attempts_extended) {
                     return [
                         v => !!v || 'Недопустимый формат',
@@ -1139,7 +1276,7 @@
                 }
                 return [() => true]
             },
-            rules_balance_type () {
+            rules_balance_type() {
                 if (this.switchPaidAttempts) {
                     return [
                         v => !!v || 'Недопустимый формат',
@@ -1147,7 +1284,7 @@
                 }
                 return [() => true]
             },
-            rules_paid_attempts_count () {
+            rules_paid_attempts_count() {
                 if (this.switchPaidAttempts) {
                     return [
                         v => !!v || 'Недопустимый формат',
@@ -1157,7 +1294,7 @@
                 }
                 return [() => true]
             },
-            rules_paid_attempt_price () {
+            rules_paid_attempt_price() {
                 if (this.switchPaidAttempts) {
                     return [
                         v => !!v || 'Недопустимый формат',
@@ -1167,7 +1304,7 @@
                 }
                 return [() => true]
             },
-            rules_join_group_count_attempts () {
+            rules_join_group_count_attempts() {
                 if (this.required_join_group_abc === 'c') {
                     return [
                         v => !!v || 'Недопустимый формат',
@@ -1176,7 +1313,7 @@
                 }
                 return [() => true]
             },
-            rules_enable_notifications_count_attempts () {
+            rules_enable_notifications_count_attempts() {
                 if (this.required_enable_notifications_abc === 'c') {
                     return [
                         v => !!v || 'Недопустимый формат',
@@ -1185,7 +1322,7 @@
                 }
                 return [() => true]
             },
-            rules_join_partner_group_count_attempts () {
+            rules_join_partner_group_count_attempts() {
                 if (this.required_join_partner_group_abc === 'c') {
                     return [
                         v => !!v || 'Недопустимый формат',
@@ -1194,18 +1331,18 @@
                 }
                 return [() => true]
             },
-            minDate () {
+            minDate() {
                 let date = new Date()
                 date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + (date.getMinutes() + 15)
                 return date
             },
-            maxDate () {
+            maxDate() {
                 let date = new Date()
                 date.setDate(date.getDate() + 7)
                 date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
                 return date
             },
-            rules_image () {
+            rules_image() {
                 const rules = [() => true]
                 if (this.image) {
                     const regex = /^(?:.*\.(?=(jpg|jpeg|png|gif)$))?[^.]*$/i
@@ -1217,10 +1354,10 @@
                 }
                 return rules
             },
-            toggle_textareas_btn_text () {
+            toggle_textareas_btn_text() {
                 // this.auto_resize_delay ()
                 if (this.textareas_showed)
-                    return  'Скрыть настройки ответов бота'
+                    return 'Скрыть настройки ответов бота'
                 else
                     return 'Показать настройки ответов бота'
             }
@@ -1230,7 +1367,8 @@
                 let response = await bridge.send("VKWebAppGetCommunityToken", {
                     "app_id": +this.settings.auth_data.vk_app_id,
                     "group_id": +this.settings.auth_data.vk_group_id,
-                    "scope": "messages, manage, wall"})
+                    "scope": "messages, manage, wall"
+                })
                 console.log(response)
             },
             VKWebAppOpenApp: async function () {
@@ -1271,9 +1409,9 @@
             },
             button_back: function () {
                 if (this.$route.params.id)
-                    this.$router.push({ path: '/my_games/'})
+                    this.$router.push({path: '/my_games/'})
                 else
-                    this.$router.push({ path: '/choice_games/'})
+                    this.$router.push({path: '/choice_games/'})
             },
             fill_textarea_values: function () {
                 this.advanced_settings_textareas.forEach(block => {
@@ -1282,7 +1420,7 @@
             },
             def_message_aply: async function () {
                 if (this.$route.params.id) {
-                    await this.load_individual_settings ()
+                    await this.load_individual_settings()
                 }
                 for (let key in this.def_settings.game) {
                     if (key.startsWith('message_')) {
@@ -1297,7 +1435,7 @@
             },
             go: async function () {
                 this.dialog = false
-                this.$router.push({ path: '/my_games'})
+                this.$router.push({path: '/my_games'})
                 await bridge.send("VKWebAppScroll", {"top": 0, "speed": 600})
 
             },
@@ -1334,21 +1472,16 @@
                     this.show_attempts_extended = true
 
                 if (this.common_settings.paid_attempts_count !== 0 || this.common_settings.paid_attempt_price !== 0)
-                    this.switchPaidAttempts =  true
+                    this.switchPaidAttempts = true
             },
             check_group_token: async function () {
-                // console.log('check_group_token')
                 try {
                     let response = await fetch("/app/wallgames/check_group_token/" + sessionStorage.getItem('auth_data_url'))
-                    // let response = await fetch("https://pedestal-test2.aiva-studio.ru/app/wallgames/check_group_token?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE")
                     let result = await response.json()
                     this.group_token = result.data
-                    // console.log('result - ' + result)
-                    // console.log('group_token - ' + this.group_token)
 
                 } catch (error) {
                     console.error('Ошибка HTTP: ', error)
-                    // console.log("Ошибка HTTP: " + response.status)
                 }
             },
             load_individual_settings: async function () {
@@ -1457,13 +1590,13 @@
                     // console.log(this.prizes_front[i].prizes)
                 }
             },
-            add_prize_card () {
+            add_prize_card() {
                 this.prizes_front.push({
                     id: ++this.id_prize_card,
                     card_prizes: [{type: 'text'}]
                 })
             },
-            delete_prize (id) {
+            delete_prize(id) {
                 let x = this.prizes_front.findIndex(item => item.id === id)
                 this.prizes_front.splice(x, 1)
             },
@@ -1473,7 +1606,7 @@
                 this.main_obj.show_main_page = true
             },
             auto_resize_delay: function () {
-                setTimeout (this.auto_resize, 1000)
+                setTimeout(this.auto_resize, 1000)
             },
 
 
@@ -1490,12 +1623,12 @@
                     return
                 }
                 if (this.required_join_partner_group_abc === 'b' || this.required_join_partner_group_abc === 'c') {
-                    await this.vkWebAppGetAuthToken ()
-                    await this.transform_partner_group_url ()
+                    await this.vkWebAppGetAuthToken()
+                    await this.transform_partner_group_url()
                 }
                 if (/^[0-9]+$/.test(this.$route.params.id)) {
                     // await this.transform_prizes_array ()
-                    await this.save_change_put ()
+                    await this.save_change_put()
                     return this.loading = false
                 }
                 if (this.payment_type == 1) {
@@ -1514,12 +1647,14 @@
                 }
                 this.loading = true
 
-                await this.transform_message_front_back ()
-                await this.transform_prizes_array ()
+                await this.transform_message_front_back()
+                await this.transform_prizes_array()
 
                 if (this.game_type == 5) {
                     let count_prize = 0
-                    this.common_settings.prizes.forEach((item) => { count_prize += item.count})
+                    this.common_settings.prizes.forEach((item) => {
+                        count_prize += item.count
+                    })
                     this.$emit('create_win_fields_type5', count_prize)
                     // console.log('count_prize ' + count_prize)
                 }
@@ -1543,7 +1678,7 @@
                 this.setting_variables_in_the_post_text()
 
                 if (this.timeDeferredPost) {
-                    if (Date.parse(this.timeDeferredPost) < +new Date ()) {
+                    if (Date.parse(this.timeDeferredPost) < +new Date()) {
                         this.message_error = 'Некорректное время отлож. поста'
                         setTimeout(this.clear_message, 5000)
                         return this.loading = false
@@ -1556,7 +1691,7 @@
                 }
                 if (this.common_settings.id_post_vk) {
                     if (await this.create_game()) {
-                        let top = document.body.offsetHeight/2 - 125
+                        let top = document.body.offsetHeight / 2 - 125
                         this.dialog = true
                         await bridge.send("VKWebAppScroll", {"top": top, "speed": 600})
 
@@ -1621,7 +1756,7 @@
                 this.src = '/static/wallgames/image_default/min/' + this.name_game + '_min.jpg'
                 this.image = null
             },
-            upload_photo: async function() {
+            upload_photo: async function () {
                 let response
                 if (this.image === null) {
                     response = await fetch("/app/wallgames/upload_photo/" + sessionStorage.getItem('auth_data_url') + "&game_name=" + this.name_game)
@@ -1637,8 +1772,7 @@
                 if (response.ok) {
                     response = await response.json()
                     return response.id
-                }
-                else {
+                } else {
                     response = await response.json()
                     console.log(response)
                     if (response.error.code === 15 || response.error.code === 5) {
@@ -1648,9 +1782,9 @@
                         return
                     }
                     console.log(response)
-                 }
+                }
             },
-            pay: async function() {
+            pay: async function () {
                 let obj = {}
                 obj.user_id = this.settings.auth_data.vk_user_id
                 obj.group_id = this.settings.auth_data.vk_group_id
@@ -1687,7 +1821,7 @@
                     return 0
                 }
             },
-            transform_prizes_array () {
+            transform_prizes_array() {
                 this.common_settings.prizes.splice(0, this.common_settings.prizes.length)
                 for (let i = 0; i < this.prizes_front.length; i++) {
                     let array_games = {}
@@ -1762,8 +1896,8 @@
             },
             send_post_vk: async function (media_id) {
                 try {
-                    let response  = await bridge.send("VKWebAppShowWallPostBox", {
-                        "owner_id": - this.settings.auth_data.vk_group_id,
+                    let response = await bridge.send("VKWebAppShowWallPostBox", {
+                        "owner_id": -this.settings.auth_data.vk_group_id,
                         "message": this.settings.post_text,
                         "from_group": "1",
                         "attachments": "photo" + this.settings.auth_data.vk_user_id + '_' + media_id,
@@ -1779,11 +1913,11 @@
             send_deferred_post_vk: async function (media_id) {
                 // console.log('id_group_vk - ' + this.settings.auth_data.vk_group_id)
                 // console.log('this.media_id - ' + media_id)
-                let publish_date = Date.parse(this.timeDeferredPost)/1000
+                let publish_date = Date.parse(this.timeDeferredPost) / 1000
                 // console.log('publish_date - ' + publish_date)
                 try {
-                    let response  = await bridge.send("VKWebAppShowWallPostBox", {
-                        "owner_id": - this.settings.auth_data.vk_group_id,
+                    let response = await bridge.send("VKWebAppShowWallPostBox", {
+                        "owner_id": -this.settings.auth_data.vk_group_id,
                         "message": this.settings.post_text,
                         "from_group": "1",
                         "attachments": "photo" + this.settings.auth_data.vk_user_id + '_' + media_id,
@@ -1839,7 +1973,7 @@
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8'
                             },
-                            body: JSON.stringify (this.gameData)
+                            body: JSON.stringify(this.gameData)
                         });
                     if (response.ok) {
                         // let result = await response.json()
@@ -1858,7 +1992,7 @@
                     console.error('Ошибка отправки данных - ', error)
                 }
             },
-            transform_partner_group_url:  async function () {
+            transform_partner_group_url: async function () {
                 let regex = [/public(\d{8,9})/, /club(\d{8,9})/, /vk.com\/(\w+)/]
                 for (let i = 0; i < regex.length; i++) {
                     let result = this.partner_group_url.match(regex[i])
@@ -1867,7 +2001,7 @@
                             return this.common_settings.partner_group_id = result[1]
                         else {
                             try {
-                                let response  = await bridge.send("VKWebAppCallAPIMethod", {
+                                let response = await bridge.send("VKWebAppCallAPIMethod", {
                                     "method": "utils.resolveScreenName",
                                     "request_id": "32test",
                                     "params": {
@@ -1886,7 +2020,6 @@
                 }
             },
             vkWebAppGetAuthToken: async function () {
-                // console.log(+this.settings.auth_data.vk_app_id)
                 try {
                     let response = await bridge.send("VKWebAppGetAuthToken", {
                         "app_id": +this.settings.auth_data.vk_app_id,
@@ -1900,7 +2033,10 @@
             },
             group_record_token: async function () {
                 try {
-                    let response = await bridge.send("VKWebAppCallAPIMethod", {"method": "groups.getTokenPermissions", "params": {"v":"5.107", "access_token": this.token_group}})
+                    let response = await bridge.send("VKWebAppCallAPIMethod", {
+                        "method": "groups.getTokenPermissions",
+                        "params": {"v": "5.107", "access_token": this.token_group}
+                    })
                     let mask = response.response.mask
                     response = response.response.permissions
                     // console.log(response)
@@ -1953,12 +2089,12 @@
             // validateField () {
             //     this.$refs.main_game_component.validate()
             // },
-            append (emoji) {
-                let area=this.$refs.post_text.$el.querySelector('textarea')
-                if ((area.selectionStart)||(area.selectionStart === 0)) {
-                    let p_start=area.selectionStart;
-                    let p_end=area.selectionEnd;
-                    this.settings.post_text = this.settings.post_text.substring(0,p_start) + emoji + this.settings.post_text.substring(p_end,area.value.length)
+            append(emoji) {
+                let area = this.$refs.post_text.$el.querySelector('textarea')
+                if ((area.selectionStart) || (area.selectionStart === 0)) {
+                    let p_start = area.selectionStart;
+                    let p_end = area.selectionEnd;
+                    this.settings.post_text = this.settings.post_text.substring(0, p_start) + emoji + this.settings.post_text.substring(p_end, area.value.length)
                 }
                 area.setRangeText(emoji, area.selectionStart, area.selectionEnd, "end");
                 area.focus();
@@ -1980,6 +2116,7 @@
         animation: loader 1s infinite;
         display: flex;
     }
+
     @-moz-keyframes loader {
         from {
             transform: rotate(0);
@@ -1988,6 +2125,7 @@
             transform: rotate(360deg);
         }
     }
+
     @-webkit-keyframes loader {
         from {
             transform: rotate(0);
@@ -1996,6 +2134,7 @@
             transform: rotate(360deg);
         }
     }
+
     @-o-keyframes loader {
         from {
             transform: rotate(0);
@@ -2004,6 +2143,7 @@
             transform: rotate(360deg);
         }
     }
+
     @keyframes loader {
         from {
             transform: rotate(0);
@@ -2012,6 +2152,7 @@
             transform: rotate(360deg);
         }
     }
+
     #token {
         border: 1px lightgrey;
         border-radius: 5px;
@@ -2061,7 +2202,6 @@
         color: red;
         font-size: 14px;
     }
-
 
 
 </style>

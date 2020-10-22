@@ -50,10 +50,10 @@
 
 <script>
     import bridge from "@vkontakte/vk-bridge";
+    import auto_resize from "@/mixins/auto_resize";
 
     export default {
-
-        name: "MyGames",
+        mixins: [auto_resize],
         data: () => ({
             headers: [
                 // { text: 'Id', value: 'id'},

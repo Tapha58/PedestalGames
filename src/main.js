@@ -14,8 +14,9 @@ Vue.use(Vuelidate)
 
 Vue.config.productionTip = false
 
-new Vue({
+let vm0 = new Vue({
   vuetify,
   router,
   render: h => h(App),
 }).$mount('#app')
+window.vm0 = vm0;
