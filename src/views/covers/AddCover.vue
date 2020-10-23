@@ -1967,11 +1967,6 @@
     }
 
     @font-face {
-        font-family: 'Crystal';
-        src: url("/static/longtime/fonts/Crystal.ttf");
-    }
-
-    @font-face {
         font-family: 'Washington';
         src: url("/static/longtime/fonts/Washington.ttf");
     }
