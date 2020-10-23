@@ -17,7 +17,7 @@
             },
         },
         mounted: async function () {
-                // sessionStorage.setItem('auth_data_url', document.location.search)
+                sessionStorage.setItem('auth_data_url', document.location.search)
          },
         computed: {
             show_btn_pedestal: function () {

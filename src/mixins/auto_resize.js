@@ -76,7 +76,15 @@
 //                 this.settings.auth_data = obj
 //             },
             getAllUrlParams: async function() {
-                let url = document.location.search
+                let url = ''
+                if (document.location.search) {
+                    url = document.location.search
+                } else {
+                    url = sessionStorage.getItem('auth_data_url')
+
+                }
+                console.log(url)
+
                 let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
 
                 // объект для хранения параметров

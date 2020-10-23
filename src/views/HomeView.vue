@@ -5,7 +5,7 @@
                 <v-tabs>
                     <v-tab to="/choice_games">Новая игра</v-tab>
                     <v-tab to="/my_games">Мои игры</v-tab>
-                    <v-tab to="/my_games">Баланс: 999₽</v-tab>
+                    <v-tab to="/balance">Баланс: 999₽</v-tab>
                 </v-tabs>
             </v-col>
             <v-col cols="3" align="right">

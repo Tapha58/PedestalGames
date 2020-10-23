@@ -29,6 +29,11 @@ export default new Router({
                 component: () => import('./views/MyGames'),
                 name: 'my_games'
             },
+            {
+                path: '/balance',
+                component: () => import('./views/Balance'),
+                name: 'balance'
+            },
         ]
         },
         {
