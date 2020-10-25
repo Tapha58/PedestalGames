@@ -25,7 +25,8 @@
                             :disabled="/^[0-9]+$/.test($route.params.id)"
                     ></v-text-field>
                 </v-col>
-                <v-btn v-if="!is_one_card && !/^[0-9]+$/.test($route.params.id)" icon fab absolute right small @click="$emit('delete_prize_creator', id)">
+                <v-btn v-if="!is_one_card && !/^[0-9]+$/.test($route.params.id)" icon fab absolute right small
+                       @click="$emit('delete_prize_creator', id)">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-row>
@@ -33,7 +34,7 @@
 
         <v-card-text class="pl-0">
 
-            <div class="mb-0 p-0"  v-for="(prize, i) in prizes_front_index.card_prizes" :key="prize.id">
+            <div class="mb-0 p-0" v-for="(prize, i) in prizes_front_index.card_prizes" :key="prize.id">
 
                 <v-row class="mb-0 p-0" dense>
                     <v-col class="pb-0 mb-n4" cols="10" xs="10" sm="5">
@@ -58,7 +59,8 @@
                                 :disabled="show_edit"
                         ></v-text-field>
                     </v-col>
-                    <v-col class="pb-0" cols="10" xs="10" sm="6" v-if="prize.type === 'balance_shop' || prize.type === 'balance_rating'">
+                    <v-col class="pb-0" cols="10" xs="10" sm="6"
+                           v-if="prize.type === 'balance_shop' || prize.type === 'balance_rating'">
                         <v-text-field
                                 v-model="prize.val"
                                 label="Кол-во баллов"
@@ -93,12 +95,15 @@
 
                         ></v-text-field>
                     </v-col>
-                    <v-col class="pb-0" v-bind:class="{ 'mt-n6': $vuetify.breakpoint.name === 'xs' }" cols="1" xs="1" v-show="!show_edit">
+                    <v-col class="pb-0" v-bind:class="{ 'mt-n6': $vuetify.breakpoint.name === 'xs' }" cols="1" xs="1"
+                           v-show="!show_edit">
                         <!--                <v-col class="pb-0"  cols="1" xs="1" v-show="!show_edit">-->
                         <!--                    <v-btn v-if="prizes.length - 1 === i && prizes.length !== types.length" class="mx-2" fab dark small color="indigo" @click="add_prize">-->
                         <!--                        <v-icon>mdi-plus</v-icon>-->
                         <!--                    </v-btn>-->
-                        <v-btn depressed v-show="prizes_front_index.card_prizes.length !== 1" class="mx-2 pb-0" fab dark small color="error" @click="prizes_front_index.card_prizes.splice(i, 1), $emit('auto_resize')">
+                        <v-btn depressed v-show="prizes_front_index.card_prizes.length !== 1" class="mx-2 pb-0" fab dark
+                               small color="error"
+                               @click="prizes_front_index.card_prizes.splice(i, 1), $emit('auto_resize')">
                             <v-icon>mdi-minus</v-icon>
                         </v-btn>
                     </v-col>
@@ -108,7 +113,9 @@
                     <!--                    <v-col sm="10">-->
                     <!--                    </v-col>-->
                     <v-col sm="1">
-                        <v-btn depressed v-show="prizes_front_index.card_prizes.length - 1 === i && prizes_front_index.card_prizes.length !== types.length" class="mx-2" fab dark small color="green" @click="add_prize">
+                        <v-btn depressed
+                               v-show="prizes_front_index.card_prizes.length - 1 === i && prizes_front_index.card_prizes.length !== types.length && pedestal_integration"
+                               class="mx-2" fab dark small color="green" @click="add_prize">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </v-col>
@@ -116,7 +123,8 @@
             </div>
         </v-card-text>
 
-        <v-btn class="mr-n2" v-if="!is_single_winner && is_last_card" fab absolute right bottom small dark color="#4a76a8" @click="$emit('add_prize_creator')">
+        <v-btn class="mr-n2" v-if="!is_single_winner && is_last_card" fab absolute right bottom small dark
+               color="#4a76a8" @click="$emit('add_prize_creator')">
             <v-icon>mdi-plus</v-icon>
         </v-btn>
     </v-card>
@@ -152,6 +160,9 @@
             number_gift: {
                 type: Number
             },
+            pedestal_integration: {
+                type: Boolean
+            },
 
         },
         data: () => ({
@@ -166,8 +177,8 @@
                 v => (!!v || v === 0) || 'Значение не задано'
             ],
             rules: {
-                required: v => !!v  || 'Недопустимый формат',
-                zero: v => (v !== '0')  || 'Недопустимый формат',
+                required: v => !!v || 'Недопустимый формат',
+                zero: v => (v !== '0') || 'Недопустимый формат',
                 max_length_200: v => (v && v.length <= 200) || 'Максимально допустимо 200 символов',
                 max_length_12: v => (v && v.length <= 12) || 'Максимально допустимо 12 символов',
                 range: v => (/^[0-9]{1,6}$/.test(v) || /^[0-9]{1,6}[-]{1}[0-9]{1,6}$/.test(v)) || 'Недопустимый формат'
@@ -201,6 +212,16 @@
                     // }
                 ]
             },
+            types2: function () {
+                return [
+                    {
+                        value: 'text',
+                        text: 'Свой приз',
+                        name: "text",
+                        disabled: this.prizes_front_index.card_prizes.find(item => item.type === 'text')
+                    },
+                ]
+            },
         },
         methods: {
             async add_prize() {
@@ -208,11 +229,18 @@
                     type: this.types.find(type => !type.disabled).value
                 })
             },
-            say_name: function(type) {
-                return this.types.map(item => ({
-                    ...item,
-                    disabled: item.value === type? false: item.disabled
-                }))
+            say_name: function (type) {
+                if (this.pedestal_integration) {
+                    return this.types.map(item => ({
+                        ...item,
+                        disabled: item.value === type ? false : item.disabled
+                    }))
+                } else {
+                    return this.types2.map(item => ({
+                        ...item,
+                        disabled: item.value === type ? false : item.disabled
+                    }))
+                }
             },
         },
     }

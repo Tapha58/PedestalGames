@@ -1,5 +1,12 @@
 <template>
     <div class="px-3">
+        <v-switch
+                :ripple="false"
+                color="red"
+                hide-details
+                label="Интеграция"
+                v-model="pedestal_integration"
+        ></v-switch>
         <!--        <v-btn @click="VKWebAppGetCommunityToken">VKWebAppGetCommunityToken</v-btn>-->
         <!--        <v-btn @click="VKWebAppOpenApp">VKWebAppOpenApp</v-btn>-->
         <v-row dense>
@@ -48,6 +55,7 @@
                         :is_last_card="index+1 === prizes_front.length"
                         :is_one_card="1 === prizes_front.length"
                         :id="prize.id"
+                        :pedestal_integration="pedestal_integration"
                         :show_edit="show_edit"
                         :number_gift="index+1"
                         v-model="prizes_front[index]"
@@ -319,7 +327,7 @@
                     </v-text-field>
                 </v-col>
             </v-row>
-            <v-row class="pl-3">
+            <v-row class="pl-3" v-if="pedestal_integration">
                 <v-switch
                         :label="($vuetify.breakpoint.name === 'xs') ? 'Платные попытки' : 'Платные попытки (за баллы)'"
                         :ripple="false"
@@ -460,12 +468,7 @@
             </v-col>
         </div>
         <div id="image_post" v-if='!/^[0-9]+$/.test($route.params.id)' class="mt-n3">
-            <!--            <v-row v-if='gameData.mobile' align="center" justify="center">-->
-            <!--            <v-row v-if='!gameData.mobile' align="center" justify="$vuetify.breakpoint.name === 'xs' ? 'center' : 'start'" dense>-->
-            <!--                <v-img max-width="250"  height="auto" :src="src"></v-img>-->
-            <!--            </v-row>-->
             <v-row align="center" dense>
-                <!--                <v-col align="center" justify="start" cols="12" xs="12" sm="5" class="mr-3">-->
                 <v-col :align="$vuetify.breakpoint.name === 'xs' ? 'center' : ''"
                        :justify="$vuetify.breakpoint.name === 'xs' ? 'center' : 'start'" cols="12" xs="12" sm="5"
                        class="mr-3">
@@ -486,6 +489,26 @@
                     ></v-file-input>
                 </v-col>
             </v-row>
+        </div>
+        <div>
+<!--            <span>h1</span>-->
+<!--            <v-btn dark small color="red">Разрешить уведомления</v-btn>-->
+            <v-alert
+                    class="mt-3"
+                    text
+                    prominent
+                    type="error"
+                    icon="mdi-progress-alert"
+            >
+                <v-row align="center">
+                    <v-col class="">
+                        Внимание, без предоставления прав на отправку уведомлений, запустить игру невозможно. Пожалуйста, предоставьте права.
+                    </v-col>
+                    <v-col class="shrink">
+                        <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="error">Разрешить уведомления</v-btn>
+                    </v-col>
+                </v-row>
+            </v-alert>
         </div>
         <v-row v-show='!show_edit' id="time_post" class="mt-5" dense>
             <v-col cols="12" xs="12" sm="4">
@@ -677,6 +700,7 @@
             'ending_game_textarea_block',
         ],
         data: () => ({
+            pedestal_integration: true,
             current_post_text: '',
             group_status: 1,
             balance: '',
@@ -780,185 +804,6 @@
             image: null,
             partner_group_url: null,
             mobile: false,
-            advanced_settings_textareas: [
-                {
-                    name: 'Игровая механика',
-                    textarea_content: ''
-                },
-                {
-                    name: 'Игрок выиграл',
-                    textarea_content: [
-                        {
-                            id: 'message_win',
-                            value: '',
-                            label: 'Игрок выигрывает и получает приз',
-                            list_of_variables_for_rules: ['profile', 'prize', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'count_attempts']
-                        },
-                        {
-                            id: 'message_win_balance',
-                            value: '',
-                            label: 'Текст при начислении баланса',
-                            list_of_variables_for_rules: ['profile', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five']
-                        },
-                        {
-                            id: 'message_win_rating',
-                            value: '',
-                            label: 'Текст при начислении рейтинга',
-                            list_of_variables_for_rules: ['profile', 'rating_win', 'rating_name_one', 'rating_name_two', 'rating_name_five']
-                        },
-                        // {id: 'message_win_API', value: '', label: 'Текст в случае успешного API запроса', list_of_variables_for_rules: ['profile']},
-                        // {id: 'message_win_API_fail', value: '', label: 'Текст если API-запрос не успешный', list_of_variables_for_rules: ['profile']},
-                    ]
-                },
-                {
-                    name: 'Общие ответы',
-                    textarea_content: [
-                        {
-                            id: 'message_has_attempts',
-                            value: '',
-                            label: 'Еще есть попытки',
-                            list_of_variables_for_rules: ['profile', 'timeout', 'count_attempts', 'remain_attempts_to_buy']
-                        },
-                        {
-                            id: 'message_already_win',
-                            value: '',
-                            label: 'Уже победил в игре',
-                            list_of_variables_for_rules: ['profile']
-                        },
-                        {
-                            id: 'message_attempts_timeout',
-                            value: '',
-                            label: 'Время между попытками не истекло',
-                            list_of_variables_for_rules: ['profile', 'timeout']
-                        },
-                        {
-                            id: 'message_invalid_format',
-                            value: '',
-                            label: 'Не верный формат сообщения',
-                            list_of_variables_for_rules: ['profile']
-                        },
-                        {
-                            id: 'message_game_end',
-                            value: '',
-                            label: 'Игра завершена (для всех)',
-                            list_of_variables_for_rules: ['profile']
-                        },
-                        {
-                            id: 'message_not_available_attempts',
-                            value: '',
-                            label: 'Игра завершена (для игрока)',
-                            list_of_variables_for_rules: ['profile']
-                        },
-                        {
-                            id: 'message_comment_edited',
-                            value: '',
-                            label: 'Пользователь отредактировал комментарий',
-                            list_of_variables_for_rules: ['profile']
-                        },
-                        {
-                            id: 'message_requirement_violated',
-                            value: '',
-                            label: 'Не выполнил условие для участия',
-                            list_of_variables_for_rules: ['profile', 'fail_conditions', 'count_attempts']
-                        },
-                        {
-                            id: 'message_repost_desc',
-                            value: '',
-                            label: 'Описание действия для репоста',
-                            list_of_variables_for_rules: ['profile']
-                        },
-                        {
-                            id: 'message_enable_notifications_desc',
-                            value: '',
-                            label: 'Описание действия для включения уведомлений',
-                            list_of_variables_for_rules: ['profile']
-                        },
-                        {
-                            id: 'message_join_group_desc',
-                            value: '',
-                            label: 'Описание действия для вступления в группу',
-                            list_of_variables_for_rules: ['profile']
-                        },
-                        {
-                            id: 'message_join_partner_group_desc',
-                            value: '',
-                            label: 'Описание действия для вступления в партнёрскую группу',
-                            list_of_variables_for_rules: ['profile', 'external']
-                        },
-                        {
-                            id: 'message_private_profile',
-                            value: '',
-                            label: 'Невозможно проверить наличие репоста (стена закрыта)',
-                            list_of_variables_for_rules: ['profile']
-                        },
-                    ]
-                },
-                {
-                    name: 'Закончились попытки',
-                    textarea_content: [
-                        {
-                            id: 'message_attempts_out',
-                            value: '',
-                            label: 'Закончились попытки',
-                            list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy', 'next_attempts_periodic', 'count_attempts_periodic', 'action_for_attempts', 'more_attempts']
-                        },
-                        {
-                            id: 'message_attempts_can_be_extended',
-                            value: '',
-                            label: 'Выдача попыток по таймеру',
-                            list_of_variables_for_rules: ['profile', 'next_attempts_periodic', 'count_attempts_periodic']
-                        },
-                        {
-                            id: 'message_attempts_can_be_added',
-                            value: '',
-                            label: 'Выдача по действию',
-                            list_of_variables_for_rules: ['profile', 'action_for_attempts']
-                        },
-                        {
-                            id: 'message_attempts_can_be_bought',
-                            value: '',
-                            label: 'Может купить еще',
-                            list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy']
-                        },
-                    ]
-                },
-                {
-                    name: 'Покупка попыток',
-                    textarea_content: [
-                        {
-                            id: 'message_bought_max_attempts',
-                            value: '',
-                            label: 'Купил максимум попыток',
-                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout']
-                        },
-                        {
-                            id: 'message_wants_too_many_attempts',
-                            value: '',
-                            label: 'Пробует купить больше, чем можно купить (по кол-ву)',
-                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']
-                        },
-                        {
-                            id: 'message_not_enough_money',
-                            value: '',
-                            label: 'Не хватает баланса для покупки',
-                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']
-                        },
-                        {
-                            id: 'message_successful_buy',
-                            value: '',
-                            label: 'Успешная покупка',
-                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout', 'count_attempts', 'remain_attempts_to_buy']
-                        },
-                        {
-                            id: 'message_successful_buy',
-                            value: '',
-                            label: 'Успешная покупка',
-                            list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout', 'count_attempts', 'remain_attempts_to_buy']
-                        },
-                    ]
-                },
-
-            ],
             game_id: '',
             def_message: '',
         }),
@@ -1191,6 +1036,327 @@
                     }
                 }
             },
+            advanced_settings_textareas() {
+                if (this.pedestal_integration) {
+                    return [
+                        {
+                            name: 'Игровая механика',
+                            textarea_content: ''
+                        },
+                        {
+                            name: 'Игрок выиграл',
+                            textarea_content: [
+                                {
+                                    id: 'message_win',
+                                    value: '',
+                                    label: 'Игрок выигрывает и получает приз',
+                                    list_of_variables_for_rules: ['profile', 'prize', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'count_attempts']
+                                },
+                                {
+                                    id: 'message_win_balance',
+                                    value: '',
+                                    label: 'Текст при начислении баланса',
+                                    list_of_variables_for_rules: ['profile', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five']
+                                },
+                                {
+                                    id: 'message_win_rating',
+                                    value: '',
+                                    label: 'Текст при начислении рейтинга',
+                                    list_of_variables_for_rules: ['profile', 'rating_win', 'rating_name_one', 'rating_name_two', 'rating_name_five']
+                                },
+                                // {id: 'message_win_API', value: '', label: 'Текст в случае успешного API запроса', list_of_variables_for_rules: ['profile']},
+                                // {id: 'message_win_API_fail', value: '', label: 'Текст если API-запрос не успешный', list_of_variables_for_rules: ['profile']},
+                            ]
+                        },
+                        {
+                            name: 'Общие ответы',
+                            textarea_content: [
+                                {
+                                    id: 'message_has_attempts',
+                                    value: '',
+                                    label: 'Еще есть попытки',
+                                    list_of_variables_for_rules: ['profile', 'timeout', 'count_attempts', 'remain_attempts_to_buy']
+                                },
+                                {
+                                    id: 'message_already_win',
+                                    value: '',
+                                    label: 'Уже победил в игре',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_attempts_timeout',
+                                    value: '',
+                                    label: 'Время между попытками не истекло',
+                                    list_of_variables_for_rules: ['profile', 'timeout']
+                                },
+                                {
+                                    id: 'message_invalid_format',
+                                    value: '',
+                                    label: 'Не верный формат сообщения',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_game_end',
+                                    value: '',
+                                    label: 'Игра завершена (для всех)',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_not_available_attempts',
+                                    value: '',
+                                    label: 'Игра завершена (для игрока)',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_comment_edited',
+                                    value: '',
+                                    label: 'Пользователь отредактировал комментарий',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_requirement_violated',
+                                    value: '',
+                                    label: 'Не выполнил условие для участия',
+                                    list_of_variables_for_rules: ['profile', 'fail_conditions', 'count_attempts']
+                                },
+                                {
+                                    id: 'message_repost_desc',
+                                    value: '',
+                                    label: 'Описание действия для репоста',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_enable_notifications_desc',
+                                    value: '',
+                                    label: 'Описание действия для включения уведомлений',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_join_group_desc',
+                                    value: '',
+                                    label: 'Описание действия для вступления в группу',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_join_partner_group_desc',
+                                    value: '',
+                                    label: 'Описание действия для вступления в партнёрскую группу',
+                                    list_of_variables_for_rules: ['profile', 'external']
+                                },
+                                {
+                                    id: 'message_private_profile',
+                                    value: '',
+                                    label: 'Невозможно проверить наличие репоста (стена закрыта)',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                            ]
+                        },
+                        {
+                            name: 'Закончились попытки',
+                            textarea_content: [
+                                {
+                                    id: 'message_attempts_out',
+                                    value: '',
+                                    label: 'Закончились попытки',
+                                    list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy', 'next_attempts_periodic', 'count_attempts_periodic', 'action_for_attempts', 'more_attempts']
+                                },
+                                {
+                                    id: 'message_attempts_can_be_extended',
+                                    value: '',
+                                    label: 'Выдача попыток по таймеру',
+                                    list_of_variables_for_rules: ['profile', 'next_attempts_periodic', 'count_attempts_periodic']
+                                },
+                                {
+                                    id: 'message_attempts_can_be_added',
+                                    value: '',
+                                    label: 'Выдача по действию',
+                                    list_of_variables_for_rules: ['profile', 'action_for_attempts']
+                                },
+                                {
+                                    id: 'message_attempts_can_be_bought',
+                                    value: '',
+                                    label: 'Может купить еще',
+                                    list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy']
+                                },
+                            ]
+                        },
+                        {
+                            name: 'Покупка попыток',
+                            textarea_content: [
+                                {
+                                    id: 'message_bought_max_attempts',
+                                    value: '',
+                                    label: 'Купил максимум попыток',
+                                    list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout']
+                                },
+                                {
+                                    id: 'message_wants_too_many_attempts',
+                                    value: '',
+                                    label: 'Пробует купить больше, чем можно купить (по кол-ву)',
+                                    list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']
+                                },
+                                {
+                                    id: 'message_not_enough_money',
+                                    value: '',
+                                    label: 'Не хватает баланса для покупки',
+                                    list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'remain_attempts_to_buy']
+                                },
+                                {
+                                    id: 'message_successful_buy',
+                                    value: '',
+                                    label: 'Успешная покупка',
+                                    list_of_variables_for_rules: ['profile', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'timeout', 'count_attempts', 'remain_attempts_to_buy']
+                                },
+                            ]
+                        },
+
+                    ]
+                } else {
+                    return [
+                        {
+                            name: 'Игровая механика',
+                            textarea_content: ''
+                        },
+                        {
+                            name: 'Игрок выиграл',
+                            textarea_content: [
+                                {
+                                    id: 'message_win',
+                                    value: '',
+                                    label: 'Игрок выигрывает и получает приз',
+                                    list_of_variables_for_rules: ['profile', 'prize', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'count_attempts']
+                                },
+                                {
+                                    id: 'message_win_balance',
+                                    value: '',
+                                    label: 'Текст при начислении баланса',
+                                    list_of_variables_for_rules: ['profile', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five']
+                                },
+                                {
+                                    id: 'message_win_rating',
+                                    value: '',
+                                    label: 'Текст при начислении рейтинга',
+                                    list_of_variables_for_rules: ['profile', 'rating_win', 'rating_name_one', 'rating_name_two', 'rating_name_five']
+                                },
+                                // {id: 'message_win_API', value: '', label: 'Текст в случае успешного API запроса', list_of_variables_for_rules: ['profile']},
+                                // {id: 'message_win_API_fail', value: '', label: 'Текст если API-запрос не успешный', list_of_variables_for_rules: ['profile']},
+                            ]
+                        },
+                        {
+                            name: 'Общие ответы',
+                            textarea_content: [
+                                {
+                                    id: 'message_has_attempts',
+                                    value: '',
+                                    label: 'Еще есть попытки',
+                                    list_of_variables_for_rules: ['profile', 'timeout', 'count_attempts', 'remain_attempts_to_buy']
+                                },
+                                {
+                                    id: 'message_already_win',
+                                    value: '',
+                                    label: 'Уже победил в игре',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_attempts_timeout',
+                                    value: '',
+                                    label: 'Время между попытками не истекло',
+                                    list_of_variables_for_rules: ['profile', 'timeout']
+                                },
+                                {
+                                    id: 'message_invalid_format',
+                                    value: '',
+                                    label: 'Не верный формат сообщения',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_game_end',
+                                    value: '',
+                                    label: 'Игра завершена (для всех)',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_not_available_attempts',
+                                    value: '',
+                                    label: 'Игра завершена (для игрока)',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_comment_edited',
+                                    value: '',
+                                    label: 'Пользователь отредактировал комментарий',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_requirement_violated',
+                                    value: '',
+                                    label: 'Не выполнил условие для участия',
+                                    list_of_variables_for_rules: ['profile', 'fail_conditions', 'count_attempts']
+                                },
+                                {
+                                    id: 'message_repost_desc',
+                                    value: '',
+                                    label: 'Описание действия для репоста',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_enable_notifications_desc',
+                                    value: '',
+                                    label: 'Описание действия для включения уведомлений',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_join_group_desc',
+                                    value: '',
+                                    label: 'Описание действия для вступления в группу',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                                {
+                                    id: 'message_join_partner_group_desc',
+                                    value: '',
+                                    label: 'Описание действия для вступления в партнёрскую группу',
+                                    list_of_variables_for_rules: ['profile', 'external']
+                                },
+                                {
+                                    id: 'message_private_profile',
+                                    value: '',
+                                    label: 'Невозможно проверить наличие репоста (стена закрыта)',
+                                    list_of_variables_for_rules: ['profile']
+                                },
+                            ]
+                        },
+                        {
+                            name: 'Закончились попытки',
+                            textarea_content: [
+                                {
+                                    id: 'message_attempts_out',
+                                    value: '',
+                                    label: 'Закончились попытки',
+                                    list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy', 'next_attempts_periodic', 'count_attempts_periodic', 'action_for_attempts', 'more_attempts']
+                                },
+                                {
+                                    id: 'message_attempts_can_be_extended',
+                                    value: '',
+                                    label: 'Выдача попыток по таймеру',
+                                    list_of_variables_for_rules: ['profile', 'next_attempts_periodic', 'count_attempts_periodic']
+                                },
+                                {
+                                    id: 'message_attempts_can_be_added',
+                                    value: '',
+                                    label: 'Выдача по действию',
+                                    list_of_variables_for_rules: ['profile', 'action_for_attempts']
+                                },
+                                {
+                                    id: 'message_attempts_can_be_bought',
+                                    value: '',
+                                    label: 'Может купить еще',
+                                    list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy']
+                                },
+                            ]
+                        },
+                    ]
+                }
+            },
             hint_text() {
                 if (this.game_type === 5 || this.game_type === 6) {
                     return '{ссылка} - подставится ссылка на игровое поле'
@@ -1363,16 +1529,12 @@
             }
         },
         methods: {
-            VKWebAppGetCommunityToken: async function () {
-                let response = await bridge.send("VKWebAppGetCommunityToken", {
-                    "app_id": +this.settings.auth_data.vk_app_id,
-                    "group_id": +this.settings.auth_data.vk_group_id,
-                    "scope": "messages, manage, wall"
-                })
-                console.log(response)
-            },
-            VKWebAppOpenApp: async function () {
-                let response = await bridge.send("VKWebAppOpenApp", {"app_id": 7147757, "location": "app-pay"})
+            // VKWebAppOpenApp: async function () {
+            //     let response = await bridge.send("VKWebAppOpenApp", {"app_id": 7147757, "location": "app-pay"})
+            //     console.log(response)
+            // },
+            VKWebAppAllowMessagesFromGroup: async function () {
+                let response = await bridge.send("VKWebAppAllowMessagesFromGroup", {"group_id": +this.settings.auth_data.vk_group_id, "key": "dBuBKe1kFcdemzB"})
                 console.log(response)
             },
             create_map: async function () {

@@ -19,22 +19,27 @@ export default new Router({
             component: () => import('./views/HomeView'),
             // redirect: { name: 'choice_games' },
             children: [
-            {
-                path: '/choice_games',
-                component: () => import('./views/СhoiceGames'),
-                name: 'choice_games'
-            },
-            {
-                path: '/my_games',
-                component: () => import('./views/MyGames'),
-                name: 'my_games'
-            },
-            {
-                path: '/balance',
-                component: () => import('./views/Balance'),
-                name: 'balance'
-            },
-        ]
+                {
+                    path: '/choice_games',
+                    component: () => import('./views/СhoiceGames'),
+                    name: 'choice_games'
+                },
+                {
+                    path: '/my_games',
+                    component: () => import('./views/MyGames'),
+                    name: 'my_games'
+                },
+                {
+                    path: '/balance',
+                    component: () => import('./views/Balance'),
+                    name: 'balance'
+                },
+                {
+                    path: '/settings',
+                    component: () => import('./views/Settings'),
+                    name: 'settings'
+                },
+            ]
         },
         {
             path: '/app_install_page',
