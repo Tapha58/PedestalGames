@@ -78,12 +78,16 @@
             getAllUrlParams: async function() {
                 let url = ''
                 if (document.location.search) {
+                    // console.log('document.location.search')
+                    // console.log(document.location.search)
                     url = document.location.search
                 } else {
+                    // console.log('auth_data_url')
+                    // console.log(sessionStorage.getItem('auth_data_url'))
                     url = sessionStorage.getItem('auth_data_url')
 
                 }
-                console.log(url)
+                // console.log(url)
 
                 let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
 

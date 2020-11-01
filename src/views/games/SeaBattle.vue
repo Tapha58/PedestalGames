@@ -157,6 +157,7 @@
         },
         data: () => ({
             settings: {
+                auth_data: '',
                 show_is_random_giveaway: false,
                 is_random_giveaway: false,
                 win_fields: [],

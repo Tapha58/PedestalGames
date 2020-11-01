@@ -114,7 +114,7 @@
                     <!--                    </v-col>-->
                     <v-col sm="1">
                         <v-btn depressed
-                               v-show="prizes_front_index.card_prizes.length - 1 === i && prizes_front_index.card_prizes.length !== types.length && pedestal_integration"
+                               v-show="prizes_front_index.card_prizes.length - 1 === i && prizes_front_index.card_prizes.length !== types.length && pedestal_integration_enabled"
                                class="mx-2" fab dark small color="green" @click="add_prize">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
@@ -160,7 +160,7 @@
             number_gift: {
                 type: Number
             },
-            pedestal_integration: {
+            pedestal_integration_enabled: {
                 type: Boolean
             },
 
@@ -230,7 +230,7 @@
                 })
             },
             say_name: function (type) {
-                if (this.pedestal_integration) {
+                if (this.pedestal_integration_enabled) {
                     return this.types.map(item => ({
                         ...item,
                         disabled: item.value === type ? false : item.disabled

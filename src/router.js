@@ -126,5 +126,6 @@ export default new Router({
             name: 'add_cover_id',
             component: () => import('./views/covers/AddCover'),
         },
+
     ]
 })

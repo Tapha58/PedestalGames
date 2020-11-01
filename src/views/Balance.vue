@@ -1,28 +1,29 @@
 <template>
-    <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml" target="_blank">
-        <input type="hidden" name="receiver" value="41001709308745">
-        <input type="hidden" name="formcomment" value="Пополнение баланса">
-        <input type="hidden" name="short-dest" value="Пополнение баланса">
-        <input type="hidden" name="quickpay-form" value="shop">
-        <input type="hidden" name="need-fio" value="false">
-        <input type="hidden" name="need-email" value="false">
-        <input type="hidden" name="need-phone" value="false">
-        <input type="hidden" name="need-address" value="false">
-        <input type="hidden" name="successURL" :value="url_current_app_group">
-        <input type="hidden" name="sum" :value="amount">
-
-        <input type="hidden" name="label" :value="payer_identifier">
-        <input type="hidden" name="targets" value="Пополнение баланса">
-        <input type="hidden" name="paymentType" :value="yandex_type_pay">
-
-
+<!--    <form method="POST" :action='action' >-->
+    <form method="POST" :action='action' target="_blank">
+        <div v-if="yandex_money || bank_card">
+            <input type="hidden" name="receiver" value="41001709308745">
+            <input type="hidden" name="formcomment" value="Пополнение баланса">
+            <input type="hidden" name="short-dest" value="Пополнение баланса">
+            <input type="hidden" name="quickpay-form" value="shop">
+            <input type="hidden" name="need-fio" value="false">
+            <input type="hidden" name="need-email" value="false">
+            <input type="hidden" name="need-phone" value="false">
+            <input type="hidden" name="need-address" value="false">
+            <input type="hidden" name="successURL" :value="url_current_app_group">
+            <input type="hidden" name="sum" :value="amount">
+            <input type="hidden" name="label" :value="payer_identifier">
+            <input type="hidden" name="targets" value="Пополнение баланса">
+            <input type="hidden" name="paymentType" :value="type_pay">
+        </div>
+        <div v-if="qiwi">
+            <input v-for="(value, name) in settings.auth_data" :key="name" type="hidden" :name="name" :value="value">
+            <input type="hidden" name="sum" :value="amount">
+        </div>
         <v-col align="center">
             <p>Пополнение баланса</p>
         </v-col>
-
-
         <v-row justify="space-around">
-
             <div class="balance" :class="{selected : bank_card}" @click="select('bank_card')">
                 <v-img
                         class="ma-1"
@@ -42,8 +43,6 @@
                 <v-img class="mt-1" src="/static/longtime/icons/pay/vkpay.png"></v-img>
             </div>
         </v-row>
-
-
         <v-row justify="center" class="mt-2">
             <v-col cols="4">
                 <v-text-field
@@ -56,9 +55,8 @@
                 >
                     <template v-slot:append>
                         <v-btn v-show="vk_pay" small color="primary" class="mtn2px" @click="replenish">Пополнить</v-btn>
-                        <v-btn v-show="yandex_money || bank_card" small color="primary" class="mtn2px" type="submit">
-                            Пополнить
-                        </v-btn>
+                        <v-btn v-show="yandex_money || bank_card" small color="primary" class="mtn2px" type="submit">Пополнить</v-btn>
+                        <v-btn v-show="qiwi" small color="primary" class="mtn2px"  type="submit">Пополнить</v-btn>
                     </template>
                 </v-text-field>
             </v-col>
@@ -81,16 +79,29 @@
             settings: {
                 auth_data: ''
             },
+            vk_ts: Math.floor(new Date()/1000)
         }),
         mounted() {
             this.getAllUrlParams()
         },
         computed: {
-            yandex_type_pay: function () {
+            // vk_ts: function () {
+            //     return new Date()
+            // },
+            action: function () {
+                if (this.yandex_money || this.bank_card) {
+                    return "https://money.yandex.ru/quickpay/confirm.xml"
+                } else if (this.qiwi) {
+                    return "/cross_api/paymentAppFromQiwi.php"
+                } else return ''
+            },
+            type_pay: function () {
                 if (this.yandex_money) {
                     return 'PC'
                 } else if (this.bank_card) {
                     return 'AC'
+                } else if (this.qiwi) {
+                    return 'QIWI'
                 } else {
                     return ''
                 }

@@ -5,12 +5,14 @@
                 <v-tabs>
                     <v-tab to="/choice_games">Новая игра</v-tab>
                     <v-tab to="/my_games">Мои игры</v-tab>
-                    <v-tab to="/settings">Настройки</v-tab>
-                    <v-tab to="/balance">Баланс: 999₽</v-tab>
+                    <v-tab to="/settings">Интеграции</v-tab>
+                    <v-tab to="/balance">Баланс: {{balance}}₽, {{games_available_launches}}Ж</v-tab>
                 </v-tabs>
             </v-col>
-            <v-col cols="3"  class="mr-1 py-0">
-                <v-btn align="right"
+            <v-col cols="3" class="mr-1 py-0">
+                <v-btn
+                        v-if="show_btn_permission"
+                        align="right"
                         @click="VKWebAppGetCommunityToken"
                         small
                         color="red"
@@ -20,7 +22,9 @@
                 <p class="mb-0" id="err_mess_rules">{{err_mess_rules}}</p>
             </v-col>
         </v-row>
-        <router-view></router-view>
+        <router-view
+                ref="child_methods"
+        ></router-view>
     </div>
 </template>
 
@@ -31,13 +35,20 @@
     export default {
         mixins: [auto_resize],
         data: () => ({
+            games_available_launches: 0,
             err_mess_rules: '',
             settings: {
                 auth_data: ''
             },
+            balance: '-',
+            show_btn_permission: false
         }),
-        mounted() {
-            this.getAllUrlParams()
+        mounted: async function () {
+            await this.getAllUrlParams()
+            if (!await this.get_data_group()) {
+                this.VKWebAppGetCommunityToken()
+            }
+            await this.load_balance()
         },
         watch: {
             err_mess_rules: function () {
@@ -63,6 +74,9 @@
                 let mask = response.response.mask
                 if (mask !== 274432) {
                     this.err_mess_rules = 'предоставленны не все права'
+                } else if (mask === 274432) {
+                    await this.put_data_group(token_group, mask)
+                    this.$refs.child_methods.get_group_status()
                 }
                 // response = response.response.permissions
                 // console.log(mask)
@@ -71,9 +85,71 @@
             clear: function () {
                 this.err_mess_rules = ''
             },
+            load_balance: async function () {
+                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/balance/' + sessionStorage.getItem('auth_data_url'))
+                if (response.ok) {
+                    response = await response.json()
+                    this.balance = +response.balance
+                } else {
+                    let result = await response.json()
+                    console.log(result)
+                    this.balance = 0
+                }
+            },
+
+            get_data_group: async function () {
+                let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + sessionStorage.getItem('auth_data_url'))
+                if (response.ok) {
+                    response = await response.json()
+                    if (response.access_token_permission) {
+                        this.show_btn_permission = false
+                        return 1
+                    } else {
+                        this.show_btn_permission = true
+                        return 0
+                    }
+                } else {
+                    let result = await response.json()
+                    console.log(result)
+                    this.balance = 0
+                }
+            },
+            put_data_group: async function (token_group, mask) {
+                let obj = {}
+                obj.auth_data = this.settings.auth_data
+                obj.access_token = token_group
+                obj.access_token_permission = mask
+
+                let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/',
+                    {
+                        method: 'put',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(obj)
+                    })
+                if (response.ok) {
+                    response = await response.json()
+                    this.show_btn_permission = false
+                    console.log('1')
+                    console.log(response)
+                } else {
+                    response = await response.json()
+                    console.log('2')
+                    console.log(response)
+                }
+            },
+            load_free_attempts: async function () {
+                let response = await fetch('/app/wallgames/payments/free_attempts/' + sessionStorage.getItem('auth_data_url'))
+                if (response.ok) {
+                    response = await response.json()
+                    this.games_available_launches = +response.games_available_launches
+                } else {
+                    let result = await response.json()
+                    console.log(result)
+                }
+            },
         }
-
-
     }
 </script>
 

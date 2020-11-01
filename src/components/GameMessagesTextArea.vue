@@ -105,8 +105,8 @@
                     let p_end=area.selectionEnd;
                     this.$emit('input', this.value.substring(0,p_start) + emoji + this.value.substring(p_end,area.value.length))
                 }
-                area.setRangeText(emoji, area.selectionStart, area.selectionEnd, "end");
-                area.focus();
+                area.setRangeText(emoji, area.selectionStart, area.selectionEnd, "end")
+                area.focus()
                 // if (document.selection) {
                 //     area.focus();
                 // let sel=document.selection.createRange();

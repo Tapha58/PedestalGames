@@ -1,14 +1,5 @@
 <template>
     <div class="px-3">
-        <v-switch
-                :ripple="false"
-                color="red"
-                hide-details
-                label="Интеграция"
-                v-model="pedestal_integration"
-        ></v-switch>
-        <!--        <v-btn @click="VKWebAppGetCommunityToken">VKWebAppGetCommunityToken</v-btn>-->
-        <!--        <v-btn @click="VKWebAppOpenApp">VKWebAppOpenApp</v-btn>-->
         <v-row dense>
             <v-col cols="2">
                 <v-btn @click="button_back" color="rgba(0, 0, 0, .6)" text dark small>
@@ -55,7 +46,7 @@
                         :is_last_card="index+1 === prizes_front.length"
                         :is_one_card="1 === prizes_front.length"
                         :id="prize.id"
-                        :pedestal_integration="pedestal_integration"
+                        :pedestal_integration_enabled="pedestal_integration_enabled"
                         :show_edit="show_edit"
                         :number_gift="index+1"
                         v-model="prizes_front[index]"
@@ -132,31 +123,31 @@
                     ></v-text-field>
                 </v-col>
             </v-row>
-            <v-row class="mb-n3">
-                <v-col cols="12" sm="9">
-                    <v-select
-                            :items="options_repost"
-                            dense
-                            label="Репост"
-                            outlined
-                            v-model="required_repost_abc"
-                    ></v-select>
-                </v-col>
+            <!--            <v-row class="mb-n3">-->
+            <!--                <v-col cols="12" sm="9">-->
+            <!--                    <v-select-->
+            <!--                            :items="options_repost"-->
+            <!--                            dense-->
+            <!--                            label="Репост"-->
+            <!--                            outlined-->
+            <!--                            v-model="required_repost_abc"-->
+            <!--                    ></v-select>-->
+            <!--                </v-col>-->
 
-                <!--                    <v-col cols="12" sm="3">-->
-                <!--                        <v-text-field-->
-                <!--                                :rules="[rules.required, rules.number_of_symbols_4]"-->
-                <!--                                dense-->
-                <!--                                label="Кол-во попыток"-->
-                <!--                                min="1"-->
-                <!--                                outlined-->
-                <!--                                required-->
-                <!--                                type="number"-->
-                <!--                                v-model.number="gameData.game.repost_count_attempts"-->
-                <!--                                v-show="required_repost_abc === 'c'"-->
-                <!--                        ></v-text-field>-->
-                <!--                    </v-col>-->
-            </v-row>
+            <!--                    <v-col cols="12" sm="3">-->
+            <!--                        <v-text-field-->
+            <!--                                :rules="[rules.required, rules.number_of_symbols_4]"-->
+            <!--                                dense-->
+            <!--                                label="Кол-во попыток"-->
+            <!--                                min="1"-->
+            <!--                                outlined-->
+            <!--                                required-->
+            <!--                                type="number"-->
+            <!--                                v-model.number="gameData.game.repost_count_attempts"-->
+            <!--                                v-show="required_repost_abc === 'c'"-->
+            <!--                        ></v-text-field>-->
+            <!--                    </v-col>-->
+            <!--            </v-row>-->
             <v-row>
                 <v-col class="py-0" cols="12" sm="9">
                     <v-select
@@ -327,7 +318,7 @@
                     </v-text-field>
                 </v-col>
             </v-row>
-            <v-row class="pl-3" v-if="pedestal_integration">
+            <v-row class="pl-3" v-if="pedestal_integration_enabled">
                 <v-switch
                         :label="($vuetify.breakpoint.name === 'xs') ? 'Платные попытки' : 'Платные попытки (за баллы)'"
                         :ripple="false"
@@ -490,26 +481,7 @@
                 </v-col>
             </v-row>
         </div>
-        <div>
-<!--            <span>h1</span>-->
-<!--            <v-btn dark small color="red">Разрешить уведомления</v-btn>-->
-            <v-alert
-                    class="mt-3"
-                    text
-                    prominent
-                    type="error"
-                    icon="mdi-progress-alert"
-            >
-                <v-row align="center">
-                    <v-col class="">
-                        Внимание, без предоставления прав на отправку уведомлений, запустить игру невозможно. Пожалуйста, предоставьте права.
-                    </v-col>
-                    <v-col class="shrink">
-                        <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="error">Разрешить уведомления</v-btn>
-                    </v-col>
-                </v-row>
-            </v-alert>
-        </div>
+
         <v-row v-show='!show_edit' id="time_post" class="mt-5" dense>
             <v-col cols="12" xs="12" sm="4">
                 <v-switch
@@ -540,29 +512,50 @@
                         v-model="timeDeferredPost"/>
             </v-col>
         </v-row>
-        <div id='token' v-if="!group_token" class="mt-3">
-            <v-col class="pb-0">
-                <span v-bind:style="{ color: 'red' }">Для запуска игры необходимо предоставить ключ доступа. </span>
-                <a href="https://vk.com/@pedestal-kluch-dostupa" target="_blank">Открыть инструкцию.</a>
-            </v-col>
-            <v-col cols="12">
-                <v-row dense>
-                    <v-text-field
-                            label="Ключ доступа"
-                            id="styled-input"
-                            class="styled-input mb-n5"
-                            outlined
-                            dense
-                            v-model="token_group"
-                    >
-                        <template v-slot:append id="btn_token">
-                            <v-btn @click="group_record_token" id="qw1" x-small color="primary">применить</v-btn>
-                        </template>
-                    </v-text-field>
+        <div>
+            <!--            <span>h1</span>-->
+            <!--            <v-btn dark small color="red">Разрешить уведомления</v-btn>-->
+            <v-alert
+                    class="mt-3"
+                    text
+                    prominent
+                    type="error"
+                    icon="mdi-progress-alert"
+            >
+                <v-row align="center">
+                    <v-col class="">
+                        Для запуска игры необходимо разрешение на получение уведомлений, чтобы мы могли прислать
+                        Вам сообщение в случае возникновения внештатных ситуаций.
+                    </v-col>
+                    <v-col class="shrink">
+                        <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="error">Разрешить уведомления</v-btn>
+                    </v-col>
                 </v-row>
-                <span v-bind:style="{ color: 'red', fontSize: 14 + 'px' }">{{ message_group_record_token }}</span>
-            </v-col>
+            </v-alert>
         </div>
+<!--        <div id='token' v-if="!group_token" class="mt-3">-->
+<!--            <v-col class="pb-0">-->
+<!--                <span v-bind:style="{ color: 'red' }">Для запуска игры необходимо предоставить ключ доступа. </span>-->
+<!--                <a href="https://vk.com/@pedestal-kluch-dostupa" target="_blank">Открыть инструкцию.</a>-->
+<!--            </v-col>-->
+<!--            <v-col cols="12">-->
+<!--                <v-row dense>-->
+<!--                    <v-text-field-->
+<!--                            label="Ключ доступа"-->
+<!--                            id="styled-input"-->
+<!--                            class="styled-input mb-n5"-->
+<!--                            outlined-->
+<!--                            dense-->
+<!--                            v-model="token_group"-->
+<!--                    >-->
+<!--                        <template v-slot:append id="btn_token">-->
+<!--                            <v-btn @click="group_record_token" id="qw1" x-small color="primary">применить</v-btn>-->
+<!--                        </template>-->
+<!--                    </v-text-field>-->
+<!--                </v-row>-->
+<!--                <span v-bind:style="{ color: 'red', fontSize: 14 + 'px' }">{{ message_group_record_token }}</span>-->
+<!--            </v-col>-->
+<!--        </div>-->
         <div id="pay_method"
              v-if='!/^[0-9]+$/.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
             <v-col class="px-0 pb-0">
@@ -700,7 +693,7 @@
             'ending_game_textarea_block',
         ],
         data: () => ({
-            pedestal_integration: true,
+            pedestal_integration_enabled: true,
             current_post_text: '',
             group_status: 1,
             balance: '',
@@ -816,6 +809,8 @@
         },
         mounted:
             async function () {
+                await this.getAllUrlParams()
+                await this.get_data_group()
                 // блок загрузки сообщений в зависимости от типа игры
                 this.advanced_settings_textareas[0].textarea_content = this.mechanics_textarea_block
                 if (this.game_type === 2 || this.game_type === 3 || this.game_type === 4 || this.game_type == 6) {
@@ -867,11 +862,11 @@
                 await this.load_balance()
                 await this.load_free_attempts()
 
-
-                await this.check_group_token()
+                // ранее была проверка токена, чтобы показать окно для ввода нового, сейчас убираем это
+                // await this.check_group_token()
 
                 this.apply_def_settings()
-                await this.getAllUrlParams()
+                // await this.getAllUrlParams()
                 this.common_settings.id_group_vk = +this.settings.auth_data.vk_group_id
                 this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
 
@@ -1037,7 +1032,7 @@
                 }
             },
             advanced_settings_textareas() {
-                if (this.pedestal_integration) {
+                if (this.pedestal_integration_enabled) {
                     return [
                         {
                             name: 'Игровая механика',
@@ -1226,18 +1221,18 @@
                                     label: 'Игрок выигрывает и получает приз',
                                     list_of_variables_for_rules: ['profile', 'prize', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five', 'rating_name_one', 'rating_name_two', 'rating_name_five', 'count_attempts']
                                 },
-                                {
-                                    id: 'message_win_balance',
-                                    value: '',
-                                    label: 'Текст при начислении баланса',
-                                    list_of_variables_for_rules: ['profile', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five']
-                                },
-                                {
-                                    id: 'message_win_rating',
-                                    value: '',
-                                    label: 'Текст при начислении рейтинга',
-                                    list_of_variables_for_rules: ['profile', 'rating_win', 'rating_name_one', 'rating_name_two', 'rating_name_five']
-                                },
+                                // {
+                                //     id: 'message_win_balance',
+                                //     value: '',
+                                //     label: 'Текст при начислении баланса',
+                                //     list_of_variables_for_rules: ['profile', 'balance_win', 'balance_name_one', 'balance_name_two', 'balance_name_five']
+                                // },
+                                // {
+                                //     id: 'message_win_rating',
+                                //     value: '',
+                                //     label: 'Текст при начислении рейтинга',
+                                //     list_of_variables_for_rules: ['profile', 'rating_win', 'rating_name_one', 'rating_name_two', 'rating_name_five']
+                                // },
                                 // {id: 'message_win_API', value: '', label: 'Текст в случае успешного API запроса', list_of_variables_for_rules: ['profile']},
                                 // {id: 'message_win_API_fail', value: '', label: 'Текст если API-запрос не успешный', list_of_variables_for_rules: ['profile']},
                             ]
@@ -1346,12 +1341,12 @@
                                     label: 'Выдача по действию',
                                     list_of_variables_for_rules: ['profile', 'action_for_attempts']
                                 },
-                                {
-                                    id: 'message_attempts_can_be_bought',
-                                    value: '',
-                                    label: 'Может купить еще',
-                                    list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy']
-                                },
+                                // {
+                                //     id: 'message_attempts_can_be_bought',
+                                //     value: '',
+                                //     label: 'Может купить еще',
+                                //     list_of_variables_for_rules: ['profile', 'remain_attempts_to_buy']
+                                // },
                             ]
                         },
                     ]
@@ -1533,8 +1528,27 @@
             //     let response = await bridge.send("VKWebAppOpenApp", {"app_id": 7147757, "location": "app-pay"})
             //     console.log(response)
             // },
+
+            get_data_group: async function () {
+                let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + sessionStorage.getItem('auth_data_url'))
+                if (response.ok) {
+                    response = await response.json()
+                    this.pedestal_integration_enabled = response.pedestal_integration_enabled
+                    if (response.access_token_permission) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    let result = await response.json()
+                    console.log(result)
+                }
+            },
             VKWebAppAllowMessagesFromGroup: async function () {
-                let response = await bridge.send("VKWebAppAllowMessagesFromGroup", {"group_id": +this.settings.auth_data.vk_group_id, "key": "dBuBKe1kFcdemzB"})
+                let response = await bridge.send("VKWebAppAllowMessagesFromGroup", {
+                    "group_id": +this.settings.auth_data.vk_group_id,
+                    "key": "dBuBKe1kFcdemzB"
+                })
                 console.log(response)
             },
             create_map: async function () {
@@ -1560,7 +1574,7 @@
                 }
             },
             get_group_status: async function () {
-                let response = await fetch("/app/wallgames/group_status/" + sessionStorage.getItem('auth_data_url'))
+                let response = await fetch("/app/wallgames/group/" + this.settings.auth_data.vk_group_id + "/status/" + sessionStorage.getItem('auth_data_url'))
                 if (response.ok) {
                     response = await response.json()
                     this.group_status = +response.status
@@ -1581,6 +1595,7 @@
                 })
             },
             def_message_aply: async function () {
+                this.advanced_settings_textareas[0].textarea_content = this.mechanics_textarea_block
                 if (this.$route.params.id) {
                     await this.load_individual_settings()
                 }
@@ -1658,7 +1673,7 @@
                 }
             },
             load_balance: async function () {
-                let response = await fetch('/app/wallgames/payments/balance/' + sessionStorage.getItem('auth_data_url'))
+                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/balance/' + sessionStorage.getItem('auth_data_url'))
                 if (response.ok) {
                     response = await response.json()
                     this.balance = +response.balance
@@ -1773,9 +1788,14 @@
 
 
             start_game: async function () {
-                if (!this.group_token) {
+                // if (!this.group_token) {
+                //     this.message_error = 'Отсутствует ключ доступа'
+                //     setTimeout(this.clear_message, 10000)
+                //     return
+                // }
+                if (!this.get_data_group()) {
                     this.message_error = 'Отсутствует ключ доступа'
-                    setTimeout(this.clear_message, 10000)
+                    setTimeout(this.clear_message, 5000)
                     return
                 }
                 await this.$emit('validateField')
@@ -1918,33 +1938,102 @@
                 this.src = '/static/wallgames/image_default/min/' + this.name_game + '_min.jpg'
                 this.image = null
             },
+            getUploadServer: async function () {
+                await this.vkWebAppGetAuthToken()
+                try {
+                    let response = await bridge.send("VKWebAppCallAPIMethod", {
+                        "method": "photos.getWallUploadServer",
+                        "request_id": "32test",
+                        "params": {
+                            "group_id": +this.settings.auth_data.vk_group_id,
+                            "v": "5.124",
+                            "access_token": this.token
+                        }
+                    })
+                    // console.log('Успех', response.response.upload_url)
+                    return response.response.upload_url
+                } catch (error) {
+                    console.error('Ошибка', error)
+                }
+            },
+            saveWallPhoto: async function (server, photo, hash) {
+                // await this.vkWebAppGetAuthToken()
+                console.log(server)
+                console.log(photo)
+                console.log(hash)
+                try {
+                    let response = await bridge.send("VKWebAppCallAPIMethod", {
+                        "method": "photos.saveWallPhoto",
+                        "request_id": "32test",
+                        "params": {
+                            "v": "5.124",
+                            "server": server,
+                            "photo": photo,
+                            "hash": hash,
+                            "group_id": this.settings.auth_data.vk_group_id,
+                            "access_token": this.token
+                        }
+                    })
+                    return +response.response[0].id
+                } catch (error) {
+                    console.error('Ошибка', error)
+                    return false
+                }
+            },
             upload_photo: async function () {
                 let response
                 if (this.image === null) {
-                    response = await fetch("/app/wallgames/upload_photo/" + sessionStorage.getItem('auth_data_url') + "&game_name=" + this.name_game)
+                    const formData = new FormData()
+                    formData.append('auth_data', this.settings.auth_data)
+                    formData.append('upload_url', await this.getUploadServer())
+                    formData.append('game_name', this.name_game)
+                    response = await fetch("/app/wallgames/upload_photo/" + sessionStorage.getItem('auth_data_url'),
+                        {
+                            method: 'POST',
+                            body: formData
+                        }
+                    )
+                    if (response.ok) {
+                        response = await response.json()
+                        let answer = await this.saveWallPhoto(response.server, response.photo, response.hash)
+                        if (answer) {
+                            return answer
+                        }
+                        console.log(response)
+                    } else {
+                        response = await response.json()
+                        console.log('err - ' + response)
+                    }
                 } else {
                     const formData = new FormData()
                     formData.append('photo', this.image)
+                    formData.append('upload_url', await this.getUploadServer())
                     response = await fetch('/app/wallgames/upload_photo/' + sessionStorage.getItem('auth_data_url'),
                         {
                             method: 'POST',
                             body: formData
                         })
-                }
-                if (response.ok) {
-                    response = await response.json()
-                    return response.id
-                } else {
-                    response = await response.json()
-                    console.log(response)
-                    if (response.error.code === 15 || response.error.code === 5) {
-                        window.open('https://oauth.vk.com/authorize?client_id=7099099&scope=offline,photos&redirect_uri=https://pedestal.aiva-studio.ru/api/vkGetTokenByCode.php&lang=ru&response_type=code&display=popup', 'width=800', 'height=400', 'location=no')
-                        this.message_error = 'Предоставьте права доступа в открывшемся окне и запустите игру еще раз'
-                        setTimeout(this.clear_message, 10000)
-                        return
+                    if (response.ok) {
+                        response = await response.json()
+                        let answer = await this.saveWallPhoto(response.server, response.photo, response.hash)
+                        if (answer) {
+                            return answer
+                        }
+                        console.log(response)
+                    } else {
+                        // response = await response.json()
+                        // console.log(response)
+                        // if (response.error.code === 15 || response.error.code === 5) {
+                        //     window.open('https://oauth.vk.com/authorize?client_id=7099099&scope=offline,photos&redirect_uri=https://pedestal.aiva-studio.ru/api/vkGetTokenByCode.php&lang=ru&response_type=code&display=popup', 'width=800', 'height=400', 'location=no')
+                        //     this.message_error = 'Предоставьте права доступа в открывшемся окне и запустите игру еще раз'
+                        //     setTimeout(this.clear_message, 10000)
+                        //     return
+                        // }
+                        response = await response.json()
+                        console.log(response)
                     }
-                    console.log(response)
                 }
+
             },
             pay: async function () {
                 let obj = {}
@@ -2185,10 +2274,10 @@
                 try {
                     let response = await bridge.send("VKWebAppGetAuthToken", {
                         "app_id": +this.settings.auth_data.vk_app_id,
-                        "scope": ""
+                        "scope": "photos"
                     })
                     this.token = response.access_token
-                    console.log('Успех token - ', response.access_token)
+                    // console.log('Успех token - ', response.access_token)
                 } catch (error) {
                     console.error('Ошибка - url ', error)
                 }
