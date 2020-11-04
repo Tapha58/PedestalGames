@@ -512,7 +512,7 @@
                         v-model="timeDeferredPost"/>
             </v-col>
         </v-row>
-        <div>
+        <div v-if="!notification_allowed">
             <!--            <span>h1</span>-->
             <!--            <v-btn dark small color="red">Разрешить уведомления</v-btn>-->
             <v-alert
@@ -693,6 +693,7 @@
             'ending_game_textarea_block',
         ],
         data: () => ({
+            notification_allowed: true,
             pedestal_integration_enabled: true,
             current_post_text: '',
             group_status: 1,
@@ -811,6 +812,8 @@
             async function () {
                 await this.getAllUrlParams()
                 await this.get_data_group()
+                this.get_admin()
+
                 // блок загрузки сообщений в зависимости от типа игры
                 this.advanced_settings_textareas[0].textarea_content = this.mechanics_textarea_block
                 if (this.game_type === 2 || this.game_type === 3 || this.game_type === 4 || this.game_type == 6) {
@@ -1524,16 +1527,45 @@
             }
         },
         methods: {
-            // VKWebAppOpenApp: async function () {
-            //     let response = await bridge.send("VKWebAppOpenApp", {"app_id": 7147757, "location": "app-pay"})
-            //     console.log(response)
-            // },
+            get_admin: async function () {
+                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/' + sessionStorage.getItem('auth_data_url'))
+                if (response.ok) {
+                    response = await response.json()
+                    // console.log(response)
+                    this.notification_allowed = response.notification_allowed
+                } else {
+                    let result = await response.json()
+                    console.log(result)
+                }
+            },
+            put_admin: async function () {
+                let obj = {}
+                obj.auth_data = this.settings.auth_data
+                obj.notification_allowed = true
 
+                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/',
+                    {
+                        method: 'put',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(obj)
+                    })
+                if (response.ok) {
+                    // response = await response.json()
+                    // console.log(response)
+                    this.notification_allowed = true
+                } else {
+                    response = await response.json()
+                    console.log(response)
+                }
+            },
             get_data_group: async function () {
                 let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + sessionStorage.getItem('auth_data_url'))
                 if (response.ok) {
                     response = await response.json()
                     this.pedestal_integration_enabled = response.pedestal_integration_enabled
+                    this.settings.pedestal_integration_enabled = response.pedestal_integration_enabled
                     if (response.access_token_permission) {
                         return true
                     } else {
@@ -1549,7 +1581,10 @@
                     "group_id": +this.settings.auth_data.vk_group_id,
                     "key": "dBuBKe1kFcdemzB"
                 })
-                console.log(response)
+                // console.log(response)
+                if (response.result === true) {
+                    this.put_admin()
+                }
             },
             create_map: async function () {
                 let obj = {}

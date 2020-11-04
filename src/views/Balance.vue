@@ -1,5 +1,5 @@
 <template>
-<!--    <form method="POST" :action='action' >-->
+    <!--    <form method="POST" :action='action' >-->
     <form method="POST" :action='action' target="_blank">
         <div v-if="yandex_money || bank_card">
             <input type="hidden" name="receiver" value="41001709308745">
@@ -20,8 +20,8 @@
             <input v-for="(value, name) in settings.auth_data" :key="name" type="hidden" :name="name" :value="value">
             <input type="hidden" name="sum" :value="amount">
         </div>
-        <v-col align="center">
-            <p>Пополнение баланса</p>
+        <v-col align="left">
+            <span><b>Способ пополнения:</b></span>
         </v-col>
         <v-row justify="space-around">
             <div class="balance" :class="{selected : bank_card}" @click="select('bank_card')">
@@ -43,10 +43,13 @@
                 <v-img class="mt-1" src="/static/longtime/icons/pay/vkpay.png"></v-img>
             </div>
         </v-row>
-        <v-row justify="center" class="mt-2">
+        <v-col align="left" class="pb-0">
+            <span><b>Сумма пополнения:</b></span>
+        </v-col>
+        <v-row justify="center" class="">
             <v-col cols="4">
                 <v-text-field
-                        label="Сумма"
+                        label="введите сумму"
                         dense
                         outlined
                         type="number"
@@ -55,12 +58,19 @@
                 >
                     <template v-slot:append>
                         <v-btn v-show="vk_pay" small color="primary" class="mtn2px" @click="replenish">Пополнить</v-btn>
-                        <v-btn v-show="yandex_money || bank_card" small color="primary" class="mtn2px" type="submit">Пополнить</v-btn>
-                        <v-btn v-show="qiwi" small color="primary" class="mtn2px"  type="submit">Пополнить</v-btn>
+                        <v-btn v-show="yandex_money || bank_card" small color="primary" class="mtn2px" type="submit">
+                            Пополнить
+                        </v-btn>
+                        <v-btn v-show="qiwi" small color="primary" class="mtn2px" type="submit">Пополнить</v-btn>
                     </template>
                 </v-text-field>
             </v-col>
         </v-row>
+        <hr>
+        <v-col align="left" class="pb-0">
+            <span><b>Жетонов на балансе группы: {{games_available_launches}}</b></span><br>
+            <span>Жетон дает возможность запустить бесплатно одну игру. Жетоны могуть быть начисленны в ходе акции.</span>
+        </v-col>
     </form>
 </template>
 
@@ -69,6 +79,8 @@
     import auto_resize from "@/mixins/auto_resize";
 
     export default {
+        props: [
+            'games_available_launches'],
         mixins: [auto_resize],
         data: () => ({
             bank_card: true,
@@ -79,15 +91,18 @@
             settings: {
                 auth_data: ''
             },
-            vk_ts: Math.floor(new Date()/1000)
+            vk_ts: Math.floor(new Date() / 1000)
         }),
         mounted() {
             this.getAllUrlParams()
+            setInterval(this.balance, 10000)
+
         },
         computed: {
             // vk_ts: function () {
             //     return new Date()
             // },
+
             action: function () {
                 if (this.yandex_money || this.bank_card) {
                     return "https://money.yandex.ru/quickpay/confirm.xml"
@@ -114,6 +129,9 @@
             },
         },
         methods: {
+            balance: function () {
+                this.$emit('load_balance')
+            },
             select: function (payment_type) {
                 if (payment_type === 'bank_card') {
                     this.bank_card = true
@@ -162,7 +180,7 @@
     }
 
     .selected {
-        border-color: red;
+        border-color: #4a76a8;
     }
 
     .mtn2px {

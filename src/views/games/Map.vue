@@ -34,14 +34,18 @@
 
 <script>
     import bridge from "@vkontakte/vk-bridge";
+    import auto_resize from "@/mixins/auto_resize";
     export default {
+        mixins: [auto_resize],
         data: () => ({
             row_count: '',
             col_count: '',
             ascii_lowercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
             win: [],
             occupied: [],
-            auth_data: {},
+            settings: {
+                auth_data: ''
+            },
             auth_data_url: '',
             show_table: true,
             mobile: false,
@@ -53,7 +57,7 @@
                 this.auto_resize()
         },
         mounted() {
-            this.mobile = this.auth_data.vk_platform !== 'desktop_web'
+            this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
         },
         updated() {
             this.auto_resize()
@@ -63,7 +67,10 @@
         methods: {
             get_map: async function () {
                 try {
-                    let response = await fetch("/app/wallgames/map/" + this.auth_data.map + '/' + this.auth_data_url)
+
+                    console.log(this.settings.auth_data)
+                    console.log(window.location.href)
+                    let response = await fetch("/app/wallgames/map/" + this.$route.params.id + '/' + sessionStorage.getItem('auth_data_url'))
                     if (response.ok) {
                         response = await response.json()
                         this.win = response.win
@@ -103,45 +110,45 @@
                 }
                 return false
             },
-            getAllUrlParams: async function() {
-                this.auth_data_url = document.location.search
-                let url = this.auth_data_url
-                let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
-                let obj = {};
-                if (queryString) {
-                    queryString = queryString.split('#')[0];
-                    let arr = queryString.split('&');
-                    for (let i = 0; i < arr.length; i++) {
-                        let a = arr[i].split('=');
-                        let paramNum = undefined;
-                        let paramName = a[0].replace(/\[\d*\]/, function (v) {
-                            paramNum = v.slice(1, -1);
-                            return '';
-                        });
-                        let paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
-                        if (obj[paramName]) {
-                            if (typeof obj[paramName] === 'string') {
-                                obj[paramName] = [decodeURI(obj[paramName])];
-                            }
-                            if (typeof paramNum === 'undefined') {
-                                obj[paramName].push(decodeURI(paramValue));
-                            }
-                            else {
-                                obj[paramName][paramNum] = decodeURI(paramValue);
-                            }
-                        }
-                        else {
-                            obj[paramName] = decodeURI(paramValue);
-                        }
-                    }
-                }
-                const regex = /%2C/gm
-                const str = obj.vk_access_token_settings
-                const subst = `,`
-                const result = str.replace(regex, subst)
-                obj.vk_access_token_settings = result
-                this.auth_data = obj
-            },
+            // getAllUrlParams: async function() {
+            //     this.auth_data_url = document.location.search
+            //     let url = this.auth_data_url
+            //     let queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+            //     let obj = {};
+            //     if (queryString) {
+            //         queryString = queryString.split('#')[0];
+            //         let arr = queryString.split('&');
+            //         for (let i = 0; i < arr.length; i++) {
+            //             let a = arr[i].split('=');
+            //             let paramNum = undefined;
+            //             let paramName = a[0].replace(/\[\d*\]/, function (v) {
+            //                 paramNum = v.slice(1, -1);
+            //                 return '';
+            //             });
+            //             let paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
+            //             if (obj[paramName]) {
+            //                 if (typeof obj[paramName] === 'string') {
+            //                     obj[paramName] = [decodeURI(obj[paramName])];
+            //                 }
+            //                 if (typeof paramNum === 'undefined') {
+            //                     obj[paramName].push(decodeURI(paramValue));
+            //                 }
+            //                 else {
+            //                     obj[paramName][paramNum] = decodeURI(paramValue);
+            //                 }
+            //             }
+            //             else {
+            //                 obj[paramName] = decodeURI(paramValue);
+            //             }
+            //         }
+            //     }
+            //     const regex = /%2C/gm
+            //     const str = obj.vk_access_token_settings
+            //     const subst = `,`
+            //     const result = str.replace(regex, subst)
+            //     obj.vk_access_token_settings = result
+            //     this.auth_data = obj
+            // },
             auto_resize: async function () {
                 // Проверяет, поддерживается ли событие на текущей платформе.
                 if (bridge.supports("VKWebAppResizeWindow")) {

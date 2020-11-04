@@ -17,7 +17,57 @@
         <v-row justify="center" class="mx-0 px-0">
             <v-btn @click="app_install" color="primary" small>Подключить к сообществу</v-btn>
         </v-row>
+        <v-row justify="center" class="mt-5 mx-0">
+            <v-col cols="9">
+                <v-carousel
+                        light
+                        cycle
+                        height="160"
+                        hide-delimiters
 
+                >
+                    <v-carousel-item
+                            v-for="(game) in game_card"
+                            :key="game.name"
+                    >
+                        <v-card
+                                class="mx-auto"
+                                max-width="380"
+                        >
+                            <v-list-item three-line>
+                                <v-list-item-content>
+                                    <v-list-item-title class="name_game mb-1">{{game.name}}</v-list-item-title>
+                                    <v-list-item-subtitle class="pt-2">{{game.description}}
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+
+                                <v-list-item-avatar
+                                        class="n"
+                                        color="grey"
+                                        size="80"
+                                        tile
+                                ><img
+                                        alt="Изображение"
+                                        :src=game.url_avatar
+                                ></v-list-item-avatar>
+                            </v-list-item>
+
+                            <v-card-actions class="pt-0 d-flex justify-space-between">
+                                <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary"
+                                       @click="go_description_page (game.btn_example)"
+                                       text>
+                                    Пример
+                                </v-btn>
+                                <v-btn color="primary"
+                                       @click="go_description_page (game.btn_more_details)"
+                                       text>Подробнее
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-carousel-item>
+                </v-carousel>
+            </v-col>
+        </v-row>
     </div>
 </template>
 
@@ -31,6 +81,43 @@
             settings: {
                 auth_data: ''
             },
+            game_card: [
+                {
+                    name: 'Угадай число',
+                    description: 'Загадайте число. Тот из игроков, кто первым отгадает получит приз.',
+                    url_avatar: '/static/wallgames/image/promo_games/guess_number.png',
+                    btn_example: 'https://vk.com/club197375430?w=wall-197375430_21',
+                    btn_more_details: 'https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-ugaday-chislo'
+                },
+                {
+                    name: 'Анаграммы',
+                    description: 'Загадайте слово, а игроки будут составлять из него другие слова.',
+                    url_avatar: '/static/wallgames/image/promo_games/anagram.png',
+                    btn_example: 'https://vk.com/club197375430?w=wall-197375430_22',
+                    btn_more_details: 'https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-anagrammy'
+                },
+                {
+                    name: 'Слова на букву(ы)',
+                    description: 'Выигрывает тот, кто напишет больше слов на загаданную букву.',
+                    url_avatar: '/static/wallgames/image/promo_games/word_starts_with.png',
+                    btn_example: 'https://vk.com/club197375430?w=wall-197375430_23',
+                    btn_more_details: 'https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-slova-na-bukvu-y'
+                },
+                {
+                    name: 'Морской бой',
+                    description: 'Игроки стреляют в ячейки. Побеждают только меткие.',
+                    url_avatar: '/static/wallgames/image/promo_games/sea_battle.png',
+                    btn_example: 'https://vk.com/club197375430?w=wall-197375430_152',
+                    btn_more_details: 'https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-morskoy-boy'
+                },
+                {
+                    name: 'Битва комментаторов',
+                    description: 'Выигрывают те, кто напишет максимум комментариев.',
+                    url_avatar: '/static/wallgames/image/promo_games/max_comments.png',
+                    btn_example: 'https://vk.com/club197375430?w=wall-197375430_151',
+                    btn_more_details: 'https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-bitva-kommentatorov'
+                }
+            ]
         }),
         mounted: async function () {
             await this.getAllUrlParams()
@@ -49,9 +136,17 @@
     }
 </script>
 
-<style scoped>
+<style>
     .logo_game {
         border-radius: 50%;
+    }
+
+    .v-window__next, .v-window__prev {
+        background-color: #4a76a8;
+    }
+
+    .mdi-chevron-right, .mdi-chevron-left {
+        color: white !important;
     }
 
 </style>

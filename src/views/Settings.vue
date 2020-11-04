@@ -1,34 +1,38 @@
 <template>
-    <v-row>
-        <v-col cols="3">
-            <v-img
-                    src="https://sun9-18.userapi.com/vrm4aRKhq6oCpK0qZO7LNyFI4-YqddwUPhadug/z3CaBEs-FiE.jpg"
-                    max-height="184"
-                    max-width="184"
-            ></v-img>
-        </v-col>
-        <v-col cols="9">
-            <span>Интеграция даст следующие возможности:<br>
-                1. В призах у игр появится вариант начисления баллов рейтинга и баланса магазина <br>
-                2. Активируется функция «платные попытки», пользователь сможет тратить баллы
-                рейтинга / магазина для покупки дополнительных попыток в игре.</span>
-            <v-row class="mt-2">
-                <v-btn class="mx-3"
-                       @click="go_description_page ('https://vk.com/@pedestal-igry-integraciya-s-pedestalom')" small
-                       color="primary">Подробнее
-                </v-btn>
-                <v-btn
-                        class="mx-1"
-                        @click="put_data_group"
-                        small
-                        color="primary"
-                        :loading="loading"
-                        :disabled="loading"
-                        min-width="150"
-                >{{integration_btn_name}}</v-btn>
-            </v-row>
-        </v-col>
-    </v-row>
+    <div>
+        <v-row>
+            <v-col cols="3">
+                <v-img
+                        src="https://sun9-18.userapi.com/vrm4aRKhq6oCpK0qZO7LNyFI4-YqddwUPhadug/z3CaBEs-FiE.jpg"
+                        max-height="184"
+                        max-width="184"
+                ></v-img>
+            </v-col>
+            <v-col cols="9">
+                <span><b>Пьедестал</b></span><br>
+                <span>Интеграция даст следующие возможности:<br>
+                1. В призах у игр появится вариант начисления баллов рейтинга и баланса магазина. <br>
+                2. Добавится функция «платные попытки», пользователь сможет тратить баллы рейтинга / магазина для покупки дополнительных попыток в игре.</span>
+                <v-row class="mt-2">
+                    <v-btn class="mx-3"
+                           @click="go_description_page ('https://vk.com/@pedestal-igry-integraciya-s-pedestalom')"
+                           small
+                           color="primary">Подробнее
+                    </v-btn>
+                    <v-btn
+                            class="mx-1"
+                            @click="put_data_group"
+                            small
+                            color="primary"
+                            :loading="loading"
+                            :disabled="loading"
+                            min-width="150"
+                    >{{integration_btn_name}}
+                    </v-btn>
+                </v-row>
+            </v-col>
+        </v-row>
+    </div>
 </template>
 
 <script>
@@ -101,6 +105,6 @@
     }
 </script>
 
-<style scoped>
+<style>
 
 </style>

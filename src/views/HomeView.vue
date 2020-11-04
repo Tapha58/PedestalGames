@@ -24,6 +24,8 @@
         </v-row>
         <router-view
                 ref="child_methods"
+                @load_balance="load_balance"
+                :games_available_launches="games_available_launches"
         ></router-view>
     </div>
 </template>
@@ -40,7 +42,7 @@
             settings: {
                 auth_data: ''
             },
-            balance: '-',
+            balance: '0',
             show_btn_permission: false
         }),
         mounted: async function () {
@@ -48,7 +50,7 @@
             if (!await this.get_data_group()) {
                 this.VKWebAppGetCommunityToken()
             }
-            await this.load_balance()
+            this.load_balance()
         },
         watch: {
             err_mess_rules: function () {
@@ -101,6 +103,7 @@
                 let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + sessionStorage.getItem('auth_data_url'))
                 if (response.ok) {
                     response = await response.json()
+                    this.games_available_launches = response.games_available_launches
                     if (response.access_token_permission) {
                         this.show_btn_permission = false
                         return 1
@@ -137,16 +140,6 @@
                     response = await response.json()
                     console.log('2')
                     console.log(response)
-                }
-            },
-            load_free_attempts: async function () {
-                let response = await fetch('/app/wallgames/payments/free_attempts/' + sessionStorage.getItem('auth_data_url'))
-                if (response.ok) {
-                    response = await response.json()
-                    this.games_available_launches = +response.games_available_launches
-                } else {
-                    let result = await response.json()
-                    console.log(result)
                 }
             },
         }

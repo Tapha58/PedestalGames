@@ -306,8 +306,8 @@
             if (this.group_status === 2) {
                 await this.get_prices ()
             }
-            setTimeout(this.auto_resize, 5000)
             this.show_sceleton = false
+            setTimeout(this.auto_resize, 5000)
         },
         computed: {
             price_type_1 () {

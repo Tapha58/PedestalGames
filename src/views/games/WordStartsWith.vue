@@ -120,7 +120,7 @@
             },
             game_type: 3,
             name_game: 'word_starts_with',
-            main_variables:
+            main_variables1:
                 '<div class="pa-3 caption">\n' +
                 '                    <p>\n' +
                 '                        <strong>Переменные игровой механики:</strong><br>\n' +
@@ -165,6 +165,36 @@
                 '                        <b>{rating_name_five}</b> — название рейтинга для формы числа 5.<br>\n' +
                 '                    </p>\n' +
                 '                    <p>\n' +
+                '                </div>',
+            main_variables2:
+                '<div class="pa-3 caption">\n' +
+                '                    <p>\n' +
+                '                        <strong>Переменные игровой механики:</strong><br>\n' +
+                '                        <b>{score}</b> — кол-во угаданных пользователем слов.<br>\n' +
+                '                    <p>\n' +
+                '                        <strong>Основные переменные:</strong><br>\n' +
+                '                        <b>{profile}</b> — имя пользователя.<br>\n' +
+                '\n' +
+                '                        <b>{fail_conditions}</b> — случайное условие, которое пользователь не выполнил (репост и т. д.).<br>\n' +
+                '                        <b>[photo100172_166443618]</b> — прикрепление картинки/видео. <a href="https://vk.com/@pedestal-wallgames?anchor=kak-prikrepit-kartinku-k-kommentariyu" target="_blank">Подробнее</a>.<br>\n' +
+                '                    </p>\n' +
+                '                    <p>\n' +
+                '                        <strong>Призы:</strong><br>\n' +
+                '                        <b>{prize}</b> — выводит информацию о призе. <a href="https://vk.com/@pedestal-wallgames?anchor=peremennaya-prize" target="_blank">Подробнее</a>.<br>\n' +
+                '                        <b>{prizes}</b> — количество оставшихся призов.<br>\n' +
+                '                    </p>\n' +
+                '                        <strong>Попытки:</strong><br>\n' +
+                '                        <b>{timeout}</b> — оставшееся время до следующей попытки.<br>\n' +
+                '                        <b>{count_attempts}</b> — количество оставшихся попыток.<br>\n' +
+                '                        <b>{next_attempts_periodic}</b> — время, через которое будет следующее начисление по таймеру.<br>\n' +
+                '                        <b>{count_attempts_periodic}</b> — количество попыток, которые будут выданы по таймеру.<br>\n' +
+                '                        <b>{action_for_attempts}</b> — случайное действие, за которое можно получить бесплатные попытки.<br>\n' +
+                '                        <b>{external}</b> — ссылка на дополнительную группу, на которую нужно подписаться.<br>\n' +
+                '                    </p>\n' +
+                '                    <p>\n' +
+                '                        <b>{more_attempts}</b> — выводит информацию о возможности получения дополнительных попыток (за действие, по таймеру). <a href="https://vk.com/@pedestal-wallgames?anchor=peremennaya-more-attempts" target="_blank">Подробнее</a>.<br>\n' +
+                '                        <b>{info_attempts}</b> — выводит информацию о кол-ве оставшихся попыток. Если закончились, то о возможности получения дополнительных. <a href="https://vk.com/@pedestal-wallgames?anchor=peremennaya-info-attempts" target="_blank">Подробнее</a>.<br>\n' +
+                '                    </p>\n' +
                 '                </div>',
             url_default_img: '/static/wallgames/image_default/min/anagram_min.jpg',
             game_duration_hour: '',
@@ -232,6 +262,13 @@
         //     'game_duration'
         // },
         computed: {
+            main_variables () {
+                if (this.settings.pedestal_integration_enabled) {
+                    return this.main_variables1
+                } else {
+                    return this.main_variables2
+                }
+            },
             rules_start_letters () {
                 return [
                     v => !!v || 'Недопустимый формат',

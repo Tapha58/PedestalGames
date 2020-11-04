@@ -11,10 +11,8 @@
   "dependencies": {
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "@vkontakte/vk-bridge": "^2.1.8",
-    "axios": "^0.20.0",
     "core-js": "^3.6.4",
     "emoji-vue": "^0.2.4",
-    "fabric": "^3.6.3",
     "fontfaceobserver": "^2.1.0",
     "node-sass": "^4.14.1",
     "vue": "^2.6.11",

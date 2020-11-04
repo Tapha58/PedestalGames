@@ -92,7 +92,7 @@ export default new Router({
             component: () => import('./views/games/SeaBattle'),
         },
         {
-            path: '/map',
+            path: '/map/:id',
             name: 'map',
             component: () => import('./views/games/Map'),
         },
@@ -111,21 +111,5 @@ export default new Router({
             name: 'sea_battle_with_score_settings_id',
             component: () => import('./views/games/SeaBattleWithScore'),
         },
-        {
-            path: '/covers_home_view',
-            name: 'covers_home_view',
-            component: () => import('./views/covers/CoversHomeView'),
-        },
-        {
-            path: '/add_cover',
-            name: 'add_cover',
-            component: () => import('./views/covers/AddCover'),
-        },
-        {
-            path: '/add_cover/:id',
-            name: 'add_cover_id',
-            component: () => import('./views/covers/AddCover'),
-        },
-
     ]
 })
