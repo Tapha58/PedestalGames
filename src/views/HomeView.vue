@@ -1,17 +1,21 @@
 <template>
     <div class="px-3">
-        <v-row align="center">
-            <v-col>
-                <v-tabs>
+        <v-row class="ml-0">
+            <v-col v-if="show_skeleton">
+                <v-skeleton-loader
+                        type='heading'
+                ></v-skeleton-loader>
+            </v-col>
+            <v-col v-else>
+                <v-tabs >
                     <v-tab to="/choice_games">Новая игра</v-tab>
                     <v-tab to="/my_games">Мои игры</v-tab>
                     <v-tab to="/settings">Интеграции</v-tab>
                     <v-tab to="/balance">Баланс: {{balance}}₽, {{games_available_launches}}Ж</v-tab>
                 </v-tabs>
             </v-col>
-            <v-col cols="3" class="mr-1 py-0">
+            <v-col v-if="show_btn_permission" cols="3" class="mr-1 py-0">
                 <v-btn
-                        v-if="show_btn_permission"
                         align="right"
                         @click="VKWebAppGetCommunityToken"
                         small
@@ -37,6 +41,7 @@
     export default {
         mixins: [auto_resize],
         data: () => ({
+            show_skeleton: true,
             games_available_launches: 0,
             err_mess_rules: '',
             settings: {
@@ -50,7 +55,8 @@
             if (!await this.get_data_group()) {
                 this.VKWebAppGetCommunityToken()
             }
-            this.load_balance()
+            await this.load_balance()
+            this.show_skeleton = false
         },
         watch: {
             err_mess_rules: function () {
@@ -150,6 +156,10 @@
     #err_mess_rules {
         color: red;
         font-size: 12px;
+    }
+
+    .v-tabs-bar--is-mobile {
+        display: none !important;
     }
 
 </style>

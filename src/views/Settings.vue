@@ -1,19 +1,19 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="3">
+            <v-col :cols="$vuetify.breakpoint.name !== ('xs') ? 3 : 12" align="center">
                 <v-img
                         src="https://sun9-18.userapi.com/vrm4aRKhq6oCpK0qZO7LNyFI4-YqddwUPhadug/z3CaBEs-FiE.jpg"
                         max-height="184"
                         max-width="184"
                 ></v-img>
             </v-col>
-            <v-col cols="9">
+            <v-col :cols="$vuetify.breakpoint.name !== ('xs') ? 9 : 12">
                 <span><b>Пьедестал</b></span><br>
                 <span>Интеграция даст следующие возможности:<br>
                 1. В призах у игр появится вариант начисления баллов рейтинга и баланса магазина. <br>
                 2. Добавится функция «платные попытки», пользователь сможет тратить баллы рейтинга / магазина для покупки дополнительных попыток в игре.</span>
-                <v-row class="mt-2">
+                <v-row class="mt-2"  :justify="$vuetify.breakpoint.name !== ('xs') ? 'left' : 'space-between'">
                     <v-btn class="mx-3"
                            @click="go_description_page ('https://vk.com/@pedestal-igry-integraciya-s-pedestalom')"
                            small

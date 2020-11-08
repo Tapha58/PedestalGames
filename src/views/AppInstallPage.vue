@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row align="center" class="mx-0">
-            <v-col cols="3">
+            <v-col :cols="$vuetify.breakpoint.name !== ('xs') ? 3 : 12" align="center">
                 <v-img
                         class="logo_game"
                         src="https://pedestal-test2.aiva-studio.ru/static/longtime/icons/logo/game_logo.jpg"
@@ -9,7 +9,7 @@
                         max-height="200"
                 ></v-img>
             </v-col>
-            <v-col cols="9">
+            <v-col :cols="$vuetify.breakpoint.name !== ('xs') ? 9 : 12">
                 <span>Сервис для проведения в сообществе автоматизированных игр (игровая механика полностью управляется приложением). <br>
                 Доступные игры: морской бой, угадай число, анаграммы, битва комментаторов, слова на букву.</span>
             </v-col>
@@ -18,21 +18,22 @@
             <v-btn @click="app_install" color="primary" small>Подключить к сообществу</v-btn>
         </v-row>
         <v-row justify="center" class="mt-5 mx-0">
-            <v-col cols="9">
+            <v-col align="center">
                 <v-carousel
                         light
                         cycle
                         height="160"
                         hide-delimiters
-
+                        :show-arrows="$vuetify.breakpoint.name === ('xs' || 'sm') ? false : true"
                 >
                     <v-carousel-item
                             v-for="(game) in game_card"
                             :key="game.name"
                     >
                         <v-card
-                                class="mx-auto"
+                                class="mx-0"
                                 max-width="380"
+                                min-width="365"
                         >
                             <v-list-item three-line>
                                 <v-list-item-content>
@@ -53,7 +54,7 @@
                             </v-list-item>
 
                             <v-card-actions class="pt-0 d-flex justify-space-between">
-                                <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary"
+                                <v-btn  color="primary"
                                        @click="go_description_page (game.btn_example)"
                                        text>
                                     Пример
@@ -117,11 +118,17 @@
                     btn_example: 'https://vk.com/club197375430?w=wall-197375430_151',
                     btn_more_details: 'https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-bitva-kommentatorov'
                 }
+
             ]
         }),
         mounted: async function () {
             await this.getAllUrlParams()
             this.auto_resize()
+        },
+        computed: {
+            mobile: function () {
+                return this.$vuetify.breakpoint.name !== ('xs') ? false : 12
+            },
         },
         methods: {
             app_install: async function () {

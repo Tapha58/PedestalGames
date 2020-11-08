@@ -1,63 +1,62 @@
 <template>
     <div>
-        <div id="skeleton" v-show="show_sceleton">
+        <div id="skeleton" v-if="show_sceleton">
             <v-row>
-                <v-col cols="6">
+                <v-col>
                     <v-skeleton-loader
                             class="mx-auto"
-                            max-width="380"
-                            min-width="380"
-
+                            max-width="365"
+                            min-width="365"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
-                <v-col cols="6">
+                <v-col>
                     <v-skeleton-loader
                             class="mx-auto"
-                            max-width="380"
-                            min-width="380"
+                            max-width="365"
+                            min-width="365"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
             </v-row>
             <v-row>
-                <v-col cols="6">
+                <v-col>
                     <v-skeleton-loader
                             class="mx-auto"
-                            max-width="380"
-                            min-width="380"
+                            max-width="365"
+                            min-width="365"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
-                <v-col cols="6">
+                <v-col>
                     <v-skeleton-loader
                             class="mx-auto"
-                            max-width="380"
-                            min-width="380"
+                            max-width="365"
+                            min-width="365"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
             </v-row>
             <v-row>
-                <v-col cols="6">
+                <v-col>
                     <v-skeleton-loader
                             class="mx-auto"
-                            max-width="380"
-                            min-width="380"
+                            max-width="365"
+                            min-width="365"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
-                <v-col cols="6">
+                <v-col>
                     <v-skeleton-loader
                             class="mx-auto"
-                            max-width="380"
-                            min-width="380"
+                            max-width="365"
+                            min-width="365"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
             </v-row>
         </div>
-        <div id="xx" v-show="!show_sceleton">
+        <div id="xx" v-else>
             <!--        hello-->
             <!--        <div id='war_info'  class="mt-3 pb-3">-->
             <!--            <v-col class="pb-0">-->
@@ -70,17 +69,17 @@
             <!--                </span>-->
             <!--            </v-col>-->
             <!--        </div>-->
-            <v-row>
+            <v-row justify="center">
                 <!--            Морской бой-->
-                <v-col cols="6">
+                <v-col>
                     <v-card
                             class="mx-auto mmm"
                             max-width="380"
-                            min-height=""
+                            min-width="297"
                     >
                         <v-list-item three-line>
                             <v-list-item-content>
-                                <div v-if="group_status === 2" class="overline1 mb-4 free_color">
+                                <div v-if="group_status === 2" class="overline1  free_color">
                                     <v-chip
                                             class="mr-1"
                                             color="red"
@@ -89,8 +88,8 @@
                                     >
                                         new
                                     </v-chip>
-                                    {{ price_type_5 }} рублей</div>
-                                <div v-else class="overline1 mb-4 free_color">
+                                    {{ price_type_5 }}₽</div>
+                                <div v-else class="overline1 free_color">
                                     <v-chip
                                             class="mr-1"
                                             color="red"
@@ -100,7 +99,7 @@
                                         new
                                     </v-chip>
                                     Бесплатно</div>
-                                <v-list-item-title class="name_game mb-1">Морской бой</v-list-item-title>
+                                <v-list-item-title class="mb-1" :class="$vuetify.breakpoint.name !== 'xs' ? 'name_game' : 'name_game_16'">Морской бой</v-list-item-title>
                                 <v-list-item-subtitle class="pt-2">Игроки стреляют в ячейки. Побеждают только меткие.
                                 </v-list-item-subtitle>
                             </v-list-item-content>
@@ -128,11 +127,11 @@
                     <v-card
                             class="mx-auto mmm"
                             max-width="380"
-                            min-height=""
+                            min-width="297"
                     >
                         <v-list-item three-line>
                             <v-list-item-content>
-                                <div v-if="group_status === 2" class="overline1 mb-4 free_color">
+                                <div v-if="group_status === 2" class="overline1  free_color">
                                     <v-chip
                                             class="mr-1"
                                             color="red"
@@ -141,8 +140,8 @@
                                     >
                                         new
                                     </v-chip>
-                                    {{ price_type_4 }} рублей</div>
-                                <div v-else class="overline1 mb-4 free_color">
+                                    {{ price_type_4 }}₽</div>
+                                <div v-else class="overline1  free_color">
                                     <v-chip
                                             class="mr-1"
                                             color="red"
@@ -152,7 +151,7 @@
                                         new
                                     </v-chip>
                                     Бесплатно</div>
-                                <v-list-item-title class="name_game mb-1">Битва комментаторов</v-list-item-title>
+                                <v-list-item-title class="mb-1" :class="$vuetify.breakpoint.name !== 'xs' ? 'name_game' : 'name_game_16'">Битва комментаторов</v-list-item-title>
                                 <v-list-item-subtitle class="pt-2">Выигрывают те, кто напишет максимум комментариев.
                                 </v-list-item-subtitle>
                             </v-list-item-content>
@@ -181,12 +180,13 @@
                     <v-card
                             class="mx-auto"
                             max-width="380"
+                            min-width="297"
                     >
                         <v-list-item three-line>
                             <v-list-item-content>
-                                <div v-if="group_status === 2" class="overline1 mb-4 free_color">Стоимость игры - <s>{{ base_price_type_1 }}</s> {{ price_type_1 }} рублей</div>
-                                <div v-else class="overline1 mb-4 free_color">Бесплатно</div>
-                                <v-list-item-title class="name_game mb-1" >Угадай число</v-list-item-title>
+                                <div v-if="group_status === 2" class="overline1  free_color">Цена игры - <s>{{ base_price_type_1 }}</s> {{ price_type_1 }}₽</div>
+                                <div v-else class="overline1  free_color">Бесплатно</div>
+                                <v-list-item-title class="mb-1" :class="$vuetify.breakpoint.name !== 'xs' ? 'name_game' : 'name_game_16'" >Угадай число</v-list-item-title>
                                 <v-list-item-subtitle class="pt-2">Загадайте число. Тот из игроков, кто первым отгадает, получит приз.
                                 </v-list-item-subtitle>
                             </v-list-item-content>
@@ -213,12 +213,13 @@
                     <v-card
                             class="mx-auto"
                             max-width="380"
+                            min-width="297"
                     >
                         <v-list-item three-line>
                             <v-list-item-content>
-                                <div v-if="group_status === 2" class="overline1 mb-4 free_color">Стоимость игры - <s>{{ base_price_type_2 }}</s> {{ price_type_2 }} рублей</div>
-                                <div v-else class="overline1 mb-4 free_color">Бесплатно</div>
-                                <v-list-item-title class="name_game mb-1">Анаграммы</v-list-item-title>
+                                <div v-if="group_status === 2" class="overline1  free_color">Цена игры - <s>{{ base_price_type_2 }}</s> {{ price_type_2 }}₽</div>
+                                <div v-else class="overline1  free_color">Бесплатно</div>
+                                <v-list-item-title class="mb-1" :class="$vuetify.breakpoint.name !== 'xs' ? 'name_game' : 'name_game_16'">Анаграммы</v-list-item-title>
                                 <v-list-item-subtitle class="pt-2">Загадайте слово, а игроки будут составлять из него другие слова.
                                 </v-list-item-subtitle>
                             </v-list-item-content>
@@ -247,12 +248,13 @@
                     <v-card
                             class="mx-auto"
                             max-width="380"
+                            min-width="297"
                     >
                         <v-list-item three-line>
                             <v-list-item-content>
-                                <div v-if="group_status === 2" class="overline1 mb-4 free_color">Стоимость игры - <s>{{ base_price_type_3 }}</s> {{ price_type_3 }} рублей</div>
-                                <div v-else class="overline1 mb-4 free_color">Бесплатно</div>
-                                <v-list-item-title class="name_game mb-1">Слова на букву(ы)</v-list-item-title>
+                                <div v-if="group_status === 2" class="overline1  free_color">Цена игры - <s>{{ base_price_type_3 }}</s> {{ price_type_3 }}₽</div>
+                                <div v-else class="overline1  free_color">Бесплатно</div>
+                                <v-list-item-title class="mb-1" :class="$vuetify.breakpoint.name !== 'xs' ? 'name_game' : 'name_game_16'">Слова на букву(ы)</v-list-item-title>
                                 <v-list-item-subtitle class="pt-2">Выигрывает тот, кто напишет больше слов на загаданную букву.
                                 </v-list-item-subtitle>
                             </v-list-item-content>
@@ -275,7 +277,6 @@
                         </v-card-actions>
                     </v-card>
                 </v-col>
-                <v-col></v-col>
             </v-row>
         </div>
     </div>
@@ -287,6 +288,7 @@
     export default {
         mixins: [auto_resize],
         data:() => ({
+
             auth_data: '',
             mobile: '',
             prices: [],
@@ -422,13 +424,16 @@
     }
 </script>
 
-<style>
+<style scoped>
     .free_color {
         color: green;
     }
 
     .name_game {
         font-size: 20px;
+    }
+    .name_game_16 {
+        font-size: 16px;
     }
 
     #war_info {
@@ -438,7 +443,7 @@
     }
 
     .overline1 {
-        font-size: .69rem !important;
+        font-size: .74rem !important;
         font-weight: 500;
         letter-spacing: .1em!important;
         line-height: 2rem;
@@ -448,6 +453,10 @@
 
     .v-skeleton-loader__image {
         height: 150px !important;
+    }
+
+    .v-list-item__subtitle {
+        -webkit-line-clamp: 3 !important;
     }
 
 

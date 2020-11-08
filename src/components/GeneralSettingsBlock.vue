@@ -14,7 +14,6 @@
         <v-row id="prizeCreator" dense>
             <v-col cols="12" class="pt-0">
                 <v-alert
-                        height="40"
                         :color='color_alert'
                         dense
                 >
@@ -63,18 +62,6 @@
                     :color='color_alert'
                     dense
             >
-                <!--                3. Задайте правила игры-->
-                <!--                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">-->
-                <!--                    <template v-slot:activator="{ on }">-->
-                <!--                        <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>-->
-                <!--                    </template>-->
-                <!--                    <span>-->
-                <!--                        Продумайте игровую механику, чтобы игра не завершилась слишком быстро и у пользователей был-->
-                <!--                        интерес следить за ней. Используйте ограниченные периодические бесплатные попытки и платные-->
-                <!--                        попытки за баллы магазина / рейтинга.-->
-                <!--                    </span>-->
-                <!--                </v-tooltip>-->
-
                 <v-row>
                     <v-col class="py-0">
                         3. Задайте правила игры
@@ -872,7 +859,7 @@
                 // await this.getAllUrlParams()
                 this.common_settings.id_group_vk = +this.settings.auth_data.vk_group_id
                 this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
-
+                await this.vkWebAppGetAuthToken()
             },
         watch: {
             loader() {
@@ -1828,6 +1815,14 @@
                 //     setTimeout(this.clear_message, 10000)
                 //     return
                 // }
+                if (this.delayedLaunch) {
+                    let is_closed = await this.groups_getById()
+                    if (is_closed) {
+                        this.message_error = 'Отложенная публикация в закрытой группе невозможна'
+                        setTimeout(this.clear_message, 5000)
+                        return
+                    }
+                }
                 if (!this.get_data_group()) {
                     this.message_error = 'Отсутствует ключ доступа'
                     setTimeout(this.clear_message, 5000)
@@ -1991,11 +1986,27 @@
                     console.error('Ошибка', error)
                 }
             },
+            groups_getById: async function () {
+                try {
+                    let response = await bridge.send("VKWebAppCallAPIMethod", {
+                        "method": "groups.getById",
+                        "request_id": "32test",
+                        "params": {
+                            "v": "5.124",
+                            "group_id": this.settings.auth_data.vk_group_id,
+                            "access_token": this.token
+                        }
+                    })
+                    return response.response[0].is_closed
+
+                } catch (error) {
+                    console.error('Ошибка', error)
+                }
+            },
             saveWallPhoto: async function (server, photo, hash) {
-                // await this.vkWebAppGetAuthToken()
-                console.log(server)
-                console.log(photo)
-                console.log(hash)
+                // console.log(server)
+                // console.log(photo)
+                // console.log(hash)
                 try {
                     let response = await bridge.send("VKWebAppCallAPIMethod", {
                         "method": "photos.saveWallPhoto",

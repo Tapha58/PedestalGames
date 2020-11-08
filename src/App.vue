@@ -1,5 +1,6 @@
 <template>
     <v-app id="app">
+        <div v-if="$vuetify.breakpoint.name !== ('xs' || 'sm') ? false : true" id="mobile_background_top"></div>
         <!--        <v-btn v-show="$route.path !== '/map/'" id="square" depressed  dark color="#4a76a8" @click="go_widget_page">Вернуться в основное меню</v-btn>-->
         <v-btn v-show="show_btn_pedestal" id="square" depressed dark color="#4a76a8" @click="go_widget_page">Вернуться в
             основное меню
@@ -10,7 +11,7 @@
 </template>
 
 <script>
-    // import bridge from "@vkontakte/vk-bridge";
+    import bridge from "@vkontakte/vk-bridge";
     export default {
         methods: {
             go_widget_page: function () {
@@ -19,6 +20,7 @@
             },
         },
         mounted: async function () {
+            await bridge.send("VKWebAppInit")
             sessionStorage.setItem('auth_data_url', document.location.search)
             if (/#map/.test(window.location.href)) {
                 let str = window.location.href
@@ -45,7 +47,7 @@
     html {
         overflow-x: auto !important;
         overflow-y: auto !important;
-        width: 795px;
+        /*width: 795px;*/
     }
 
     #square {
@@ -59,6 +61,11 @@
 
     .v-application--wrap {
         min-height: auto !important;
+    }
+
+    #mobile_background_top {
+        background-color: #4a76a8;
+        min-height: 60px;
     }
 
 

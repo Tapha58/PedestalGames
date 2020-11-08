@@ -34,20 +34,22 @@
                         class="ma-1"
                         src="/static/longtime/icons/pay/yandex_money.png"></v-img>
             </div>
-            <div class="balance" :class="{selected : qiwi}" @click="select('qiwi')">
+            <div class="balance" :class="{selected : qiwi, mobile : mobile}" @click="select('qiwi')">
                 <v-img
                         class="ma-1"
                         src="/static/longtime/icons/pay/qiwi_wallet.png"></v-img>
             </div>
-            <div class="balance" :class="{selected : vk_pay}" @click="select('vk_pay')">
-                <v-img class="mt-1" src="/static/longtime/icons/pay/vkpay.png"></v-img>
+            <div class="balance" :class="{selected : vk_pay, mobile : mobile}" @click="select('vk_pay')">
+                <v-img
+                        class="mt-1"
+                        src="/static/longtime/icons/pay/vkpay.png"></v-img>
             </div>
         </v-row>
         <v-col align="left" class="pb-0">
             <span><b>Сумма пополнения:</b></span>
         </v-col>
         <v-row justify="center" class="">
-            <v-col cols="4">
+            <v-col :cols="$vuetify.breakpoint.name === ('sm' || 'xs') ? 4 : 12">
                 <v-text-field
                         label="введите сумму"
                         dense
@@ -66,7 +68,7 @@
                 </v-text-field>
             </v-col>
         </v-row>
-        <hr>
+        <hr id="line_vk">
         <v-col align="left" class="pb-0">
             <span><b>Жетонов на балансе группы: {{games_available_launches}}</b></span><br>
             <span>Жетон дает возможность запустить бесплатно одну игру. Жетоны могуть быть начисленны в ходе акции.</span>
@@ -99,9 +101,9 @@
 
         },
         computed: {
-            // vk_ts: function () {
-            //     return new Date()
-            // },
+            mobile: function () {
+                return this.$vuetify.breakpoint.name !== ('xs') ? false : true
+            },
 
             action: function () {
                 if (this.yandex_money || this.bank_card) {
@@ -187,5 +189,15 @@
         margin-top: -2px !important;
     }
 
+    #line_vk {
+        color: #e7e8ec;
+        background-color: #e7e8ec;
+        border: none;
+        height: 1px;
+    }
+
+    .mobile {
+        margin-top: 10px;
+    }
 
 </style>
