@@ -6,7 +6,7 @@
                     <v-skeleton-loader
                             class="mx-auto"
                             max-width="365"
-                            min-width="365"
+                            min-width="297"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
@@ -14,7 +14,25 @@
                     <v-skeleton-loader
                             class="mx-auto"
                             max-width="365"
-                            min-width="365"
+                            min-width="297"
+                            type="card"
+                    ></v-skeleton-loader>
+                </v-col>
+            </v-row>
+            <v-row class="">
+                <v-col>
+                    <v-skeleton-loader
+                            class="mx-auto"
+                            max-width="365"
+                            min-width="297"
+                            type="card"
+                    ></v-skeleton-loader>
+                </v-col>
+                <v-col>
+                    <v-skeleton-loader
+                            class="mx-auto"
+                            max-width="365"
+                            min-width="297"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
@@ -24,7 +42,7 @@
                     <v-skeleton-loader
                             class="mx-auto"
                             max-width="365"
-                            min-width="365"
+                            min-width="297"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
@@ -32,25 +50,7 @@
                     <v-skeleton-loader
                             class="mx-auto"
                             max-width="365"
-                            min-width="365"
-                            type="card"
-                    ></v-skeleton-loader>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <v-skeleton-loader
-                            class="mx-auto"
-                            max-width="365"
-                            min-width="365"
-                            type="card"
-                    ></v-skeleton-loader>
-                </v-col>
-                <v-col>
-                    <v-skeleton-loader
-                            class="mx-auto"
-                            max-width="365"
-                            min-width="365"
+                            min-width="297"
                             type="card"
                     ></v-skeleton-loader>
                 </v-col>
@@ -117,8 +117,8 @@
 
                         <v-card-actions class="pt-0 d-flex justify-space-between">
                             <v-btn color="primary" text to="/sea_battle">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" text @click="go_description_page (' https://vk.com/club197375430?w=wall-197375430_152')">Пример</v-btn>
-                            <v-btn color="primary" text @click="go_description_page ('https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-morskoy-boy')">Подробнее </v-btn>
+                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" text href="https://vk.com/club197375430?w=wall-197375430_152" target="_blank">Пример</v-btn>
+                            <v-btn color="primary" text href="https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-morskoy-boy" target="_blank">Подробнее </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -169,8 +169,8 @@
 
                         <v-card-actions class="pt-0 d-flex justify-space-between">
                             <v-btn color="primary" text to="/max_comments">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" text @click="go_description_page ('https://vk.com/club197375430?w=wall-197375430_151')">Пример</v-btn>
-                            <v-btn color="primary" text @click="go_description_page ('https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-bitva-kommentatorov')">Подробнее </v-btn>
+                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" text href="https://vk.com/club197375430?w=wall-197375430_151" target="_blank">Пример</v-btn>
+                            <v-btn color="primary" text href="https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-bitva-kommentatorov" target="_blank">Подробнее </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -204,8 +204,8 @@
 
                         <v-card-actions class="pt-0 d-flex justify-space-between">
                             <v-btn color="primary" text to="/guess_number_settings">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" @click="go_description_page ('https://vk.com/club197375430?w=wall-197375430_21')" text >Пример</v-btn>
-                            <v-btn color="primary" @click="go_description_page ('https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-ugaday-chislo')" text>Подробнее</v-btn>
+                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" href="https://vk.com/club197375430?w=wall-197375430_21" target="_blank" text >Пример</v-btn>
+                            <v-btn color="primary" href="https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-ugaday-chislo" target="_blank" text>Подробнее</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -237,8 +237,8 @@
 
                         <v-card-actions class="pt-0 d-flex justify-space-between">
                             <v-btn color="primary" text to="/anagram">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" @click="go_description_page ('https://vk.com/club197375430?w=wall-197375430_22')" text >Пример</v-btn>
-                            <v-btn color="primary" @click="go_description_page ('https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-anagrammy')" text>Подробнее</v-btn>
+                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" href="https://vk.com/club197375430?w=wall-197375430_22" target="_blank" text >Пример</v-btn>
+                            <v-btn color="primary" href="https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-anagrammy" target="_blank" text>Подробнее</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -272,8 +272,43 @@
 
                         <v-card-actions class="pt-0 d-flex justify-space-between">
                             <v-btn color="primary" text to="/words_with_letter">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" @click="go_description_page ('https://vk.com/club197375430?w=wall-197375430_23')" text >Пример</v-btn>
-                            <v-btn color="primary" text @click="go_description_page ('https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-slova-na-bukvu-y')">Подробнее </v-btn>
+                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" href="https://vk.com/club197375430?w=wall-197375430_23" target="_blank" text >Пример</v-btn>
+                            <v-btn color="primary" text href="https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-slova-na-bukvu-y" target="_blank">Подробнее </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+                <v-col>
+                    <v-card
+                            class="mx-auto"
+                            max-width="380"
+                            min-width="297"
+                            min-height="170"
+                            max-height="170"
+                            disabled
+                    >
+                        <v-list-item three-line>
+                            <v-list-item-content>
+                                <div class="overline1  free_color"></div>
+                                <v-list-item-title class="mb-1" :class="$vuetify.breakpoint.name !== 'xs' ? 'name_game' : 'name_game_16'">Игра в разработке</v-list-item-title>
+                                <v-list-item-subtitle class="pt-2">
+                                </v-list-item-subtitle>
+                            </v-list-item-content>
+
+                            <v-list-item-avatar
+                                    class="n"
+                                    color="grey"
+                                    size="80"
+                                    tile
+                            ><img
+                                    alt="Изображение"
+                                    src="/static/wallgames/image/promo_games/development.png"
+                            ></v-list-item-avatar>
+                        </v-list-item>
+
+                        <v-card-actions class="pt-4 d-flex justify-space-between">
+                            <v-btn color="primary" text to="/words_with_letter">Создать игру</v-btn>
+                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" href="https://vk.com/club197375430?w=wall-197375430_23" target="_blank" text >Пример</v-btn>
+                            <v-btn color="primary" text href="https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-slova-na-bukvu-y" target="_blank">Подробнее </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -457,6 +492,10 @@
 
     .v-list-item__subtitle {
         -webkit-line-clamp: 3 !important;
+    }
+
+    .btn {
+        text-decoration: none;
     }
 
 

@@ -20,7 +20,7 @@
                             dense
                     >
                         <v-row>
-                            <v-col class="py-0">
+                            <v-col class="py-0" cols="auto">
                                 2. Настройки игры
                                 <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
                                     <template v-slot:activator="{ on }">

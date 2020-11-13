@@ -18,7 +18,7 @@
                         dense
                 >
                     <v-row>
-                        <v-col class="py-0">
+                        <v-col class="py-0" cols="auto">
                             1. Сформируйте приз
                             <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
                                 <template v-slot:activator="{ on }">
@@ -63,7 +63,7 @@
                     dense
             >
                 <v-row>
-                    <v-col class="py-0">
+                    <v-col class="py-0" cols="auto">
                         3. Задайте правила игры
                         <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
                             <template v-slot:activator="{ on }">
@@ -81,7 +81,7 @@
                 </v-row>
 
             </v-alert>
-            <v-row class="pt-2 mb-n3">
+            <v-row>
                 <v-col class="py-0" cols="12" sm="9">
                     <v-select
                             :items="options"
@@ -1928,7 +1928,7 @@
             },
             setting_variables_in_the_post_text: function () {
                 this.current_post_text = this.settings.post_text
-                this.settings.post_text = this.settings.post_text.replace(/{ссылка}/ig, "[https://vk.com/app" + this.settings.auth_data.vk_app_id + '_-' + this.settings.auth_data.vk_group_id + "#map=" + this.settings.map + "|Открыть игровое поле]")
+                this.settings.post_text = this.settings.post_text.replace(/{ссылка}/ig, "@https://vk.com/app" + this.settings.auth_data.vk_app_id + '_-' + this.settings.auth_data.vk_group_id + "#map=" + this.settings.map + ' ' + "(Открыть игровое поле)")
             },
             clear_message: function () {
                 this.message_error = ''

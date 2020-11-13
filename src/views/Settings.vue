@@ -15,7 +15,7 @@
                 2. Добавится функция «платные попытки», пользователь сможет тратить баллы рейтинга / магазина для покупки дополнительных попыток в игре.</span>
                 <v-row class="mt-2"  :justify="$vuetify.breakpoint.name !== ('xs') ? 'left' : 'space-between'">
                     <v-btn class="mx-3"
-                           @click="go_description_page ('https://vk.com/@pedestal-igry-integraciya-s-pedestalom')"
+                           href="https://vk.com/@pedestal-igry-integraciya-s-pedestalom" target="_blank"
                            small
                            color="primary">Подробнее
                     </v-btn>

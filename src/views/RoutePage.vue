@@ -1,6 +1,6 @@
 <template>
 <div>
-    <span v-if="show_user_page">Шалом друг, к сожалению ты не админ чтобы тут быть.</span>
+    <span v-if="show_user_page">Эта страница доступна только администраторам группы.</span>
 </div>
 </template>
 

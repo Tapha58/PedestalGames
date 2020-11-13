@@ -13,7 +13,7 @@
                 :game_type="game_type"
         >
             <template v-slot:settings>
-                <div class="pt-5">
+                <div class="pt-5" cols="auto">
                     <v-alert
                             :color='color_alert'
                             dense

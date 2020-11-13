@@ -1,35 +1,48 @@
 <template>
     <div class="px-3">
-        <v-row class="ml-0">
-            <v-col v-if="show_skeleton">
+        <v-row v-if="show_skeleton" class="ml-0">
+            <v-col>
                 <v-skeleton-loader
                         type='heading'
                 ></v-skeleton-loader>
             </v-col>
-            <v-col v-else>
-                <v-tabs >
+        </v-row>
+        <v-row v-else align="center" class="mx-0">
+            <v-col v-if="$vuetify.breakpoint.name === 'xs'" justify="center" class="px-0 py-0">
+                <v-tabs>
+                    <v-tab to="/choice_games" class="tab_mobile">Создать</v-tab>
+                    <v-tab to="/my_games" class="tab_mobile">Мои игры</v-tab>
+                    <v-tab to="/settings" class="tab_mobile">Сервисы</v-tab>
+                    <v-tab to="/balance" class="tab_mobile">Баланс</v-tab>
+                </v-tabs>
+            </v-col>
+            <v-col v-else class="py-0 px-0" cols="auto">
+                <v-tabs ripple="false">
                     <v-tab to="/choice_games">Новая игра</v-tab>
                     <v-tab to="/my_games">Мои игры</v-tab>
-                    <v-tab to="/settings">Интеграции</v-tab>
+                    <v-tab to="/settings">Сервисы</v-tab>
                     <v-tab to="/balance">Баланс: {{balance}}₽, {{games_available_launches}}Ж</v-tab>
                 </v-tabs>
             </v-col>
-            <v-col v-if="show_btn_permission" cols="3" class="mr-1 py-0">
+            <v-col v-if="show_btn_permission" class="py-0" cols="auto">
                 <v-btn
-                        align="right"
+
+                        :x-small="$vuetify.breakpoint.name === 'xs' ? true : false"
+                        :small="$vuetify.breakpoint.name !== 'xs' ? true : false"
                         @click="VKWebAppGetCommunityToken"
-                        small
                         color="red"
                         dark
                 >Предоставить права
                 </v-btn>
-                <p class="mb-0" id="err_mess_rules">{{err_mess_rules}}</p>
+                                    <p class="mb-0" id="err_mess_rules">{{err_mess_rules}}</p>
             </v-col>
         </v-row>
+
         <router-view
                 ref="child_methods"
                 @load_balance="load_balance"
                 :games_available_launches="games_available_launches"
+                :balance="balance"
         ></router-view>
     </div>
 </template>
@@ -65,16 +78,24 @@
         },
         methods: {
             VKWebAppGetCommunityToken: async function () {
-                let response = await bridge.send("VKWebAppGetCommunityToken", {
-                    "app_id": +this.settings.auth_data.vk_app_id,
-                    "group_id": +this.settings.auth_data.vk_group_id,
-                    "scope": "messages, manage, wall"
-                })
-                console.log(response)
-                this.VKWebAppCallAPIMethod(response.access_token)
+                try {
+                    let response = await bridge.send("VKWebAppGetCommunityToken", {
+                        "app_id": +this.settings.auth_data.vk_app_id,
+                        "group_id": +this.settings.auth_data.vk_group_id,
+                        "scope": "messages, manage, wall"
+                    })
+                    if (response.scope === "messages,manage,wall" && response.access_token) {
+                        this.VKWebAppCallAPIMethod(response.access_token)
+                    } else {
+                        this.err_mess_rules = 'предоставленны не все права'
+                    }
+                } catch (e) {
+                    console.log('пользователь нажал кнопку отмена')
+                }
+
+
             },
             VKWebAppCallAPIMethod: async function (token_group) {
-                console.log(token_group)
                 let response = await bridge.send("VKWebAppCallAPIMethod", {
                     "method": "groups.getTokenPermissions",
                     "params": {"v": "5.107", "access_token": token_group}
@@ -86,9 +107,6 @@
                     await this.put_data_group(token_group, mask)
                     this.$refs.child_methods.get_group_status()
                 }
-                // response = response.response.permissions
-                // console.log(mask)
-                // console.log(response)
             },
             clear: function () {
                 this.err_mess_rules = ''
@@ -140,11 +158,9 @@
                 if (response.ok) {
                     response = await response.json()
                     this.show_btn_permission = false
-                    console.log('1')
                     console.log(response)
                 } else {
                     response = await response.json()
-                    console.log('2')
                     console.log(response)
                 }
             },
@@ -152,14 +168,32 @@
     }
 </script>
 
-<style scoped>
+<style>
     #err_mess_rules {
         color: red;
         font-size: 12px;
     }
 
-    .v-tabs-bar--is-mobile {
+    .v-slide-group__prev {
         display: none !important;
     }
+
+    .tab_mobile {
+        font-size: 11px !important;
+        padding-left: 0px;
+        padding-right: 0px;
+        min-width: 77px;
+    }
+
+    .v-tab1 {
+        padding-left: 0px;
+        padding-right: 0px;
+        min-width: 77px;
+    }
+
+    .v-tabs-slider-wrapper {
+        /*bottom: 14px;*/
+    }
+
 
 </style>

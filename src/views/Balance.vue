@@ -20,6 +20,9 @@
             <input v-for="(value, name) in settings.auth_data" :key="name" type="hidden" :name="name" :value="value">
             <input type="hidden" name="sum" :value="amount">
         </div>
+        <v-col align="left" v-if="$vuetify.breakpoint.name === 'xs'">
+            <span><b>Баланс: </b>{{balance}}₽</span>
+        </v-col>
         <v-col align="left">
             <span><b>Способ пополнения:</b></span>
         </v-col>
@@ -70,7 +73,7 @@
         </v-row>
         <hr id="line_vk">
         <v-col align="left" class="pb-0">
-            <span><b>Жетонов на балансе группы: {{games_available_launches}}</b></span><br>
+            <span><b>Жетонов на балансе группы: </b>{{games_available_launches}}</span><br>
             <span>Жетон дает возможность запустить бесплатно одну игру. Жетоны могуть быть начисленны в ходе акции.</span>
         </v-col>
     </form>
@@ -82,7 +85,9 @@
 
     export default {
         props: [
-            'games_available_launches'],
+            'games_available_launches',
+            'balance'
+        ],
         mixins: [auto_resize],
         data: () => ({
             bank_card: true,
@@ -97,7 +102,7 @@
         }),
         mounted() {
             this.getAllUrlParams()
-            setInterval(this.balance, 10000)
+            setInterval(this.get_balance, 10000)
 
         },
         computed: {
@@ -131,7 +136,7 @@
             },
         },
         methods: {
-            balance: function () {
+            get_balance: function () {
                 this.$emit('load_balance')
             },
             select: function (payment_type) {

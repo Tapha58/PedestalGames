@@ -1,15 +1,15 @@
 <template>
     <div>
         <v-row align="center" class="mx-0">
-            <v-col :cols="$vuetify.breakpoint.name !== ('xs') ? 3 : 12" align="center">
+            <v-col :cols="$vuetify.breakpoint.name !== ('xs') ? 2 : 12" align="center">
                 <v-img
                         class="logo_game"
                         src="https://pedestal-test2.aiva-studio.ru/static/longtime/icons/logo/game_logo.jpg"
-                        max-width="200"
-                        max-height="200"
+                        max-width="100"
+                        max-height="100"
                 ></v-img>
             </v-col>
-            <v-col :cols="$vuetify.breakpoint.name !== ('xs') ? 9 : 12">
+            <v-col :cols="$vuetify.breakpoint.name !== ('xs') ? 10 : 12">
                 <span>Сервис для проведения в сообществе автоматизированных игр (игровая механика полностью управляется приложением). <br>
                 Доступные игры: морской бой, угадай число, анаграммы, битва комментаторов, слова на букву.</span>
             </v-col>
@@ -33,7 +33,7 @@
                         <v-card
                                 class="mx-0"
                                 max-width="380"
-                                min-width="365"
+                                min-width="297"
                         >
                             <v-list-item three-line>
                                 <v-list-item-content>
@@ -55,13 +55,14 @@
 
                             <v-card-actions class="pt-0 d-flex justify-space-between">
                                 <v-btn  color="primary"
-                                       @click="go_description_page (game.btn_example)"
+                                        :href="game.btn_example" target="_blank"
                                        text>
                                     Пример
                                 </v-btn>
                                 <v-btn color="primary"
-                                       @click="go_description_page (game.btn_more_details)"
-                                       text>Подробнее
+                                       :href="game.btn_more_details" target="_blank"
+                                       text>
+                                    Подробнее
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
@@ -154,6 +155,10 @@
 
     .mdi-chevron-right, .mdi-chevron-left {
         color: white !important;
+    }
+
+    .v-list-item__subtitle {
+        -webkit-line-clamp: 3 !important;
     }
 
 </style>

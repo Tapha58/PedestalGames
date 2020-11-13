@@ -1,7 +1,7 @@
 <template>
 
     <v-card
-            class="mx my-2 border_top_bottom"
+            :class="is_single_winner ? 'border_top_bottom_is_single_winner' : 'border_top_bottom'"
             width="100%"
             outlined
             flat
@@ -32,7 +32,7 @@
             </v-row>
         </v-card-title>
 
-        <v-card-text class="pl-0">
+        <v-card-text class="pl-0" :class="{pad_but_0 : is_single_winner}">
 
             <div class="mb-0 p-0" v-for="(prize, i) in prizes_front_index.card_prizes" :key="prize.id">
 
@@ -253,6 +253,18 @@
         border-top: hidden !important;
         border-bottom: 1px solid #edeef0 !important;
         border-radius: 0 !important;
+    }
+    .border_top_bottom_is_single_winner {
+        border-left: hidden !important;
+        border-right: hidden !important;
+        border-top: hidden !important;
+        border-bottom: hidden !important;
+        border-radius: 0 !important;
+    }
+
+    .pad_but_0 {
+        padding-bottom: 0 !important;
+        margin-bottom: -8px;
     }
 
 </style>

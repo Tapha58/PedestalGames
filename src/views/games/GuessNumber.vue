@@ -19,8 +19,8 @@
 
         >
             <template v-slot:settings>
-                <v-row class="pt-5" dense>
-                    <v-col>
+                <v-row class="pt-5" dense >
+                    <v-col cols="auto">
                         <v-alert
                                 :color='color_alert'
                                 dense

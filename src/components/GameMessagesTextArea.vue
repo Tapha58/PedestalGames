@@ -72,30 +72,32 @@
             mdi: 'mdi-alert-circle-outline',
         }),
         computed: {
-            rules_answer () {
-                // console.log(this.id)
-                if (!this.list_of_variables_for_rules.length) {
-                    return [v => (v && v.length <= 2000) || 'Не более 2000 символов']
-                }
-                let result = this.value.matchAll(/\{([0-9A-Za-z_]+)\}/g)
-                result = Array.from(result)
-                result = result.map(match => match[1])
-                result = new Set(result)
-                let list_of_variables_for_rules = new Set(this.list_of_variables_for_rules)
-                let outcome = [...result].filter(x => !list_of_variables_for_rules.has(x))
-                if (this.id === 'message_repost_desc' || this.id === 'message_join_group_desc' ||
-                    this.id === 'message_join_partner_group_desc' || this.id === 'message_enable_notifications_desc') {
-                    return [
-                        v => (v && v.length <= 300) || 'Не более 300 символов',
-                        () => !outcome.length || `Переменную ${outcome[0]} нельзя использовать в данном поле`
-                    ]
-                } else {
-                    return [
-                        v => (v && v.length <= 2000) || 'Не более 2000 символов',
-                        () => !outcome.length || `Переменную ${outcome[0]} нельзя использовать в данном поле`
-                    ]
-                }
-            },
+            // rules_answer () {
+            //     if (!this.value) return true
+            //     // console.log(this.id)
+            //     if (!this.list_of_variables_for_rules.length) {
+            //         return [v => (v && v.length <= 2000) || 'Не более 2000 символов']
+            //     }
+            //
+            //     let result = this.value.matchAll(/\{([0-9A-Za-z_]+)\}/g)
+            //     result = Array.from(result)
+            //     result = result.map(match => match[1])
+            //     result = new Set(result)
+            //     let list_of_variables_for_rules = new Set(this.list_of_variables_for_rules)
+            //     let outcome = [...result].filter(x => !list_of_variables_for_rules.has(x))
+            //     if (this.id === 'message_repost_desc' || this.id === 'message_join_group_desc' ||
+            //         this.id === 'message_join_partner_group_desc' || this.id === 'message_enable_notifications_desc') {
+            //         return [
+            //             v => (v && v.length <= 300) || 'Не более 300 символов',
+            //             () => !outcome.length || `Переменную ${outcome[0]} нельзя использовать в данном поле`
+            //         ]
+            //     } else {
+            //         return [
+            //             v => (v && v.length <= 2000) || 'Не более 2000 символов',
+            //             () => !outcome.length || `Переменную ${outcome[0]} нельзя использовать в данном поле`
+            //         ]
+            //     }
+            // },
         },
         methods: {
             append(emoji) {
