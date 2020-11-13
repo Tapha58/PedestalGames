@@ -1581,7 +1581,7 @@
             },
             setting_variables_in_the_post_text: function () {
                 this.current_post_text = this.settings.post_text
-                this.settings.post_text = this.settings.post_text.replace(/{ссылка}/ig, "[https://vk.com/app" + this.settings.auth_data.vk_app_id + '_-' + this.settings.auth_data.vk_group_id + "#map=" + this.settings.map + "|Открыть игровое поле]")
+                this.settings.post_text = this.settings.post_text.replace(/{ссылка}/ig, "@https://vk.com/app" + this.settings.auth_data.vk_app_id + '_-' + this.settings.auth_data.vk_group_id + "#map=" + this.settings.map + " " + "(Открыть игровое поле)")
             },
             clear_message: function () {
                 this.message_error = ''
