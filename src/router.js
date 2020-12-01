@@ -14,7 +14,7 @@ export default new Router({
             component: () => import('./views/RoutePage'),
         },
         {
-            path: '/',
+            path: '/home_view',
             name: 'home',
             component: () => import('./views/HomeView'),
             // redirect: { name: 'choice_games' },
@@ -22,22 +22,22 @@ export default new Router({
                 {
                     path: '/choice_games',
                     component: () => import('./views/СhoiceGames'),
-                    name: 'choice_games'
+                    name: 'новая игра'
                 },
                 {
                     path: '/my_games',
                     component: () => import('./views/MyGames'),
-                    name: 'my_games'
+                    name: 'мои игры'
                 },
                 {
                     path: '/balance',
                     component: () => import('./views/Balance'),
-                    name: 'balance'
+                    name: 'баланс'
                 },
                 {
                     path: '/settings',
                     component: () => import('./views/Settings'),
-                    name: 'settings'
+                    name: 'сервисы'
                 },
             ]
         },

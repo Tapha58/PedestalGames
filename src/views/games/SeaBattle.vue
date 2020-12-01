@@ -29,7 +29,7 @@
                                     <span>Настройте игру.</span>
                                 </v-tooltip>
                             </v-col>
-                            <v-col align="right" class="py-0">
+                            <v-col  align="right" class="py-0">
                                 <a href="https://vk.com/@pedestal-wallgames-opisanie?anchor=nastroyki-igry-morskoy-boy" target="_blank">Подробнее</a>
                             </v-col>
                         </v-row>

@@ -1,6 +1,24 @@
 <template>
     <!--    <form method="POST" :action='action' >-->
     <form method="POST" :action='action' target="_blank">
+        <div v-if="show_alert_iphone_pay">
+            <v-alert
+                    class="mt-3"
+                    text
+                    prominent
+                    type="primary"
+                    icon="mdi-progress-alert"
+            >
+                <v-row align="center">
+                    <v-col class="">
+                        С iPhone пополнение баланса доступно только через VkPay.
+                    </v-col>
+                    <!--                    <v-col class="shrink">-->
+                    <!--                        <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="primary">Разрешить уведомления</v-btn>-->
+                    <!--                    </v-col>-->
+                </v-row>
+            </v-alert>
+        </div>
         <div v-if="yandex_money || bank_card">
             <input type="hidden" name="receiver" value="41001709308745">
             <input type="hidden" name="formcomment" value="Пополнение баланса">
@@ -84,10 +102,7 @@
     import auto_resize from "@/mixins/auto_resize";
 
     export default {
-        props: [
-            'games_available_launches',
-            'balance'
-        ],
+        props: ['games_available_launches', 'balance', 'settings', 'auth_data_url'],
         mixins: [auto_resize],
         data: () => ({
             bank_card: true,
@@ -95,9 +110,9 @@
             qiwi: false,
             vk_pay: false,
             amount: 100,
-            settings: {
-                auth_data: ''
-            },
+            // settings: {
+            //     auth_data: ''
+            // },
             vk_ts: Math.floor(new Date() / 1000)
         }),
         mounted() {
@@ -108,6 +123,13 @@
         computed: {
             mobile: function () {
                 return this.$vuetify.breakpoint.name !== ('xs') ? false : true
+            },
+            show_alert_iphone_pay: function () {
+                if (this.settings.auth_data.vk_platform === 'mobile_iphone') {
+                    return true
+                } else {
+                    return false
+                }
             },
 
             action: function () {

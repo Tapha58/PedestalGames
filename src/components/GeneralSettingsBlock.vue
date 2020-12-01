@@ -1,508 +1,27 @@
 <template>
-    <div class="px-3">
-        <v-row dense>
-            <v-col cols="2">
-                <v-btn @click="button_back" color="rgba(0, 0, 0, .6)" text dark small>
-                    <v-icon class="pr-1" small>mdi-arrow-left-thick</v-icon>
-                    Назад
-                </v-btn>
-            </v-col>
-            <v-col cols="10" v-if="no_money">
-                <span id="no_money">Внимание! У Вас недостаточно средств для запуска данной игры.</span>
-            </v-col>
-        </v-row>
-        <v-row id="prizeCreator" dense>
-            <v-col cols="12" class="pt-0">
-                <v-alert
-                        :color='color_alert'
-                        dense
-                >
-                    <v-row>
-                        <v-col class="py-0" cols="auto">
-                            1. Сформируйте приз
-                            <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
-                                <template v-slot:activator="{ on }">
-                                    <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
-                                </template>
-                                <span>Победитель может получить комбинацию призов. Свой приз - это текст, отправляемый победителю,
-                            например "Ваш приз: скидка 10% на заказ". Числа в поле "кол-во баллов" могут быть диапазоном,
-                            запись через дефис, например "10-20". По умолчанию победителю будет отправлен комментарий:
-                            "Поздравляем, Вы выиграли!" + сообщение из поля "свой текст" + автоматически генерируемые
-                            сообщения из полей начисления баланса / рейтинга. Все ответы бота можно редактировать.</span>
-                            </v-tooltip>
-                        </v-col>
-                        <v-col align="right" class="py-0">
-                            <a href="https://vk.com/@pedestal-wallgames?anchor=nastroyka-priza-2" target="_blank">Подробнее</a>
-                        </v-col>
-                    </v-row>
-                </v-alert>
-                <PrizeCreator
-                        class="mt-n2"
-                        ref="prizeCreatorComponent"
-                        v-for="(prize, index) in prizes_front"
-                        :key="prize.id"
-                        :is_single_winner="is_single_winner"
-                        :is_last_card="index+1 === prizes_front.length"
-                        :is_one_card="1 === prizes_front.length"
-                        :id="prize.id"
-                        :pedestal_integration_enabled="pedestal_integration_enabled"
-                        :show_edit="show_edit"
-                        :number_gift="index+1"
-                        v-model="prizes_front[index]"
-                        @add_prize_creator="add_prize_card"
-                        @delete_prize_creator="delete_prize"
-                        @auto_resize="auto_resize"
-                ></PrizeCreator>
-            </v-col>
-
-        </v-row>
-        <slot name="settings"></slot>
-        <div id="rules">
+    <div>
+<!--        <div :class="{game_name : $vuetify.breakpoint.name === 'xs'}" v-if="$vuetify.breakpoint.name === 'xs'">-->
+<!--            <span>Название игры</span>-->
+<!--        </div>-->
+<!--        <v-skeleton-loader-->
+<!--                v-if="show_skeleton"-->
+<!--                type="article, article, article, article"-->
+<!--        ></v-skeleton-loader>-->
+        <div v-if="$vuetify.breakpoint.name !== ('xs' || 'sm') ? false : true" class="mobile_background_top"></div>
+        <div class="px-3">
+            <v-row dense :class="{game_name : $vuetify.breakpoint.name === 'xs'}">
+                <v-col cols="2">
+                    <v-btn @click="button_back"  text dark small color="primary">
+                        <v-icon class="mr-1" >mdi-arrow-left-thick</v-icon>
+                        Назад
+                    </v-btn>
+                </v-col>
+<!--                <v-col cols="10" v-if="no_money && load_page">-->
+<!--                    <span id="no_money">Внимание! У Вас недостаточно средств для запуска данной игры.</span>-->
+<!--                </v-col>-->
+            </v-row>
             <v-alert
-                    :color='color_alert'
-                    dense
-            >
-                <v-row>
-                    <v-col class="py-0" cols="auto">
-                        3. Задайте правила игры
-                        <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
-                            <template v-slot:activator="{ on }">
-                                <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
-                            </template>
-                            <span>Продумайте игровую механику, чтобы игра не завершилась слишком быстро и у пользователей был
-                        интерес следить за ней. Используйте ограниченные периодические бесплатные попытки и платные
-                        попытки за баллы магазина / рейтинга.</span>
-                        </v-tooltip>
-                    </v-col>
-                    <v-col align="right" class="py-0">
-                        <a href="https://vk.com/@pedestal-wallgames?anchor=pravila-igry-uslovia-i-popytki-2"
-                           target="_blank">Подробнее</a>
-                    </v-col>
-                </v-row>
-
-            </v-alert>
-            <v-row>
-                <v-col class="py-0" cols="12" sm="9">
-                    <v-select
-                            :items="options"
-                            dense
-                            label="Подписка на группу"
-                            outlined
-                            v-model="required_join_group_abc"
-                            xs="12"
-                    ></v-select>
-                </v-col>
-
-                <v-col class="py-0" cols="12" sm="3"
-                       v-show="!(required_join_group_abc === 'a' || required_join_group_abc === 'b' || required_join_group_abc === '')">
-                    <v-text-field
-                            :rules="rules_join_group_count_attempts"
-                            dense
-                            label="Кол-во попыток"
-                            md="6"
-                            min="1"
-                            outlined
-                            required
-                            validate-on-blur
-                            type="number"
-                            v-model.number="common_settings.join_group_count_attempts"
-                            xs="6"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-            <!--            <v-row class="mb-n3">-->
-            <!--                <v-col cols="12" sm="9">-->
-            <!--                    <v-select-->
-            <!--                            :items="options_repost"-->
-            <!--                            dense-->
-            <!--                            label="Репост"-->
-            <!--                            outlined-->
-            <!--                            v-model="required_repost_abc"-->
-            <!--                    ></v-select>-->
-            <!--                </v-col>-->
-
-            <!--                    <v-col cols="12" sm="3">-->
-            <!--                        <v-text-field-->
-            <!--                                :rules="[rules.required, rules.number_of_symbols_4]"-->
-            <!--                                dense-->
-            <!--                                label="Кол-во попыток"-->
-            <!--                                min="1"-->
-            <!--                                outlined-->
-            <!--                                required-->
-            <!--                                type="number"-->
-            <!--                                v-model.number="gameData.game.repost_count_attempts"-->
-            <!--                                v-show="required_repost_abc === 'c'"-->
-            <!--                        ></v-text-field>-->
-            <!--                    </v-col>-->
-            <!--            </v-row>-->
-            <v-row>
-                <v-col class="py-0" cols="12" sm="9">
-                    <v-select
-                            :items="options"
-                            dense
-                            label="Подписка на сообщения группы"
-                            outlined
-                            v-model="required_enable_notifications_abc"
-                            xs="12"
-                    ></v-select>
-                </v-col>
-                <v-col class="py-0" cols="12" sm="3" v-show="(required_enable_notifications_abc === 'c')">
-                    <v-text-field
-                            :rules="rules_enable_notifications_count_attempts"
-                            dense
-                            label="Кол-во попыток"
-                            md="6"
-                            min="1"
-                            validate-on-blur
-                            outlined
-                            required
-                            type="number"
-                            v-model.number="common_settings.enable_notifications_count_attempts"
-                            xs="6"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col class="py-0" cols="12" sm="5">
-                    <v-select
-                            :items="options"
-                            dense
-                            label="Подписка на партнерскую группу"
-                            outlined
-                            v-model="required_join_partner_group_abc"
-                            xs="12"
-                    ></v-select>
-                </v-col>
-                <v-col class="py-0" cols="12" sm="4"
-                       v-show="(required_join_partner_group_abc === 'b' || required_join_partner_group_abc === 'c')">
-                    <v-text-field
-                            :rules="url_rules"
-                            dense
-                            label="URL на партнерскую группу"
-                            outlined
-                            required
-                            v-model="partner_group_url"
-                    ></v-text-field>
-                </v-col>
-                <v-col class="py-0" cols="12" sm="3" v-show="required_join_partner_group_abc === 'c'">
-                    <v-text-field
-                            :rules="rules_join_partner_group_count_attempts"
-                            dense
-                            label="Кол-во попыток"
-                            validate-on-blur
-                            min="1"
-                            outlined
-                            required
-                            type="number"
-                            v-model.number="common_settings.join_partner_group_count_attempts"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col class="py-0" cols="12" sm="5">
-                    <v-text-field
-                            :rules="[rules.required, rules.only_number, rules.number_of_symbols_4]"
-                            dense
-                            label="Кол-во бесплатных попыток"
-                            validate-on-blur
-                            min="1"
-                            outlined
-                            required
-                            type="number"
-                            v-model.number="common_settings.free_attempts_count"
-                    ></v-text-field>
-                </v-col>
-                <v-col class="py-0" cols="12" sm="4" v-bind:class="{ 'pt-0': this.mobile }">
-                    <v-text-field
-                            :rules="[rules.required, rules.only_number, rules.number_of_symbols_7]"
-                            dense
-                            label="Время между попытками"
-                            min="1"
-                            outlined
-                            required
-                            suffix="секунд"
-                            type="number"
-                            v-model.number="common_settings.attempts_interval"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row class="pl-3 mt-n4">
-                <v-switch
-                        :ripple="false"
-                        color="primary"
-                        hide-details
-                        label="Дополнительные попытки"
-                        v-model="show_attempts_extended"
-                >
-                    <template v-slot:append>
-                        <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
-                            <template v-slot:activator="{ on }">
-                                <v-icon class="ml-n1 mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
-                            </template>
-                            <span>Когда у пользователя закончатся попытки, Вы можете начислять ему дополнительные попытки через определенные промежутки времени, также можно ограничить максимальное кол-во дополнительных попыток.</span>
-                        </v-tooltip>
-                    </template>
-                </v-switch>
-            </v-row>
-            <v-row class="mt-4 mb-1">
-                <v-col class="py-0" cols="12" sm="4" v-show="show_attempts_extended">
-                    <v-text-field
-                            :rules="rules_attempts_extended_frequency_minutes"
-                            dense
-                            id="area1"
-                            md="6"
-                            min="1"
-                            outlined
-                            prefix="каждые"
-                            validate-on-blur
-                            required
-                            suffix="минут"
-                            type="number"
-                            v-model.number="common_settings.attempts_extended_frequency_minutes"
-                            xs="6"
-                    ></v-text-field>
-                </v-col>
-                <v-col class="py-0" cols="12" sm="4" v-show="show_attempts_extended">
-                    <v-text-field
-                            :rules="rules_attempts_extended_count"
-                            dense
-                            id="area2"
-                            md="6"
-                            min="1"
-                            outlined
-                            prefix="начислять"
-                            required
-                            suffix="попыток"
-                            type="number"
-                            validate-on-blur
-                            v-model.number="common_settings.attempts_extended_count"
-                            xs="6"
-                    ></v-text-field>
-                </v-col>
-                <v-col class="py-0" cols="12" sm="4" v-show="show_attempts_extended">
-                    <v-text-field
-                            :rules="rules_attempts_extended_max_count"
-                            dense
-                            id="area3"
-                            md="6"
-                            min="1"
-                            outlined
-                            prefix="но не более"
-                            required
-                            validate-on-blur
-                            type="number"
-                            v-model.number="common_settings.attempts_extended_max_count"
-                            xs="6"
-                    >
-                        <template v-slot:append>
-                            <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
-                                <template v-slot:activator="{ on }">
-                                    <v-icon class="mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
-                                </template>
-                                <span>"Но не более 5" означает, что когда пользователь получит 5 дополнительных периодических попыток (например, 5 раз по 1 попытке), то больше не будет получать периодические попытки.</span>
-                            </v-tooltip>
-                        </template>
-                    </v-text-field>
-                </v-col>
-            </v-row>
-            <v-row class="pl-3" v-if="pedestal_integration_enabled">
-                <v-switch
-                        :label="($vuetify.breakpoint.name === 'xs') ? 'Платные попытки' : 'Платные попытки (за баллы)'"
-                        :ripple="false"
-                        class="mt-n3"
-                        color="primary"
-                        hide-details
-                        v-model="switchPaidAttempts"
-                >
-                    <template v-slot:append>
-                        <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
-                            <template v-slot:activator="{ on }">
-                                <v-icon class="ml-n1 mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
-                            </template>
-                            <span>Для покупки попытки пользователю нужно будет написать в комментариях "/купить попытку X" (без кавычек), где X - число покупаемых попыток. Если X не задан, то покупается одна попытка. Пример: "/купить попытку", "/купить попытку 1", "/купить попытку 5"</span>
-                        </v-tooltip>
-                    </template>
-                </v-switch>
-            </v-row>
-            <v-row class="mt-4" v-show="switchPaidAttempts">
-                <v-col class="py-0" cols="12" sm="4">
-                    <v-select
-                            :items="items_balance_type"
-                            :rules="rules_balance_type"
-                            dense
-                            label="Кошелек"
-                            outlined
-                            v-model="common_settings.balance_type"
-                    ></v-select>
-                </v-col>
-                <v-col class="py-0" cols="12" sm="4">
-                    <v-text-field
-                            :rules="rules_paid_attempts_count"
-                            dense
-                            label="Кол-во платных попыток"
-                            min="1"
-                            outlined
-                            required
-                            validate-on-blur
-                            type="number"
-                            v-model.number="common_settings.paid_attempts_count"
-                    >
-                        <template v-slot:append>
-                            <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
-                                <template v-slot:activator="{ on }">
-                                    <v-icon class="mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
-                                </template>
-                                <span>Укажите, сколько максимум дополнительных попыток за баллы сможет купить каждый участник.</span>
-                            </v-tooltip>
-                        </template>
-                    </v-text-field>
-                </v-col>
-                <v-col class="py-0" cols="12" sm="4">
-                    <v-text-field
-                            :rules="rules_paid_attempt_price"
-                            dense
-                            label="Цена платной попытки"
-                            min="1"
-                            outlined
-                            validate-on-blur
-                            required
-                            type="number"
-                            v-model.number="common_settings.paid_attempt_price"
-                    >
-                        <template v-slot:append>
-                            <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
-                                <template v-slot:activator="{ on }">
-                                    <v-icon class="mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
-                                </template>
-                                <span>Цена одной попытки (сколько баллов будет списано при покупке попытки).</span>
-                            </v-tooltip>
-                        </template>
-                    </v-text-field>
-                </v-col>
-            </v-row>
-        </div>
-        <div id="post_settings" v-if='!/^[0-9]+$/.test($route.params.id)'>
-            <v-col class="px-0">
-                <v-alert
-                        :color='color_alert'
-                        dense
-                >4. Содержание поста
-                    <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
-                        <template v-slot:activator="{ on }">
-                            <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
-                        </template>
-                        <span>
-                            Отредактируйте наш шаблон поста под Вашу игровую механику, а также можете загрузить свою картинку.
-                            После нажатия на "Запустить игру" пост будет опубликован в группе (сразу или в виде отложенного
-                            поста, если функция задана).
-                        </span>
-                    </v-tooltip>
-                </v-alert>
-
-                <v-textarea
-                        id="we"
-                        v-model="settings.post_text"
-                        solo
-                        background-color="blue lighten-5"
-                        ref="post_text"
-                        label="Напишите текст поста, который появится в Вашей группе при публикации игры."
-                        auto-grow
-                        class="relative dense-textarea mb-0"
-                        :hint="hint_text"
-                        persistent-hint="true"
-                >
-                    <template v-if="!mobile" v-slot:append>
-                        <emoji-picker @emoji="append">
-                            <div
-                                    @click.stop="clickEvent"
-                                    class="emoji-invoker"
-                                    slot="emoji-invoker"
-                                    slot-scope="{ events: { click: clickEvent } }"
-                            >
-                                <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
-                                </svg>
-                            </div>
-                            <div slot="emoji-picker" slot-scope="{ emojis, insert,  }">
-                                <!--                                <div :style="{ top: 1 + 'px', left: 400 + 'px' }" class="emoji-picker">-->
-                                <div class="emoji-picker">
-                                    <div class="emojis" :key="category" v-for="(emojiGroup, category) in emojis">
-                                        <!--                                        <h5>{{ category }}</h5>-->
-
-                                        <span
-                                                :key="emojiName"
-                                                :title="emojiName"
-                                                @click="insert(emoji)"
-                                                v-for="(emoji, emojiName) in emojiGroup"
-                                        >{{ emoji }}</span>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </emoji-picker>
-                    </template>
-                </v-textarea>
-            </v-col>
-        </div>
-        <div id="image_post" v-if='!/^[0-9]+$/.test($route.params.id)' class="mt-n3">
-            <v-row align="center" dense>
-                <v-col :align="$vuetify.breakpoint.name === 'xs' ? 'center' : ''"
-                       :justify="$vuetify.breakpoint.name === 'xs' ? 'center' : 'start'" cols="12" xs="12" sm="5"
-                       class="mr-3">
-                    <v-img id="img" max-width="300" height="auto" :src="src"></v-img>
-                </v-col>
-                <v-col sm="5" cols="12" xs="12">
-                    <v-file-input
-                            class="pt-5"
-                            dense
-                            outlined
-                            :rules="rules_image"
-                            v-model="image"
-                            @change="create"
-                            accept="image/png, image/jpeg, image/gif, image/jpg"
-                            prepend-icon="mdi-camera"
-                            label="Своя картинка для поста"
-                            id="fileItem"
-                    ></v-file-input>
-                </v-col>
-            </v-row>
-        </div>
-
-        <v-row v-show='!show_edit' id="time_post" class="mt-5" dense>
-            <v-col cols="12" xs="12" sm="4">
-                <v-switch
-                        :ripple="false"
-                        color=""
-                        hide-details
-                        label="Отложенный запуск"
-                        v-model="delayedLaunch"
-                        class="mt-0 pt-2"
-                ></v-switch>
-            </v-col>
-            <v-col cols="12" xs="12" sm="5" v-show="delayedLaunch">
-                <VueCtkDateTimePicker
-                        id="DateTimePicker"
-                        format="YYYY-MM-DD HH:mm"
-                        formated="||"
-                        no-label
-                        label="Введите время и дату публикации"
-                        no-button-now
-                        color=#4872a3
-                        buttonColor=#4872a3
-                        no-header
-                        right
-                        inputSize="sm"
-                        minuteInterval="5"
-                        :minDate="minDate"
-                        :maxDate="maxDate"
-                        v-model="timeDeferredPost"/>
-            </v-col>
-        </v-row>
-        <div v-if="!notification_allowed">
-            <!--            <span>h1</span>-->
-            <!--            <v-btn dark small color="red">Разрешить уведомления</v-btn>-->
-            <v-alert
+                    v-if="no_money && load_page"
                     class="mt-3"
                     text
                     prominent
@@ -510,146 +29,706 @@
                     icon="mdi-progress-alert"
             >
                 <v-row align="center">
+                    <v-col>
+                        Внимание! У Вас недостаточно средств для запуска данной игры.
+                    </v-col>
+<!--                    <v-col class="shrink">-->
+<!--                        <v-btn @click="VKWebAppGetCommunityToken" small color="primary">Предоставить права-->
+<!--                        </v-btn>-->
+<!--                    </v-col>-->
+                </v-row>
+            </v-alert>
+            <v-row id="prizeCreator" dense>
+                <v-col class="pt-0">
+                    <v-alert
+                            :color='color_alert'
+                            dense
+                    >
+                        <v-row>
+                            <v-col class="py-0" cols="auto">
+                                1. Сформируйте приз
+                                <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
+                                    </template>
+                                    <span>Победитель может получить комбинацию призов. Свой приз - это текст, отправляемый победителю,
+                            например "Ваш приз: скидка 10% на заказ". Числа в поле "кол-во баллов" могут быть диапазоном,
+                            запись через дефис, например "10-20". По умолчанию победителю будет отправлен комментарий:
+                            "Поздравляем, Вы выиграли!" + сообщение из поля "свой текст" + автоматически генерируемые
+                            сообщения из полей начисления баланса / рейтинга. Все ответы бота можно редактировать.</span>
+                                </v-tooltip>
+                            </v-col>
+                            <v-col  align="right" class="py-0">
+                                <a href="https://vk.com/@pedestal-wallgames?anchor=nastroyka-priza-2" target="_blank">Подробнее</a>
+                            </v-col>
+                        </v-row>
+                    </v-alert>
+                    <PrizeCreator
+                            class="mt-n2"
+                            ref="prizeCreatorComponent"
+                            v-for="(prize, index) in prizes_front"
+                            :key="prize.id"
+                            :is_single_winner="is_single_winner"
+                            :is_last_card="index+1 === prizes_front.length"
+                            :is_one_card="1 === prizes_front.length"
+                            :id="prize.id"
+                            :pedestal_integration_enabled="pedestal_integration_enabled"
+                            :show_edit="show_edit"
+                            :number_gift="index+1"
+                            v-model="prizes_front[index]"
+                            @add_prize_creator="add_prize_card"
+                            @delete_prize_creator="delete_prize"
+                            @auto_resize="auto_resize"
+                    ></PrizeCreator>
+                </v-col>
+
+            </v-row>
+            <slot name="settings"></slot>
+            <div id="rules">
+                <v-alert
+                        :color='color_alert'
+                        dense
+                >
+                    <v-row>
+                        <v-col class="py-0" cols="auto">
+                            3. Задайте правила игры
+                            <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
+                                </template>
+                                <span>Продумайте игровую механику, чтобы игра не завершилась слишком быстро и у пользователей был
+                        интерес следить за ней. Используйте ограниченные периодические бесплатные попытки и платные
+                        попытки за баллы магазина / рейтинга.</span>
+                            </v-tooltip>
+                        </v-col>
+                        <v-col align="right" class="py-0">
+                            <a href="https://vk.com/@pedestal-wallgames?anchor=pravila-igry-uslovia-i-popytki-2"
+                               target="_blank">Подробнее</a>
+                        </v-col>
+                    </v-row>
+
+                </v-alert>
+                <v-row>
+                    <v-col class="py-0" cols="12" sm="9">
+                        <v-select
+                                :items="options"
+                                dense
+                                label="Подписка на группу"
+                                outlined
+                                v-model="required_join_group_abc"
+                                xs="12"
+                        ></v-select>
+                    </v-col>
+
+                    <v-col class="py-0" cols="12" sm="3"
+                           v-show="!(required_join_group_abc === 'a' || required_join_group_abc === 'b' || required_join_group_abc === '')">
+                        <v-text-field
+                                :rules="rules_join_group_count_attempts"
+                                dense
+                                label="Кол-во попыток"
+                                md="6"
+                                min="1"
+                                outlined
+                                required
+                                validate-on-blur
+                                type="number"
+                                v-model.number="common_settings.join_group_count_attempts"
+                                xs="6"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                <!--            <v-row class="mb-n3">-->
+                <!--                <v-col cols="12" sm="9">-->
+                <!--                    <v-select-->
+                <!--                            :items="options_repost"-->
+                <!--                            dense-->
+                <!--                            label="Репост"-->
+                <!--                            outlined-->
+                <!--                            v-model="required_repost_abc"-->
+                <!--                    ></v-select>-->
+                <!--                </v-col>-->
+
+                <!--                    <v-col cols="12" sm="3">-->
+                <!--                        <v-text-field-->
+                <!--                                :rules="[rules.required, rules.number_of_symbols_4]"-->
+                <!--                                dense-->
+                <!--                                label="Кол-во попыток"-->
+                <!--                                min="1"-->
+                <!--                                outlined-->
+                <!--                                required-->
+                <!--                                type="number"-->
+                <!--                                v-model.number="gameData.game.repost_count_attempts"-->
+                <!--                                v-show="required_repost_abc === 'c'"-->
+                <!--                        ></v-text-field>-->
+                <!--                    </v-col>-->
+                <!--            </v-row>-->
+                <v-row>
+                    <v-col class="py-0" cols="12" sm="9">
+                        <v-select
+                                :items="options"
+                                dense
+                                label="Подписка на сообщения группы"
+                                outlined
+                                v-model="required_enable_notifications_abc"
+                                xs="12"
+                        ></v-select>
+                    </v-col>
+                    <v-col class="py-0" cols="12" sm="3" v-show="(required_enable_notifications_abc === 'c')">
+                        <v-text-field
+                                :rules="rules_enable_notifications_count_attempts"
+                                dense
+                                label="Кол-во попыток"
+                                md="6"
+                                min="1"
+                                validate-on-blur
+                                outlined
+                                required
+                                type="number"
+                                v-model.number="common_settings.enable_notifications_count_attempts"
+                                xs="6"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col class="py-0" cols="12" sm="5">
+                        <v-select
+                                :items="options"
+                                dense
+                                label="Подписка на партнерскую группу"
+                                outlined
+                                v-model="required_join_partner_group_abc"
+                                xs="12"
+                        ></v-select>
+                    </v-col>
+                    <v-col class="py-0" cols="12" sm="4"
+                           v-show="(required_join_partner_group_abc === 'b' || required_join_partner_group_abc === 'c')">
+                        <v-text-field
+                                :rules="url_rules"
+                                dense
+                                label="URL на партнерскую группу"
+                                outlined
+                                required
+                                v-model="partner_group_url"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col class="py-0" cols="12" sm="3" v-show="required_join_partner_group_abc === 'c'">
+                        <v-text-field
+                                :rules="rules_join_partner_group_count_attempts"
+                                dense
+                                label="Кол-во попыток"
+                                validate-on-blur
+                                min="1"
+                                outlined
+                                required
+                                type="number"
+                                v-model.number="common_settings.join_partner_group_count_attempts"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col class="py-0" cols="12" sm="5">
+                        <v-text-field
+                                :rules="[rules.required, rules.only_number, rules.number_of_symbols_4]"
+                                dense
+                                label="Кол-во бесплатных попыток"
+                                validate-on-blur
+                                min="1"
+                                outlined
+                                required
+                                type="number"
+                                v-model.number="common_settings.free_attempts_count"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col class="py-0" cols="12" sm="4" v-bind:class="{ 'pt-0': this.mobile }">
+                        <v-text-field
+                                :rules="[rules.required, rules.only_number, rules.number_of_symbols_7]"
+                                dense
+                                label="Время между попытками"
+                                min="1"
+                                outlined
+                                required
+                                suffix="секунд"
+                                type="number"
+                                v-model.number="common_settings.attempts_interval"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row class="pl-3 mt-n4">
+                    <v-switch
+                            :ripple="false"
+                            color="primary"
+                            hide-details
+                            label="Дополнительные попытки"
+                            v-model="show_attempts_extended"
+                    >
+                        <template v-slot:append>
+                            <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon class="ml-n1 mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                </template>
+                                <span>Когда у пользователя закончатся попытки, Вы можете начислять ему дополнительные попытки через определенные промежутки времени, также можно ограничить максимальное кол-во дополнительных попыток.</span>
+                            </v-tooltip>
+                        </template>
+                    </v-switch>
+                </v-row>
+                <v-row class="mt-4 mb-1">
+                    <v-col class="py-0" cols="12" sm="4" v-show="show_attempts_extended">
+                        <v-text-field
+                                :rules="rules_attempts_extended_frequency_minutes"
+                                dense
+                                id="area1"
+                                md="6"
+                                min="1"
+                                outlined
+                                prefix="каждые"
+                                validate-on-blur
+                                required
+                                suffix="минут"
+                                type="number"
+                                v-model.number="common_settings.attempts_extended_frequency_minutes"
+                                xs="6"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col class="py-0" cols="12" sm="4" v-show="show_attempts_extended">
+                        <v-text-field
+                                :rules="rules_attempts_extended_count"
+                                dense
+                                id="area2"
+                                md="6"
+                                min="1"
+                                outlined
+                                prefix="начислять"
+                                required
+                                suffix="попыток"
+                                type="number"
+                                validate-on-blur
+                                v-model.number="common_settings.attempts_extended_count"
+                                xs="6"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col class="py-0" cols="12" sm="4" v-show="show_attempts_extended">
+                        <v-text-field
+                                :rules="rules_attempts_extended_max_count"
+                                dense
+                                id="area3"
+                                md="6"
+                                min="1"
+                                outlined
+                                prefix="но не более"
+                                required
+                                validate-on-blur
+                                type="number"
+                                v-model.number="common_settings.attempts_extended_max_count"
+                                xs="6"
+                        >
+                            <template v-slot:append>
+                                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon class="mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                    </template>
+                                    <span>"Но не более 5" означает, что когда пользователь получит 5 дополнительных периодических попыток (например, 5 раз по 1 попытке), то больше не будет получать периодические попытки.</span>
+                                </v-tooltip>
+                            </template>
+                        </v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row class="pl-3" v-if="pedestal_integration_enabled">
+                    <v-switch
+                            :label="($vuetify.breakpoint.name === 'xs') ? 'Платные попытки' : 'Платные попытки (за баллы)'"
+                            :ripple="false"
+                            class="mt-n3"
+                            color="primary"
+                            hide-details
+                            v-model="switchPaidAttempts"
+                    >
+                        <template v-slot:append>
+                            <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon class="ml-n1 mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                </template>
+                                <span>Для покупки попытки пользователю нужно будет написать в комментариях "/купить попытку X" (без кавычек), где X - число покупаемых попыток. Если X не задан, то покупается одна попытка. Пример: "/купить попытку", "/купить попытку 1", "/купить попытку 5"</span>
+                            </v-tooltip>
+                        </template>
+                    </v-switch>
+                </v-row>
+                <v-row class="mt-4" v-show="switchPaidAttempts">
+                    <v-col class="py-0" cols="12" sm="4">
+                        <v-select
+                                :items="items_balance_type"
+                                :rules="rules_balance_type"
+                                dense
+                                label="Кошелек"
+                                outlined
+                                v-model="common_settings.balance_type"
+                        ></v-select>
+                    </v-col>
+                    <v-col class="py-0" cols="12" sm="4">
+                        <v-text-field
+                                :rules="rules_paid_attempts_count"
+                                dense
+                                label="Кол-во платных попыток"
+                                min="1"
+                                outlined
+                                required
+                                validate-on-blur
+                                type="number"
+                                v-model.number="common_settings.paid_attempts_count"
+                        >
+                            <template v-slot:append>
+                                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon class="mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                    </template>
+                                    <span>Укажите, сколько максимум дополнительных попыток за баллы сможет купить каждый участник.</span>
+                                </v-tooltip>
+                            </template>
+                        </v-text-field>
+                    </v-col>
+                    <v-col class="py-0" cols="12" sm="4">
+                        <v-text-field
+                                :rules="rules_paid_attempt_price"
+                                dense
+                                label="Цена платной попытки"
+                                min="1"
+                                outlined
+                                validate-on-blur
+                                required
+                                type="number"
+                                v-model.number="common_settings.paid_attempt_price"
+                        >
+                            <template v-slot:append>
+                                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon class="mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                    </template>
+                                    <span>Цена одной попытки (сколько баллов будет списано при покупке попытки).</span>
+                                </v-tooltip>
+                            </template>
+                        </v-text-field>
+                    </v-col>
+                </v-row>
+            </div>
+            <div id="post_settings" v-if='!/id_game/i.test($route.params.id)'>
+                <v-col class="px-0">
+                    <v-alert
+                            :color='color_alert'
+                            dense
+                    >4. Содержание поста
+                        <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                            <template v-slot:activator="{ on }">
+                                <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
+                            </template>
+<!--                            <span>-->
+<!--                            Отредактируйте наш шаблон поста под Вашу игровую механику, а также можете загрузить свою картинку.-->
+<!--                            После нажатия на "Запустить игру" пост будет опубликован в группе (сразу или в виде отложенного-->
+<!--                            поста, если функция задана).-->
+<!--                            </span>-->
+                            <span>
+                            Отредактируйте наш шаблон поста под Вашу игровую механику, а также можете загрузить свою картинку.
+                            После нажатия на "Запустить игру" пост будет опубликован в группе.
+                            </span>
+                        </v-tooltip>
+                    </v-alert>
+
+                    <v-textarea
+                            id="we"
+                            v-model="settings.post_text"
+                            solo
+                            background-color="blue lighten-5"
+                            ref="post_text"
+                            label="Напишите текст поста, который появится в Вашей группе при публикации игры."
+                            auto-grow
+                            class="relative dense-textarea mb-0"
+                            :hint="hint_text"
+                            persistent-hint="true"
+                                              >
+                        <template v-if="!mobile" v-slot:append>
+                            <emoji-picker @emoji="append">
+                                <div
+                                        @click.stop="clickEvent"
+                                        class="emoji-invoker"
+                                        slot="emoji-invoker"
+                                        slot-scope="{ events: { click: clickEvent } }"
+                                >
+                                    <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                                    </svg>
+                                </div>
+                                <div slot="emoji-picker" slot-scope="{ emojis, insert,  }">
+                                    <!--                                <div :style="{ top: 1 + 'px', left: 400 + 'px' }" class="emoji-picker">-->
+                                    <div class="emoji-picker">
+                                        <div class="emojis" :key="category" v-for="(emojiGroup, category) in emojis">
+                                            <!--                                        <h5>{{ category }}</h5>-->
+
+                                            <span
+                                                    :key="emojiName"
+                                                    :title="emojiName"
+                                                    @click="insert(emoji)"
+                                                    v-for="(emoji, emojiName) in emojiGroup"
+                                            >{{ emoji }}</span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </emoji-picker>
+                        </template>
+                    </v-textarea>
+                </v-col>
+            </div>
+            <div id="image_post" v-if='!/id_game/i.test($route.params.id)' class="mt-n3">
+                <v-row align="center" dense>
+                    <v-col :align="$vuetify.breakpoint.name === 'xs' ? 'center' : ''"
+                           :justify="$vuetify.breakpoint.name === 'xs' ? 'center' : 'start'" cols="12" xs="12" sm="5"
+                           class="mr-3">
+                        <v-img id="img" max-width="300" height="auto" :src="src"></v-img>
+                    </v-col>
+                    <v-col sm="5" cols="12" xs="12">
+                        <v-file-input
+                                class="pt-5"
+                                dense
+                                outlined
+                                :rules="rules_image"
+                                v-model="image"
+                                @change="create"
+                                accept="image/png, image/jpeg, image/gif, image/jpg"
+                                prepend-icon="mdi-camera"
+                                label="Своя картинка для поста"
+                                id="fileItem"
+                        ></v-file-input>
+                    </v-col>
+                </v-row>
+            </div>
+
+<!--            <v-row v-show='!show_edit' id="time_post" class="mt-5" dense>-->
+<!--                <v-col cols="12" xs="12" sm="4">-->
+<!--                    <v-switch-->
+<!--                            :ripple="false"-->
+<!--                            color=""-->
+<!--                            hide-details-->
+<!--                            label="Отложенный запуск"-->
+<!--                            v-model="delayedLaunch"-->
+<!--                            class="mt-0 pt-2"-->
+<!--                    ></v-switch>-->
+<!--                </v-col>-->
+<!--                <v-col cols="12" xs="12" sm="5" v-show="delayedLaunch">-->
+<!--                    <VueCtkDateTimePicker-->
+<!--                            id="DateTimePicker"-->
+<!--                            format="YYYY-MM-DD HH:mm"-->
+<!--                            formated="||"-->
+<!--                            no-label-->
+<!--                            label="Введите время и дату публикации"-->
+<!--                            no-button-now-->
+<!--                            color=#4872a3-->
+<!--                            buttonColor=#4872a3-->
+<!--                            no-header-->
+<!--                            right-->
+<!--                            inputSize="sm"-->
+<!--                            minuteInterval="5"-->
+<!--                            :minDate="minDate"-->
+<!--                            :maxDate="maxDate"-->
+<!--                            v-model="timeDeferredPost"/>-->
+<!--                </v-col>-->
+<!--            </v-row>-->
+
+            <div v-if="!notification_allowed">
+                <!--            <span>h1</span>-->
+                <!--            <v-btn dark small color="red">Разрешить уведомления</v-btn>-->
+                <v-alert
+                        class="mt-3"
+                        text
+                        prominent
+                        type="error"
+                        icon="mdi-progress-alert"
+                >
+                    <v-row align="center">
+                        <v-col class="">
+                            Для запуска игры необходимо разрешение на получение уведомлений, чтобы мы могли прислать
+                            Вам сообщение в случае возникновения внештатных ситуаций.
+                        </v-col>
+                        <v-col class="shrink">
+                            <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="error">Разрешить уведомления</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-alert>
+            </div>
+            <!--        <div id='token' v-if="!group_token" class="mt-3">-->
+            <!--            <v-col class="pb-0">-->
+            <!--                <span v-bind:style="{ color: 'red' }">Для запуска игры необходимо предоставить ключ доступа. </span>-->
+            <!--                <a href="https://vk.com/@pedestal-kluch-dostupa" target="_blank">Открыть инструкцию.</a>-->
+            <!--            </v-col>-->
+            <!--            <v-col cols="12">-->
+            <!--                <v-row dense>-->
+            <!--                    <v-text-field-->
+            <!--                            label="Ключ доступа"-->
+            <!--                            id="styled-input"-->
+            <!--                            class="styled-input mb-n5"-->
+            <!--                            outlined-->
+            <!--                            dense-->
+            <!--                            v-model="token_group"-->
+            <!--                    >-->
+            <!--                        <template v-slot:append id="btn_token">-->
+            <!--                            <v-btn @click="group_record_token" id="qw1" x-small color="primary">применить</v-btn>-->
+            <!--                        </template>-->
+            <!--                    </v-text-field>-->
+            <!--                </v-row>-->
+            <!--                <span v-bind:style="{ color: 'red', fontSize: 14 + 'px' }">{{ message_group_record_token }}</span>-->
+            <!--            </v-col>-->
+            <!--        </div>-->
+            <div id="pay_method"
+                 v-if='!/id_game/i.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
+                <v-col class="px-0 pb-0">
+                    <v-alert
+                            class="mb-2"
+                            :color='color_alert'
+                            dense
+                    >5. Вариант оплаты
+                        <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                            <template v-slot:activator="{ on }">
+                                <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
+                            </template>
+                            <span>
+                            Подсказка.
+                        </span>
+                        </v-tooltip>
+                    </v-alert>
+                </v-col>
+            </div>
+            <v-col cols="12" sm="6" md="6" class="pb-0 mb-n3"
+                   v-if='!/id_game/i.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
+                <v-radio-group v-model="payment_type" column class="mt-0">
+                    <v-radio
+                            :label=label_payment_type_1
+                            color="primary"
+                            value="1"
+                    ></v-radio>
+                    <v-radio
+                            :label=label_payment_type_2
+                            color="primary"
+                            value="2"
+                    ></v-radio>
+                </v-radio-group>
+            </v-col>
+            <div v-if="alert_integration_pedeatal">
+                <!--            <span>h1</span>-->
+                <!--            <v-btn dark small color="red">Разрешить уведомления</v-btn>-->
+                <v-alert
+                        class="mt-3"
+                        text
+                        prominent
+                        type="primary"
+                        icon="mdi-progress-alert"
+                >
+                    <v-row align="center">
+                        <v-col class="">
+                            Внимание! У вас активирована интеграция с приложением Пьедестал, но лицензия просрочена.
+                        </v-col>
+                        <!--                    <v-col class="shrink">-->
+                        <!--                        <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="primary">Разрешить уведомления</v-btn>-->
+                        <!--                    </v-col>-->
+                    </v-row>
+                </v-alert>
+            </div>
+<!--            <v-btn-->
+<!--                    v-if="show_btn_permission"-->
+<!--                    color="error"-->
+<!--                    small-->
+<!--                    dark-->
+<!--                    block-->
+<!--                    @click="VKWebAppGetCommunityToken"-->
+<!--            >Предоставить права доступа</v-btn>-->
+            <v-alert
+                    v-if="!token_availability"
+                    class="mt-3"
+                    text
+                    prominent
+                    type="primary"
+                    icon="mdi-progress-alert"
+            >
+                <v-row align="center">
                     <v-col class="">
-                        Для запуска игры необходимо разрешение на получение уведомлений, чтобы мы могли прислать
-                        Вам сообщение в случае возникновения внештатных ситуаций.
+                        Необходимо предоставить права доступа для работы приложения с сообществом. Они нужны для запуска игр и ответов пользователям от имени сообщества.
                     </v-col>
                     <v-col class="shrink">
-                        <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="error">Разрешить уведомления</v-btn>
+                        <v-btn @click="VKWebAppGetCommunityToken" small color="primary">Предоставить права
+                        </v-btn>
                     </v-col>
                 </v-row>
             </v-alert>
-        </div>
-<!--        <div id='token' v-if="!group_token" class="mt-3">-->
-<!--            <v-col class="pb-0">-->
-<!--                <span v-bind:style="{ color: 'red' }">Для запуска игры необходимо предоставить ключ доступа. </span>-->
-<!--                <a href="https://vk.com/@pedestal-kluch-dostupa" target="_blank">Открыть инструкцию.</a>-->
-<!--            </v-col>-->
-<!--            <v-col cols="12">-->
-<!--                <v-row dense>-->
-<!--                    <v-text-field-->
-<!--                            label="Ключ доступа"-->
-<!--                            id="styled-input"-->
-<!--                            class="styled-input mb-n5"-->
-<!--                            outlined-->
-<!--                            dense-->
-<!--                            v-model="token_group"-->
-<!--                    >-->
-<!--                        <template v-slot:append id="btn_token">-->
-<!--                            <v-btn @click="group_record_token" id="qw1" x-small color="primary">применить</v-btn>-->
-<!--                        </template>-->
-<!--                    </v-text-field>-->
-<!--                </v-row>-->
-<!--                <span v-bind:style="{ color: 'red', fontSize: 14 + 'px' }">{{ message_group_record_token }}</span>-->
-<!--            </v-col>-->
-<!--        </div>-->
-        <div id="pay_method"
-             v-if='!/^[0-9]+$/.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
-            <v-col class="px-0 pb-0">
-                <v-alert
-                        class="mb-2"
-                        :color='color_alert'
-                        dense
-                >5. Вариант оплаты
-                    <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
-                        <template v-slot:activator="{ on }">
-                            <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
-                        </template>
-                        <span>
-                            Подсказка.
-                        </span>
-                    </v-tooltip>
-                </v-alert>
-            </v-col>
-        </div>
-        <v-col cols="12" sm="6" md="6"
-               v-if='!/^[0-9]+$/.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
-            <v-radio-group v-model="payment_type" column class="mt-0">
-                <v-radio
-                        :label=label_payment_type_1
-                        color="primary"
-                        value="1"
-                ></v-radio>
-                <v-radio
-                        :label=label_payment_type_2
-                        color="primary"
-                        value="2"
-                ></v-radio>
-            </v-radio-group>
-        </v-col>
-        <v-row>
-            <v-col v-show="$vuetify.breakpoint.name !== 'xs'" align="center" sm="6" xs='12' cols="12">
-                <v-btn @click="textareas_showed = !textareas_showed" block color="primary" small>
-                    {{ toggle_textareas_btn_text }}
-                </v-btn>
-            </v-col>
-            <v-col align="center" sm="6" xs='12'>
-                <v-btn
-                        @click="start_game"
-                        block
-                        color="error"
-                        small
-                        :loading="loading"
-                        :disabled="loading"
-                >{{ name_button_2 }}
-                </v-btn>
-                <span v-bind:style="{ color: 'red', fontSize: 14 + 'px' }">{{ message_error }}
+            <v-row>
+                <v-col v-show="$vuetify.breakpoint.name !== 'xs'" align="center" sm="6" xs='12' cols="12">
+                    <v-btn @click="textareas_showed = !textareas_showed" block color="primary" small>
+                        {{ toggle_textareas_btn_text }}
+                    </v-btn>
+                </v-col>
+                <v-col align="center" sm="6" xs='12' class="pb-0">
+                    <v-btn
+                            @click="start_game"
+                            block
+                            color="error"
+                            small
+                            :loading="loading"
+                            :disabled="loading"
+                    >{{ name_button_2 }}
+                    </v-btn>
+                    <span v-bind:style="{ color: 'red', fontSize: 14 + 'px' }">{{ message_error }}
                     <a v-if='show_link_error_callback' v-bind:style="{ color: 'red', fontSize: 14 + 'px' }"
                        href="https://vk.com/@pedestal-error?anchor=oshibka-2000-maximum-callback-serverov"
                        target="_blank"> Подробнее.</a></span>
-                <span v-bind:style="{ color: 'green', fontSize: 14 + 'px' }">{{ message_success }}</span>
-            </v-col>
+                    <span v-bind:style="{ color: 'green', fontSize: 14 + 'px' }">{{ message_success }}</span>
+                </v-col>
 
-            <v-col v-show="$vuetify.breakpoint.name === 'xs'" align="center" sm="6" xs='12' cols="12">
-                <v-btn @click="textareas_showed = !textareas_showed" block color="primary" small>
-                    {{ toggle_textareas_btn_text }}
-                </v-btn>
-            </v-col>
-            <!--                <v-col align="center" md="6" sm='12' cols="12">-->
-            <div class="text-center">
-                <v-dialog
-                        v-model="dialog"
-                        width="255"
-                        persistent
-                >
-                    <v-card>
-                        <v-card-title
-                                class="headline"
-                        >
-                            Игра запущена
-                            <v-icon color="green" class="pl-2">mdi-rocket</v-icon>
-                        </v-card-title>
-
-                        <v-card-text>
-                            Будем надеяться, что сервера Вконтакте выдержат активность в вашей группе.
-
-                        </v-card-text>
-
-                        <v-divider></v-divider>
-
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                    color="green darken-1"
-                                    dark
-                                    @click="go"
+                <v-col v-show="$vuetify.breakpoint.name === 'xs'" align="center" sm="6" xs='12' cols="12">
+                    <v-btn @click="textareas_showed = !textareas_showed" block color="primary" small>
+                        {{ toggle_textareas_btn_text }}
+                    </v-btn>
+                </v-col>
+                <!--                <v-col align="center" md="6" sm='12' cols="12">-->
+                <div class="text-center">
+                    <v-dialog
+                            v-model="dialog"
+                            width="255"
+                            persistent
+                    >
+                        <v-card>
+                            <v-card-title
+                                    class="headline"
                             >
-                                OK
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-            </div>
-        </v-row>
-        <GameMessages
-                v-if="textareas_showed"
-                v-model="textarea_values"
-                :textarea_blocks="advanced_settings_textareas"
-                :mobile="mobile"
-                :main_variables="main_variables"
-                @autoresize="auto_resize_delay"
-                @def_message_aply="def_message_aply"
-        ></GameMessages>
+                                Игра запущена
+                                <v-icon color="green" class="pl-2">mdi-rocket</v-icon>
+                            </v-card-title>
+
+                            <v-card-text>
+                                Будем надеяться, что сервера Вконтакте выдержат активность в вашей группе.
+
+                            </v-card-text>
+
+                            <v-divider></v-divider>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                        color="green darken-1"
+                                        dark
+                                        @click="go"
+                                >
+                                    OK
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </div>
+            </v-row>
+            <GameMessages
+                    v-if="textareas_showed"
+                    v-model="textarea_values"
+                    :textarea_blocks="advanced_settings_textareas"
+                    :mobile="mobile"
+                    :main_variables="main_variables"
+                    @autoresize="auto_resize_delay"
+                    @def_message_aply="def_message_aply"
+            ></GameMessages>
+        </div>
     </div>
 </template>
 
@@ -680,6 +759,11 @@
             'ending_game_textarea_block',
         ],
         data: () => ({
+            token_availability: true,
+            load_page: false,
+            license_expiration_at: '',
+            now: '',
+            show_btn_permission: false,
             notification_allowed: true,
             pedestal_integration_enabled: true,
             current_post_text: '',
@@ -816,7 +900,6 @@
                     }
                 }
 
-
                 await this.get_group_status()
                 if (this.group_status === 1) {
                     this.payment_type = 3
@@ -833,8 +916,10 @@
                     if (this.common_settings.partner_group_id) {
                         this.partner_group_url = 'https://vk.com/club' + this.common_settings.partner_group_id
                     }
-                    if (/^[0-9]+$/.test(this.$route.params.id)) {
+                    if (/id_game/.test(this.$route.params.id)) {
+                        // console.log(this.$route.params.id)
                         this.show_edit = true
+                        // console.log('id_game')
                         // this.auto_resize (30)
                         this.auto_resize()
                     }
@@ -859,7 +944,11 @@
                 // await this.getAllUrlParams()
                 this.common_settings.id_group_vk = +this.settings.auth_data.vk_group_id
                 this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
-                await this.vkWebAppGetAuthToken()
+                // await this.vkWebAppGetAuthToken()
+                await this.get_data_group()
+                this.now = Math.floor(new Date()/1000)
+                this.load_page = true
+                // setTimeout(this.auto_resize, 300)
             },
         watch: {
             loader() {
@@ -1021,7 +1110,14 @@
                     }
                 }
             },
-            advanced_settings_textareas() {
+            alert_integration_pedeatal () {
+                if (this.now > this.license_expiration_at && this.pedestal_integration_enabled) {
+                    return true
+                } else {
+                    return false
+                }
+            },
+            advanced_settings_textareas () {
                 if (this.pedestal_integration_enabled) {
                     return [
                         {
@@ -1104,12 +1200,12 @@
                                     label: 'Не выполнил условие для участия',
                                     list_of_variables_for_rules: ['profile', 'fail_conditions', 'count_attempts']
                                 },
-                                {
-                                    id: 'message_repost_desc',
-                                    value: '',
-                                    label: 'Описание действия для репоста',
-                                    list_of_variables_for_rules: ['profile']
-                                },
+                                // {
+                                //     id: 'message_repost_desc',
+                                //     value: '',
+                                //     label: 'Описание действия для репоста',
+                                //     list_of_variables_for_rules: ['profile']
+                                // },
                                 {
                                     id: 'message_enable_notifications_desc',
                                     value: '',
@@ -1278,12 +1374,12 @@
                                     label: 'Не выполнил условие для участия',
                                     list_of_variables_for_rules: ['profile', 'fail_conditions', 'count_attempts']
                                 },
-                                {
-                                    id: 'message_repost_desc',
-                                    value: '',
-                                    label: 'Описание действия для репоста',
-                                    list_of_variables_for_rules: ['profile']
-                                },
+                                // {
+                                //     id: 'message_repost_desc',
+                                //     value: '',
+                                //     label: 'Описание действия для репоста',
+                                //     list_of_variables_for_rules: ['profile']
+                                // },
                                 {
                                     id: 'message_enable_notifications_desc',
                                     value: '',
@@ -1348,7 +1444,8 @@
                 } else return ''
             },
             no_money() {
-                if (/^[0-9]+$/.test(this.$route.params.id) || this.group_status === 1 || this.balance >= this.price || this.games_available_launches !== 0) {
+                // if (/^[0-9]+$/.test(this.$route.params.id) || this.group_status === 1 || this.balance >= this.price || this.games_available_launches !== 0) {
+                if (/id_game/i.test(this.$route.params.id) || this.group_status === 1 || this.balance >= this.price || this.games_available_launches !== 0) {
                     return false
                 } else {
                     return true
@@ -1361,7 +1458,7 @@
                 return 'Оплата жетоном (доступно жетонов: ' + this.games_available_launches + ')'
             },
             name_button_2() {
-                if (/^[0-9]+$/.test(this.$route.params.id)) {
+                if (/id_game/i.test(this.$route.params.id)) {
                     return 'Cохранить изменения'
                 } else if (this.payment_type == 1) {
                     return 'Запустить игру за ' + this.price + 'р'
@@ -1514,8 +1611,30 @@
             }
         },
         methods: {
+            get_data_group: async function () {
+                // let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + sessionStorage.getItem('auth_data_url'))
+                let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + this.auth_data_url)
+                if (response.ok) {
+                    response = await response.json()
+                    this.license_expiration_at = response.license_expiration_at
+                    this.games_available_launches = response.games_available_launches
+                    this.pedestal_integration_enabled = response.pedestal_integration_enabled
+                    if (response.access_token_permission) {
+                        this.token_availability = true
+                        return 1
+                    } else {
+                        this.token_availability = false
+                        return 0
+                    }
+                } else {
+                    let result = await response.json()
+                    console.log(result)
+                    this.balance = 0
+                }
+            },
             get_admin: async function () {
-                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/' + sessionStorage.getItem('auth_data_url'))
+                // let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/' + sessionStorage.getItem('auth_data_url'))
+                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/' + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     // console.log(response)
@@ -1547,20 +1666,80 @@
                     console.log(response)
                 }
             },
-            get_data_group: async function () {
-                let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + sessionStorage.getItem('auth_data_url'))
+
+            VKWebAppGetCommunityToken: async function () {
+                try {
+                    let response = await bridge.send("VKWebAppGetCommunityToken", {
+                        "app_id": +this.settings.auth_data.vk_app_id,
+                        "group_id": +this.settings.auth_data.vk_group_id,
+                        "scope": "messages, manage, wall"
+                    })
+                    if (response.access_token) {
+                        this.getTokenPermissions(response.access_token)
+                    } else {
+                        this.message_error = 'предоставленны не все права'
+                        setTimeout(this.clear_message, 5000)
+                    }
+                } catch (e) {
+                    console.log('пользователь нажал кнопку отмена')
+                }
+            },
+            getTokenPermissions: async function (token_group) {
+                let response = await bridge.send("VKWebAppCallAPIMethod", {
+                    "method": "groups.getTokenPermissions",
+                    "params": {"v": "5.107", "access_token": token_group}
+                })
+                // console.log(response)
+                let mask = response.response.mask
+                if (mask !== 274432) {
+                    this.message_error = 'предоставленны не все права'
+                    setTimeout(this.clear_message, 5000)
+                } else if (mask === 274432) {
+                    await this.put_data_group(token_group, mask)
+                    // this.$refs.child_methods.get_group_status()
+                }
+            },
+            put_group_info: async function () {
+                let obj = {}
+                obj.auth_data = this.settings.auth_data
+                obj.not_launch_games = false
+                let response = await fetch('/app/wallgames/group_info/' + this.settings.auth_data.vk_group_id + '/',
+                    {
+                        method: 'put',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(obj)
+                    })
+                if (response.ok) {
+                    // response = await response.json()
+                    // console.log(response)
+                } else {
+                    response = await response.json()
+                    console.log(response)
+                }
+            },
+            put_data_group: async function (token_group, mask) {
+                let obj = {}
+                obj.auth_data = this.settings.auth_data
+                obj.access_token = token_group
+                obj.access_token_permission = mask
+
+                let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/',
+                    {
+                        method: 'put',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(obj)
+                    })
                 if (response.ok) {
                     response = await response.json()
-                    this.pedestal_integration_enabled = response.pedestal_integration_enabled
-                    this.settings.pedestal_integration_enabled = response.pedestal_integration_enabled
-                    if (response.access_token_permission) {
-                        return true
-                    } else {
-                        return false
-                    }
+                    this.token_availability = true
+                    // console.log(response)
                 } else {
-                    let result = await response.json()
-                    console.log(result)
+                    response = await response.json()
+                    console.log(response)
                 }
             },
             VKWebAppAllowMessagesFromGroup: async function () {
@@ -1578,7 +1757,8 @@
                 obj.auth_data = this.settings.auth_data
                 obj.game_type = this.game_type
                 obj.group_id = +this.settings.auth_data.vk_group_id
-                let response = await fetch('/app/wallgames/map/' + sessionStorage.getItem('auth_data_url'),
+                // let response = await fetch('/app/wallgames/map/' + sessionStorage.getItem('auth_data_url'),
+                let response = await fetch('/app/wallgames/map/' + this.auth_data_url,
                     {
                         method: 'POST',
                         headers: {
@@ -1596,7 +1776,8 @@
                 }
             },
             get_group_status: async function () {
-                let response = await fetch("/app/wallgames/group/" + this.settings.auth_data.vk_group_id + "/status/" + sessionStorage.getItem('auth_data_url'))
+                // let response = await fetch("/app/wallgames/group/" + this.settings.auth_data.vk_group_id + "/status/" + sessionStorage.getItem('auth_data_url'))
+                let response = await fetch("/app/wallgames/group/" + this.settings.auth_data.vk_group_id + "/status/" + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     this.group_status = +response.status
@@ -1607,9 +1788,9 @@
             },
             button_back: function () {
                 if (this.$route.params.id)
-                    this.$router.push({path: '/my_games/'})
+                    this.$router.push({path: '/my_games/' + this.auth_data_url})
                 else
-                    this.$router.push({path: '/choice_games/'})
+                    this.$router.push({path: '/choice_games/' + this.auth_data_url})
             },
             fill_textarea_values: function () {
                 this.advanced_settings_textareas.forEach(block => {
@@ -1634,7 +1815,7 @@
             },
             go: async function () {
                 this.dialog = false
-                this.$router.push({path: '/my_games'})
+                this.$router.push({path: '/my_games/' + document.location.search})
                 await bridge.send("VKWebAppScroll", {"top": 0, "speed": 600})
 
             },
@@ -1675,7 +1856,8 @@
             },
             check_group_token: async function () {
                 try {
-                    let response = await fetch("/app/wallgames/check_group_token/" + sessionStorage.getItem('auth_data_url'))
+                    // let response = await fetch("/app/wallgames/check_group_token/" + sessionStorage.getItem('auth_data_url'))
+                    let response = await fetch("/app/wallgames/check_group_token/" + this.auth_data_url)
                     let result = await response.json()
                     this.group_token = result.data
 
@@ -1695,7 +1877,8 @@
                 }
             },
             load_balance: async function () {
-                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/balance/' + sessionStorage.getItem('auth_data_url'))
+                // let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/balance/' + sessionStorage.getItem('auth_data_url'))
+                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/balance/' + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     this.balance = +response.balance
@@ -1706,7 +1889,8 @@
                 }
             },
             load_free_attempts: async function () {
-                let response = await fetch('/app/wallgames/payments/free_attempts/' + sessionStorage.getItem('auth_data_url'))
+                // let response = await fetch('/app/wallgames/payments/free_attempts/' + sessionStorage.getItem('auth_data_url'))
+                  let response = await fetch('/app/wallgames/payments/free_attempts/' + this.auth_data_url)
                 // let response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/payments/free_attempts/?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE')
                 if (response.ok) {
                     response = await response.json()
@@ -1721,7 +1905,8 @@
                 // console.log('load_user_settings')
                 try {
                     // let response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/guess_number/174?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE')
-                    let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id + '/' + sessionStorage.getItem('auth_data_url'))
+                    // let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id + '/' + sessionStorage.getItem('auth_data_url'))
+                    let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id + '/' + this.auth_data_url)
                     let result = await response.json()
 
                     delete result.game.start_date
@@ -1835,10 +2020,9 @@
                     return
                 }
                 if (this.required_join_partner_group_abc === 'b' || this.required_join_partner_group_abc === 'c') {
-                    await this.vkWebAppGetAuthToken()
                     await this.transform_partner_group_url()
                 }
-                if (/^[0-9]+$/.test(this.$route.params.id)) {
+                if (/id_game/i.test(this.$route.params.id)) {
                     // await this.transform_prizes_array ()
                     await this.save_change_put()
                     return this.loading = false
@@ -1856,6 +2040,11 @@
                         setTimeout(this.clear_message, 5000)
                         return
                     }
+                }
+                if (!await this.vkWebAppGetAuthToken()) {
+                    this.message_error = 'Отсутствуют права "Photo"'
+                    setTimeout(this.clear_message, 5000)
+                    return
                 }
                 this.loading = true
 
@@ -1917,6 +2106,13 @@
                     setTimeout(this.clear_message, 5000)
                     return this.loading = false
                 }
+
+                // записываем в кеш и в базу, что хоть одна игра запущена
+                this.put_group_info()
+                // if (!localStorage.getItem('not_launch_games_' + toString(this.settings.auth_data.vk_group_id))) {
+                //     this.put_group_info()
+                //     localStorage.setItem('not_launch_games_' + this.settings.auth_data.vk_group_id, 'false')
+                // }
                 this.loading = false
             },
 
@@ -2026,6 +2222,7 @@
                     return false
                 }
             },
+
             upload_photo: async function () {
                 let response
                 if (this.image === null) {
@@ -2033,7 +2230,8 @@
                     formData.append('auth_data', this.settings.auth_data)
                     formData.append('upload_url', await this.getUploadServer())
                     formData.append('game_name', this.name_game)
-                    response = await fetch("/app/wallgames/upload_photo/" + sessionStorage.getItem('auth_data_url'),
+                    // response = await fetch("/app/wallgames/upload_photo/" + sessionStorage.getItem('auth_data_url'),
+                    response = await fetch("/app/wallgames/upload_photo/" + this.auth_data_url,
                         {
                             method: 'POST',
                             body: formData
@@ -2054,7 +2252,8 @@
                     const formData = new FormData()
                     formData.append('photo', this.image)
                     formData.append('upload_url', await this.getUploadServer())
-                    response = await fetch('/app/wallgames/upload_photo/' + sessionStorage.getItem('auth_data_url'),
+                    // response = await fetch('/app/wallgames/upload_photo/' + sessionStorage.getItem('auth_data_url'),
+                    response = await fetch('/app/wallgames/upload_photo/' + this.auth_data_url,
                         {
                             method: 'POST',
                             body: formData
@@ -2107,7 +2306,8 @@
                 }
             },
             get_prices: async function () {
-                let response = await fetch("/app/wallgames/payments/prices/" + sessionStorage.getItem('auth_data_url'))
+                // let response = await fetch("/app/wallgames/payments/prices/" + sessionStorage.getItem('auth_data_url'))
+                let response = await fetch("/app/wallgames/payments/prices/" + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     let obj = response.find(item => item.game_type === +this.game_type)
@@ -2166,8 +2366,8 @@
             },
             activating_callback_server: async function () {
                 try {
-                    let response = await fetch("/app/wallgames/activate_callback/"
-                        + sessionStorage.getItem('auth_data_url'))
+                    // let response = await fetch("/app/wallgames/activate_callback/" + sessionStorage.getItem('auth_data_url'))
+                    let response = await fetch("/app/wallgames/activate_callback/" + this.auth_data_url)
                     let answer = await response.json()
                     if (response.ok) {
                         return answer
@@ -2232,7 +2432,7 @@
                 if (this.game_type == 1 || this.game_type == 5) {
                     this.gameData.game.game_duration = null
                 }
-                console.log(this.gameData)
+                // console.log(this.gameData)
                 try {
                     let response = await fetch('/app/wallgames/' + this.name_game + '/',
                         {
@@ -2323,9 +2523,11 @@
                         "scope": "photos"
                     })
                     this.token = response.access_token
+                    return true
                     // console.log('Успех token - ', response.access_token)
                 } catch (error) {
                     console.error('Ошибка - url ', error)
+                    return false
                 }
             },
             group_record_token: async function () {
@@ -2345,7 +2547,8 @@
                             }
                             formData.append('group_access_token', this.token_group)
                             formData.append('group_access_token_permission', mask)
-                            response = await fetch('/api/groupTokenHandSave.php' + sessionStorage.getItem('auth_data_url'),
+                            // response = await fetch('/api/groupTokenHandSave.php' + sessionStorage.getItem('auth_data_url'),
+                            response = await fetch('/api/groupTokenHandSave.php' + this.auth_data_url,
                                 {
                                     method: 'POST',
                                     body: formData
@@ -2375,7 +2578,8 @@
             },
             delete_post: async function () {
                 try {
-                    let response = await fetch("/app/wallgames/delete_post/" + 'post_id=' + this.common_settings.id_post_vk + sessionStorage.getItem('auth_data_url'))
+                    // let response = await fetch("/app/wallgames/delete_post/" + 'post_id=' + this.common_settings.id_post_vk + sessionStorage.getItem('auth_data_url'))
+                    let response = await fetch("/app/wallgames/delete_post/" + 'post_id=' + this.common_settings.id_post_vk + this.auth_data_url)
                     let result = await response.json()
                     if (response.ok) console.log('Пост удален' + result)
                     else console.log('Ошибка удаления поста' + result)
@@ -2498,6 +2702,12 @@
     #no_money {
         color: red;
         font-size: 14px;
+    }
+
+    .game_name {
+        top:30px;
+        position: fixed;
+        z-index: 8;
     }
 
 

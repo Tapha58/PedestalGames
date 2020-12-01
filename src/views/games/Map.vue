@@ -52,12 +52,15 @@
         }),
         beforeMount:
             async function() {
-                await this.getAllUrlParams()
-                await this.get_map()
-                this.auto_resize()
+
+
+
         },
-        mounted() {
+        mounted: async function() {
+            await this.getAllUrlParams()
+            await this.get_map()
             this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
+            this.auto_resize()
         },
         updated() {
             this.auto_resize()
@@ -69,8 +72,9 @@
                 try {
 
                     console.log(this.settings.auth_data)
+                    console.log(this.auth_data_url)
                     console.log(window.location.href)
-                    let response = await fetch("/app/wallgames/map/" + this.$route.params.id + '/' + sessionStorage.getItem('auth_data_url'))
+                    let response = await fetch("/app/wallgames/map/" + this.$route.params.id + '/' + this.auth_data_url)
                     if (response.ok) {
                         response = await response.json()
                         this.win = response.win

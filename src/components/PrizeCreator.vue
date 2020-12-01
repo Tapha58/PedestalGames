@@ -7,14 +7,20 @@
             flat
     >
         <v-card-title class="pb-0">
-            <v-row dense v-if="!is_single_winner">
+            <v-row dense v-if="!is_single_winner" justify="space-between">
 
-                <v-col cols="6" class="pl-0">
+                <v-col  cols="auto" class="pl-0">
                     Подарок № {{number_gift}}
                 </v-col>
-                <v-col cols="2"></v-col>
-                <v-col cols="3">
+<!--                <v-col align="center">-->
+<!--                    <span>Подарок № {{number_gift}}</span>-->
+<!--                </v-col>-->
+
+                <!--                <v-col cols="2"></v-col>-->
+                <v-col  cols="auto">
                     <v-text-field
+                            id="count_win"
+                            max-width="50"
                             type="number"
                             min="1"
                             v-model.number="prizes_front_index.count"
@@ -22,13 +28,16 @@
                             dense
                             validate-on-blur
                             :rules="prize_count_rules"
-                            :disabled="/^[0-9]+$/.test($route.params.id)"
+                            :disabled="/id_game/i.test($route.params.id)"
                     ></v-text-field>
                 </v-col>
-                <v-btn v-if="!is_one_card && !/^[0-9]+$/.test($route.params.id)" icon fab absolute right small
-                       @click="$emit('delete_prize_creator', id)">
-                    <v-icon>mdi-close</v-icon>
-                </v-btn>
+                <v-col cols="1" v-if="!is_one_card && !/id_game/i.test($route.params.id)">
+                    <v-btn  icon fab absolute right small
+                           @click="$emit('delete_prize_creator', id)">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-col>
+
             </v-row>
         </v-card-title>
 
@@ -123,7 +132,7 @@
             </div>
         </v-card-text>
 
-        <v-btn class="mr-n2" v-if="!is_single_winner && is_last_card" fab absolute right bottom small dark
+        <v-btn class="mr-n2" v-if="!is_single_winner && is_last_card" fab absolute right bottom small dark depressed
                color="#4a76a8" @click="$emit('add_prize_creator')">
             <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -246,7 +255,7 @@
     }
 </script>
 
-<style>
+<style >
     .border_top_bottom {
         border-left: hidden !important;
         border-right: hidden !important;
@@ -254,6 +263,7 @@
         border-bottom: 1px solid #edeef0 !important;
         border-radius: 0 !important;
     }
+
     .border_top_bottom_is_single_winner {
         border-left: hidden !important;
         border-right: hidden !important;
@@ -265,6 +275,10 @@
     .pad_but_0 {
         padding-bottom: 0 !important;
         margin-bottom: -8px;
+    }
+
+    #count_win {
+        width: 131px;
     }
 
 </style>
