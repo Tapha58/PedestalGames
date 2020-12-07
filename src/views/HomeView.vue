@@ -1,6 +1,6 @@
 <template>
     <div class="px-3">
-        <div v-if="settings.auth_data.vk_platform !== 'desktop_web'" class="mobile_background_top">
+        <div v-if="!computer_mode" class="mobile_background_top">
             <div class="mobile_menu">
                 <v-menu
                         bottom
@@ -25,7 +25,6 @@
                                 v-for="(item, index) in items"
                                 :key="index"
                                 :to="item.to"
-
                         >
                             <v-list-item-title>{{ item.title }}</v-list-item-title>
                         </v-list-item>
@@ -46,8 +45,8 @@
                 ></v-skeleton-loader>
             </v-col>
         </v-row>
-        <v-row v-if="!show_skeleton && settings.auth_data.vk_platform === 'desktop_web'" align="center" class="mx-0">
-            <v-col  class="py-0 px-0" cols="auto">
+        <v-row v-if="!show_skeleton && computer_mode" align="center" class="mx-0">
+            <v-col class="py-0 px-0" cols="auto">
                 <v-tabs ripple="false">
                     <v-tab :to="/choice_games/ + auth_data_url">Новая игра</v-tab>
                     <v-tab :to="/my_games/ + auth_data_url">Мои игры</v-tab>
@@ -70,12 +69,13 @@
         <router-view
                 ref="child_methods"
                 @load_balance="load_balance"
-                :games_available_launches="games_available_launches"
                 :balance="balance"
                 :license_expiration_at="license_expiration_at"
                 :incognito_mode="incognito_mode"
                 :auth_data_url="auth_data_url"
                 :settings="settings"
+                :storageAvailable="storageAvailable"
+                :games_available_launches="games_available_launches"
         ></router-view>
     </div>
 </template>
@@ -92,22 +92,18 @@
             show_skeleton: true,
             games_available_launches: 0,
             err_mess_rules: '',
-            // settings: {
-            //     auth_data: ''
-            // },
-            nnn: 1,
             select_menu: '',
             balance: '0',
-
-            // auth_data_url: '',
             incognito_mode: false,
+            storageAvailable: false
         }),
         mounted: async function () {
-            // await this.check_incognito_mode()
-            // await this.getAllUrlParams()
-            if (!await this.get_data_group()) {
-                // this.VKWebAppGetCommunityToken()
+            if (this.storageAvailableFun('localStorage')) {
+                this.storageAvailable = true
+            } else {
+                this.storageAvailable = false
             }
+            await this.get_data_group()
             await this.load_balance()
             this.show_skeleton = false
         },
@@ -124,23 +120,30 @@
                     {title: 'Сервисы', to: "/settings/" + this.auth_data_url, icon: 'currency-usd'},
                     {title: 'Баланс', to: "/balance/" + this.auth_data_url, icon: 'currency-usd'},
                 ]
+            },
+            computer_mode() {
+                if (this.settings.auth_data.vk_platform === 'desktop_web') {
+                    return true
+                } else {
+                    if (this.settings.auth_data.vk_platform === 'mobile_web' && this.$vuetify.breakpoint.name !== ('xs')) {
+                        return true
+                    } else {
+                        return false
+                    }
+                }
             }
         },
         methods: {
-            check_incognito_mode: async function main() {
-                let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
-                if (!fs) {
-                    console.log(1)
-                    this.incognito_mode = false
-                } else {
-                    fs(window.TEMPORARY, 100, this.not_incognito, this.incognito);
+            storageAvailableFun: function (type) {
+                try {
+                    let storage = window[type];
+                    let x = '__storage_test__';
+                    storage.setItem(x, x);
+                    storage.removeItem(x);
+                    return true;
+                } catch (e) {
+                    return false;
                 }
-            },
-            not_incognito: function () {
-                this.incognito_mode = false
-            },
-            incognito: function () {
-                this.incognito_mode = true
             },
             VKWebAppGetCommunityToken: async function () {
                 try {
@@ -191,24 +194,11 @@
             },
 
             get_data_group: async function () {
-                // let param = ''
-                // if (document.location.search) {
-                //     param = document.location.search
-                // } else {
-                //     param = sessionStorage.getItem('auth_data_url')
-                // }
-
-                // let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + param)
                 let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     this.license_expiration_at = response.license_expiration_at
                     this.games_available_launches = response.games_available_launches
-                    if (response.access_token_permission) {
-                        return 1
-                    } else {
-                        return 0
-                    }
                 } else {
                     let result = await response.json()
                     console.log(result)
@@ -277,6 +267,8 @@
         background-color: #ffffff;
         position: fixed;
         top: 34px;
+        top: calc(constant(safe-area-inset-top) + 14px);
+        top: calc(env(safe-area-inset-top) + 14px);
         left: 12px;
         width: 100%;
         z-index: 6;

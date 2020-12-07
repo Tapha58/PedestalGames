@@ -136,7 +136,7 @@
                 if (this.yandex_money || this.bank_card) {
                     return "https://money.yandex.ru/quickpay/confirm.xml"
                 } else if (this.qiwi) {
-                    return "/cross_api/paymentAppFromQiwi.php"
+                    return "https://pedestal.aiva-studio.ru/cross_api/paymentAppFromQiwi.php"
                 } else return ''
             },
             type_pay: function () {

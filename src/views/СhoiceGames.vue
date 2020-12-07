@@ -2,7 +2,7 @@
     <div>
 
         <div id="skeleton" v-if="show_sceleton">
-            <v-row>
+            <v-row justify="space-between">
                 <v-col>
                     <v-skeleton-loader
                             class="mx-auto"
@@ -127,7 +127,7 @@
                 <v-col>
                     <v-card
                             class="mx-auto mmm"
-                            max-width="380"
+                            :max-width="max_width_card"
                             min-width="296"
                     >
                         <v-list-item three-line>
@@ -175,7 +175,7 @@
 
                         <v-card-actions class="pt-0 d-flex justify-space-between">
                             <v-btn color="primary" text :to="/sea_battle/ + auth_data_url">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" text
+                            <v-btn v-show="show_example_btn" color="primary" text
                                    href="https://vk.com/club197375430?w=wall-197375430_152" target="_blank">Пример
                             </v-btn>
                             <v-btn color="primary" text
@@ -189,7 +189,7 @@
                 <v-col>
                     <v-card
                             class="mx-auto mmm"
-                            max-width="380"
+                            :max-width="max_width_card"
                             min-width="296"
                     >
                         <v-list-item three-line>
@@ -237,7 +237,7 @@
 
                         <v-card-actions class="pt-0 d-flex justify-space-between">
                             <v-btn color="primary" text :to="/max_comments/ + auth_data_url">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary" text
+                            <v-btn v-show="show_example_btn" color="primary" text
                                    href="https://vk.com/club197375430?w=wall-197375430_151" target="_blank">Пример
                             </v-btn>
                             <v-btn color="primary" text
@@ -252,7 +252,7 @@
                 <v-col>
                     <v-card
                             class="mx-auto"
-                            max-width="380"
+                            :max-width="max_width_card"
                             min-width="296"
                     >
                         <v-list-item three-line>
@@ -284,7 +284,7 @@
                         <v-card-actions class="pt-0 d-flex justify-space-between">
                             <v-btn color="primary" text :to="/guess_number_settings/ + auth_data_url">Создать игру
                             </v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary"
+                            <v-btn v-show="show_example_btn" color="primary"
                                    href="https://vk.com/club197375430?w=wall-197375430_21" target="_blank" text>Пример
                             </v-btn>
                             <v-btn color="primary"
@@ -297,7 +297,7 @@
                 <v-col>
                     <v-card
                             class="mx-auto"
-                            max-width="380"
+                            :max-width="max_width_card"
                             min-width="296"
                     >
                         <v-list-item three-line>
@@ -327,8 +327,8 @@
                         </v-list-item>
 
                         <v-card-actions class="pt-0 d-flex justify-space-between">
-                            <v-btn color="primary" text :to="/anagram / + auth_data_url">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary"
+                            <v-btn color="primary" text :to="/anagram/ + auth_data_url">Создать игру</v-btn>
+                            <v-btn v-show="show_example_btn" color="primary"
                                    href="https://vk.com/club197375430?w=wall-197375430_22" target="_blank" text>Пример
                             </v-btn>
                             <v-btn color="primary"
@@ -343,7 +343,7 @@
                 <v-col>
                     <v-card
                             class="mx-auto"
-                            max-width="380"
+                            :max-width="max_width_card"
                             min-width="296"
                     >
                         <v-list-item three-line>
@@ -374,7 +374,7 @@
 
                         <v-card-actions class="pt-0 d-flex justify-space-between">
                             <v-btn color="primary" text :to="/words_with_letter/ + auth_data_url">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary"
+                            <v-btn v-show="show_example_btn" color="primary"
                                    href="https://vk.com/club197375430?w=wall-197375430_23" target="_blank" text>Пример
                             </v-btn>
                             <v-btn color="primary" text
@@ -387,10 +387,9 @@
                 <v-col>
                     <v-card
                             class="mx-auto"
-                            max-width="380"
+                            :max-width="max_width_card"
                             min-width="296"
-                            min-height="170"
-                            max-height="170"
+                            :min-height="min_height_mobile_web"
                             disabled
                     >
                         <v-list-item three-line>
@@ -417,7 +416,7 @@
 
                         <v-card-actions class="pt-4 d-flex justify-space-between">
                             <v-btn color="primary" text :to="/words_with_letter/ + auth_data_url">Создать игру</v-btn>
-                            <v-btn v-show="$vuetify.breakpoint.name !== 'xs'" color="primary"
+                            <v-btn v-show="show_example_btn" color="primary"
                                    href="https://vk.com/club197375430?w=wall-197375430_23" target="_blank" text>Пример
                             </v-btn>
                             <v-btn color="primary" text
@@ -438,35 +437,24 @@
 
     export default {
         mixins: [auto_resize],
-        props: ['games_available_launches', 'settings', 'auth_data_url'],
+        props: ['settings', 'auth_data_url', 'storageAvailable'],
         data: () => ({
             auth_data: '',
             mobile: '',
             prices: [],
             group_status: '',
-            // settings: {
-            //     auth_data: ''
-            // },
             show_alert_first_start: false,
             show_sceleton: true,
             token_availability: true,
-            // auth_data_url: '',
             incognito_mode: true,
         }),
         mounted: async function () {
-            // await this.check_incognito_mode()
-            // await this.getAllUrlParams()
-            if (!this.incognito_mode && !sessionStorage.getItem('auth_data_url')) {
-                sessionStorage.setItem('auth_data_url', document.location.search)
-            }
-            if (this.incognito_mode || !localStorage.getItem('create_group')) {
+            if (!this.storageAvailable || !localStorage.getItem('create_group_' + this.settings.auth_data.vk_group_id)) {
                 await this.create_group()
             }
-            // localStorage.setItem('not_launch_games', 'true')
-            if (this.incognito_mode || !localStorage.getItem('not_launch_games_' + this.settings.auth_data.vk_group_id)) {
+            if (!this.storageAvailable || !localStorage.getItem('not_launch_games_' + this.settings.auth_data.vk_group_id)) {
                 await this.get_group_info()
             }
-
             this.mobile = this.auth_data.vk_platform !== 'desktop_web'
             await this.get_group_status()
             if (this.group_status === 2) {
@@ -476,33 +464,33 @@
             setTimeout(this.auto_resize, 5000)
         },
         computed: {
+            min_height_mobile_web: function () {
+                if (this.settings.auth_data.vk_platform === 'mobile_web') {
+                    return 186
+                } else return ''
+            },
+            show_example_btn: function () {
+                if (this.$vuetify.breakpoint.name === 'xs') {
+                    return false
+                } else if (this.settings.auth_data.vk_platform === 'mobile_web') {
+                    return false
+                } else return true
+            },
 
+            max_width_card: function () {
+                if (this.settings.auth_data.vk_platform !== 'desktop_web') {
+                    return 346
+                } else {
+                    return 380
+                }
+            },
             show_alert_grant_rights() {
-                // if (this.incognito_mode === true) {
-                //     if (this.token_availability) {
-                //         return false
-                //     } else {
-                //         return true
-                //     }
-                // } else if (this.incognito_mode === '') {
-                //     return false
-                // }
-                // else {
-                //     if (localStorage.getItem('not_launch_games_' + this.settings.auth_data.vk_group_id) && this.token_availability) {
-                //         return false
-                //     } else if (!localStorage.getItem('not_launch_games_' + this.settings.auth_data.vk_group_id)) {
-                //         return false
-                //     } else {
-                //         return true
-                //     }
-                // }
                 if (!this.show_alert_first_start && !this.token_availability) {
                     return true
                 } else {
                     return false
                 }
             },
-
             price_type_1() {
                 let obj = this.prices.find(item => item.game_type === 1)
                 if (obj === undefined)
@@ -565,42 +553,6 @@
             },
         },
         methods: {
-            mounted2: async function () {
-                console.log('im' + this.incognito_mode)
-                await this.getAllUrlParams()
-                if (this.incognito_mode || !localStorage.getItem('create_group')) {
-                    await this.create_group()
-                }
-                this.mobile = this.auth_data.vk_platform !== 'desktop_web'
-                await this.get_group_status()
-                if (this.group_status === 2) {
-                    await this.get_prices()
-                }
-                this.show_sceleton = false
-                setTimeout(this.auto_resize, 5000)
-            },
-            check_incognito_mode: async function () {
-                let fs = window.RequestFileSystem || window.webkitRequestFileSystem;
-                if (!fs) {
-                    console.log(1)
-                    this.incognito_mode = false
-                    this.mounted2()
-                } else {
-                    await fs(window.TEMPORARY, 100, this.not_incognito, this.incognito);
-                }
-
-            },
-            not_incognito: async function () {
-                console.log('not_incognito_')
-                this.incognito_mode = false
-                this.mounted2()
-            },
-            incognito: async function () {
-                console.log('incognito_')
-                this.incognito_mode = true
-                this.mounted2()
-            },
-
             VKWebAppGetCommunityToken: async function () {
                 try {
                     let response = await bridge.send("VKWebAppGetCommunityToken", {
@@ -699,31 +651,24 @@
             },
             // информация, запускалась ли когда-либо игра в данном сообществе
             get_group_info: async function () {
-                // let response = await fetch("/app/wallgames/group_info/" + this.settings.auth_data.vk_group_id + sessionStorage.getItem('auth_data_url'))
+                console.log('get_group_info')
                 let response = await fetch("/app/wallgames/group_info/" + this.settings.auth_data.vk_group_id + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     if (response.not_launch_games) {
                         this.show_alert_first_start = true
-                    }
-                    // console.log(response)
+                    } else {
+                        if (this.storageAvailable) {
+                        localStorage.setItem('not_launch_games_' + this.settings.auth_data.vk_group_id, false)
+                    }}
                 } else {
                     response = await response.json()
                     console.log(response)
                 }
             },
-            // get_group_status: function () {
-            //     let members_count = sessionStorage.getItem('members_count')
-            //     if (members_count < 5) {
-            //         this.group_status = 1
-            //     } else {
-            //         this.group_status = 2
-            //     }
-            // },
             create_group: async function () {
                 let obj = {}
                 obj.auth_data = this.settings.auth_data
-                // let response = await fetch('/app/wallgames/group/' + sessionStorage.getItem('auth_data_url'),
                 let response = await fetch('/app/wallgames/group/' + this.auth_data_url,
                     {
                         method: 'POST',
@@ -732,13 +677,13 @@
                         },
                         body: JSON.stringify(obj)
                     })
-                if (response.ok && !this.incognito_mode) {
-                    // response = await response.json()
-                    // console.log(response)
-                    localStorage.setItem('create_group', 'true')
+                if (response.ok) {
+                    if (this.storageAvailable) {
+                        localStorage.setItem('create_group_' + this.settings.auth_data.vk_group_id, 'true')
+                    }
                 } else {
-                    // response = await response.json()
-                    // console.log(response)
+                    response = await response.json()
+                    console.log(response)
                 }
             },
         },

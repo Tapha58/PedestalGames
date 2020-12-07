@@ -11,13 +11,9 @@
         mixins: [auto_resize],
         props: ['settings'],
         data: () => ({
-            // settings: {
-            //     auth_data: ''
-            // },
             show_user_page: false,
         }),
         mounted: async function () {
-            // await this.getAllUrlParams()
             if (this.settings.auth_data.vk_group_id) {
                 if (this.settings.auth_data.vk_viewer_group_role === 'admin') {
                     this.$router.push({ path: '/choice_games/' + window.location.search})

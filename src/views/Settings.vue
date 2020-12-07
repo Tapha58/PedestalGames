@@ -45,7 +45,7 @@
         >
             <v-row align="center">
                 <v-col class="">
-                    Приложение Пьедестал не подключенно в сообществе.
+                    Приложение Пьедестал не подключено в сообществе.
                 </v-col>
                 <v-col class="shrink">
                     <v-btn href="https://vk.com/app7147757" target="_blank" small color="primary">Подключить</v-btn>
