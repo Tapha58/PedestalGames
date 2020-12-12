@@ -10,6 +10,9 @@
                 :main_variables="main_variables"
                 :name_game="name_game"
                 :game_type="game_type"
+                :auth_data="auth_data"
+                :auth_data_url="auth_data_url"
+
         >
             <template v-slot:settings>
                 <div class="pt-5" cols="auto">
@@ -37,10 +40,25 @@
                                     :rules="rules_game_duration"
                                     validate-on-blur
                             ><template v-slot:prepend-inner >
-                                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                                color="rgba(48, 44, 44, 0.99)"
+                                                dark
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                        >
+                                            <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Через указанное кол-во часов игра завершится и последним комментарием будет
+                                        опубликован список победителей и выданы указанные призы.</span>
+                                </v-tooltip>
+
+                                <v-tooltip v-else bottom  color="rgba(48, 44, 44, 0.99)" max-width="280">
                                     <template v-slot:activator="{ on }">
-                                        <v-icon class="mt2px" size="20" v-on="on">mdi-help-circle-outline
-                                        </v-icon>
+                                        <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                                     </template>
                                     <span>Через указанное кол-во часов игра завершится и последним комментарием будет
                                         опубликован список победителей и выданы указанные призы.</span>
@@ -61,6 +79,7 @@
         components: {
             GeneralSettingsBlock
         },
+        props: ['auth_data', 'auth_data_url'],
         data: () => ({
             settings: {
                 game_duration: '',

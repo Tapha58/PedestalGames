@@ -8,7 +8,7 @@
                             class="mx-auto"
                             max-width="365"
                             min-width="296"
-                            type="card"
+                            type="image"
                     ></v-skeleton-loader>
                 </v-col>
                 <v-col>
@@ -16,7 +16,7 @@
                             class="mx-auto"
                             max-width="365"
                             min-width="296"
-                            type="card"
+                            type="image"
                     ></v-skeleton-loader>
                 </v-col>
             </v-row>
@@ -26,7 +26,7 @@
                             class="mx-auto"
                             max-width="365"
                             min-width="296"
-                            type="card"
+                            type="image"
                     ></v-skeleton-loader>
                 </v-col>
                 <v-col>
@@ -34,7 +34,7 @@
                             class="mx-auto"
                             max-width="365"
                             min-width="296"
-                            type="card"
+                            type="image"
                     ></v-skeleton-loader>
                 </v-col>
             </v-row>
@@ -44,7 +44,7 @@
                             class="mx-auto"
                             max-width="365"
                             min-width="296"
-                            type="card"
+                            type="image"
                     ></v-skeleton-loader>
                 </v-col>
                 <v-col>
@@ -52,7 +52,7 @@
                             class="mx-auto"
                             max-width="365"
                             min-width="296"
-                            type="card"
+                            type="image"
                     ></v-skeleton-loader>
                 </v-col>
             </v-row>

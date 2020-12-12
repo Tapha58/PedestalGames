@@ -12,6 +12,9 @@
                 :main_variables="main_variables"
                 :name_game="name_game"
                 :game_type="game_type"
+                :auth_data="auth_data"
+                :auth_data_url="auth_data_url"
+                :pedestal_integration_enabled="pedestal_integration_enabled"
         >
             <template v-slot:settings>
                 <div class="pt-5">
@@ -22,7 +25,23 @@
                         <v-row>
                             <v-col class="py-0" cols="auto">
                                 2. Настройки игры
-                                <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+
+                                <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                                color="rgba(48, 44, 44, 0.99)"
+                                                dark
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                        >
+                                            <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Настройте игру.</span>
+                                </v-tooltip>
+
+                                <v-tooltip v-else bottom  color="rgba(48, 44, 44, 0.99)" max-width="280">
                                     <template v-slot:activator="{ on }">
                                         <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                                     </template>
@@ -77,8 +96,7 @@
                             ><template v-slot:prepend-inner >
                                 <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
                                     <template v-slot:activator="{ on }">
-                                        <v-icon class="mt2px" size="20" v-on="on">mdi-help-circle-outline
-                                        </v-icon>
+                                        <v-icon class="mt2px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
                                     </template>
                                     <span>Поскольку приз выдаётся за каждое попадание, то вы можете ограничить кол-во
                                         призов на одного участника. Когда участник достигнет лимита победных ходов,
@@ -155,6 +173,7 @@
         components: {
             GeneralSettingsBlock
         },
+        props: ['auth_data', 'auth_data_url', 'pedestal_integration_enabled'],
         data: () => ({
             settings: {
                 auth_data: '',
@@ -335,7 +354,7 @@
         // },
         computed: {
             main_variables () {
-                if (this.settings.pedestal_integration_enabled) {
+                if (this.pedestal_integration_enabled) {
                     return this.main_variables1
                 } else {
                     return this.main_variables2

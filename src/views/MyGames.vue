@@ -20,10 +20,6 @@
                         Еще ни одной игры не было запущено. По нашим прогнозам, самое подходящее время для первого
                         запуска - сейчас.
                     </v-col>
-                    <!--                <v-col class="shrink">-->
-                    <!--                    <v-btn @click="VKWebAppGetCommunityToken" small color="primary">Предоставить права-->
-                    <!--                    </v-btn>-->
-                    <!--                </v-col>-->
                 </v-row>
             </v-alert>
             <v-data-table
@@ -31,9 +27,12 @@
                     :headers="headers"
                     :items="games"
                     sort-by="start_date"
-
                     sortDesc
-                    :footerProps="{itemsPerPageText: 'Строк на странице', pageText: '{0} из {1}', itemsPerPageAllText: 'все'}"
+                    items-per-page="10"
+
+                    hide-default-footer
+                    :page.sync="page"
+                    @page-count="pageCount = $event"
             >
                 <template v-slot:item.actions="{ item }">
                     <v-btn
@@ -42,27 +41,41 @@
                             icon
                     >
                         <v-icon
-                                small
                                 color="#4872a3"
+                                :size="size_icon"
                         >
                             mdi-vk
                         </v-icon>
                     </v-btn>
-
-                    <v-icon
-                            class="mx-5"
-                            small
+                    <v-btn
+                            class="mx-1"
+                            icon
                             @click="copy_game(item.id, item.route)"
                     >
-                        mdi-content-copy
-                    </v-icon>
-                    <v-icon
-                            v-show="item.is_active"
-                            small
+
+                        <v-icon
+                                class="mx-5"
+                                :size="size_icon"
+                        >
+                            mdi-content-copy
+                        </v-icon>
+                    </v-btn>
+
+                    <v-btn
                             @click="editItem(item.id, item.route)"
+                            icon
+
+                            v-show="item.is_active"
                     >
-                        mdi-pencil
-                    </v-icon>
+
+                        <v-icon
+                                :size="size_icon"
+
+                        >
+                            mdi-pencil
+                        </v-icon>
+                    </v-btn>
+
                 </template>
 
                 <template v-slot:item.start_date="{ item }">
@@ -79,6 +92,13 @@
                     Нет данных для отображения
                 </template>
             </v-data-table>
+            <v-pagination
+                    v-if="games.length > 10"
+                    class="mt-2"
+                    v-model="page"
+                    :length="pageCount"
+                    :total-visible="7"
+            ></v-pagination>
         </div>
     </div>
 
@@ -95,6 +115,8 @@
             // settings: {
             //     auth_data: ''
             // },
+            page: 1,
+            pageCount: 10,
             show_skeleton: true,
             headers: [
                 // { text: 'Id', value: 'id'},
@@ -109,6 +131,13 @@
             // auth_data_url: ''
         }),
         computed: {
+            size_icon() {
+                if (this.settings.auth_data.vk_platform !== 'mobile_web' && this.settings.auth_data.vk_platform !== 'desktop_web') {
+                    return 24
+                } else {
+                    return 18
+                }
+            },
             name_route_obj() {
                 return {
                     1: {name: 'Угадай число', route: '/guess_number_settings/'},
@@ -196,7 +225,31 @@
 
 <style>
     .v-data-table__mobile-row {
-        min-height: 26px !important;
-        height: 26px !important;
+        min-height: 36px !important;
+        height: 36px !important;
+    }
+
+    .v-data-footer {
+        justify-content: space-between !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .v-data-footer__select {
+        margin-right: -12px !important;
+    }
+
+    /*.v-select {*/
+    /*    margin-left: 8px !important;*/
+    /*}*/
+
+    .v-data-footer__pagination {
+        margin-left: 8px !important;
+        margin-right: 8px !important;
+    }
+
+    tr {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
     }
 </style>

@@ -11,6 +11,9 @@
                 :url_default_img="url_default_img"
                 :name_game="name_game"
                 :game_type="game_type"
+                :auth_data="auth_data"
+                :auth_data_url="auth_data_url"
+
         >
             <template v-slot:settings>
                 <div class="pt-5" cols="auto">
@@ -34,11 +37,28 @@
                                     outlined
                                     v-model="settings.word_count_strategy"
                             >
+
+
                                 <template v-slot:prepend-inner >
-                                    <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn
+                                                    color="rgba(48, 44, 44, 0.99)"
+                                                    dark
+                                                    v-bind="attrs"
+                                                    v-on="on"
+                                                    icon
+                                            >
+                                                <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Вариант "найденные слова выбывают из розыгрыша" означает, что если один
+                                            участник уже отгадал какое-то слово, то другим участникам это слово не будет засчитано.</span>
+                                    </v-tooltip>
+
+                                    <v-tooltip v-else bottom  color="rgba(48, 44, 44, 0.99)" max-width="280">
                                         <template v-slot:activator="{ on }">
-                                            <v-icon class="mt2px" size="20" v-on="on">mdi-help-circle-outline
-                                            </v-icon>
+                                            <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                                         </template>
                                         <span>Вариант "найденные слова выбывают из розыгрыша" означает, что если один
                                             участник уже отгадал какое-то слово, то другим участникам это слово не будет засчитано.</span>
@@ -100,6 +120,7 @@
         components: {
             GeneralSettingsBlock
         },
+        props: ['auth_data', 'auth_data_url'],
         data: () => ({
             settings: {
                 start_letters: '',

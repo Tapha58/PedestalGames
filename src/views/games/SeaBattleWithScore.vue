@@ -12,6 +12,8 @@
                 :main_variables="main_variables"
                 :name_game="name_game"
                 :game_type="game_type"
+                :auth_data="auth_data"
+                :auth_data_url="auth_data_url"
         >
             <template v-slot:settings>
                 <div class="pt-5">
@@ -22,7 +24,22 @@
                         <v-row>
                             <v-col class="py-0" cols="auto">
                                 2. Настройки игры
-                                <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                                <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                                color="rgba(48, 44, 44, 0.99)"
+                                                dark
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                        >
+                                            <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Настройте игру.</span>
+                                </v-tooltip>
+
+                                <v-tooltip v-else bottom  color="rgba(48, 44, 44, 0.99)" max-width="280">
                                     <template v-slot:activator="{ on }">
                                         <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                                     </template>
@@ -155,6 +172,7 @@
         components: {
             GeneralSettingsBlock
         },
+        props: ['auth_data', 'auth_data_url'],
         data: () => ({
             settings: {
                 show_is_random_giveaway: false,

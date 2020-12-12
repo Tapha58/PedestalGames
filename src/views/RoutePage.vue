@@ -18,7 +18,9 @@
                 if (this.settings.auth_data.vk_viewer_group_role === 'admin') {
                     this.$router.push({ path: '/choice_games/' + window.location.search})
                 } else {
-                    this.show_user_page = true
+                    // window.open("https://vk.com/app" + this.settings.auth_data.vk_app_id, "_parent")
+                    this.$router.push({ path: '/app_install_page/' + window.location.search})
+                    // this.show_user_page = true
                 }
             } else {
                 this.$router.push({ path: '/app_install_page/' + window.location.search})

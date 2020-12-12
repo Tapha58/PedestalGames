@@ -76,6 +76,7 @@
                 :settings="settings"
                 :storageAvailable="storageAvailable"
                 :games_available_launches="games_available_launches"
+                v-model="data_bus"
         ></router-view>
     </div>
 </template>
@@ -86,7 +87,10 @@
 
     export default {
         mixins: [auto_resize],
-        props: ['settings', 'auth_data_url'],
+        model: {
+            prop: 'data_bus'
+        },
+        props: ['settings', 'auth_data_url', 'data_bus'],
         data: () => ({
             license_expiration_at: null,
             show_skeleton: true,
@@ -199,6 +203,8 @@
                     response = await response.json()
                     this.license_expiration_at = response.license_expiration_at
                     this.games_available_launches = response.games_available_launches
+                    console.log(response)
+                    this.data_bus.pedestal_integration_enabled = response.pedestal_integration_enabled
                 } else {
                     let result = await response.json()
                     console.log(result)

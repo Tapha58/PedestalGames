@@ -61,7 +61,10 @@
 
     export default {
         mixins: [auto_resize],
-        props: ['license_expiration_at', 'settings', 'auth_data_url'],
+        model: {
+            prop: 'data_bus'
+        },
+        props: ['license_expiration_at', 'settings', 'auth_data_url', 'data_bus'],
         data: () => ({
             // settings: {
             //     auth_data: ''
@@ -124,6 +127,7 @@
                         console.log('Приложение Пьедестал не обнаружено в сообществе')
                     }
                     this.pedestal_integration_enabled = response.pedestal_integration_enabled
+                    this.data_bus.pedestal_integration_enabled = response.pedestal_integration_enabled
 
                     // await this.get_data_group()
 

@@ -47,8 +47,8 @@
             <div class="px-3">
                 <v-row dense :class="{game_name : $vuetify.breakpoint.name === 'xs'}">
                     <v-col cols="2">
-                        <v-btn @click="button_back"  text dark small color="primary">
-                            <v-icon class="mr-1" >mdi-arrow-left-thick</v-icon>
+                        <v-btn @click="button_back" text dark small color="primary">
+                            <v-icon class="mr-1">mdi-arrow-left-thick</v-icon>
                             Назад
                         </v-btn>
                     </v-col>
@@ -76,7 +76,27 @@
                             <v-row>
                                 <v-col class="py-0" cols="auto">
                                     1. Сформируйте приз
-                                    <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                                    <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom
+                                               color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn
+                                                    color="rgba(48, 44, 44, 0.99)"
+                                                    dark
+                                                    v-bind="attrs"
+                                                    v-on="on"
+                                                    icon
+                                            >
+                                                <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <span>Победитель может получить комбинацию призов. Свой приз - это текст, отправляемый победителю,
+                            например "Ваш приз: скидка 10% на заказ". Числа в поле "кол-во баллов" могут быть диапазоном,
+                            запись через дефис, например "10-20". По умолчанию победителю будет отправлен комментарий:
+                            "Поздравляем, Вы выиграли!" + сообщение из поля "свой текст" + автоматически генерируемые
+                            сообщения из полей начисления баланса / рейтинга. Все ответы бота можно редактировать.</span>
+                                    </v-tooltip>
+
+                                    <v-tooltip v-else bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
                                         <template v-slot:activator="{ on }">
                                             <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                                         </template>
@@ -87,8 +107,9 @@
                             сообщения из полей начисления баланса / рейтинга. Все ответы бота можно редактировать.</span>
                                     </v-tooltip>
                                 </v-col>
-                                <v-col  align="right" class="py-0">
-                                    <a href="https://vk.com/@pedestal-wallgames?anchor=nastroyka-priza-2" target="_blank">Подробнее</a>
+                                <v-col align="right" class="py-0">
+                                    <a href="https://vk.com/@pedestal-wallgames?anchor=nastroyka-priza-2"
+                                       target="_blank">Подробнее</a>
                                 </v-col>
                             </v-row>
                         </v-alert>
@@ -121,7 +142,25 @@
                         <v-row>
                             <v-col class="py-0" cols="auto">
                                 3. Задайте правила игры
-                                <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                                <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom
+                                           color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                                color="rgba(48, 44, 44, 0.99)"
+                                                dark
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                        >
+                                            <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Продумайте игровую механику, чтобы игра не завершилась слишком быстро и у пользователей был
+                        интерес следить за ней. Используйте ограниченные периодические бесплатные попытки и платные
+                        попытки за баллы магазина / рейтинга.</span>
+                                </v-tooltip>
+
+                                <v-tooltip v-else bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
                                     <template v-slot:activator="{ on }">
                                         <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                                     </template>
@@ -291,11 +330,32 @@
                                 v-model="show_attempts_extended"
                         >
                             <template v-slot:append>
-                                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
-                                    <template v-slot:activator="{ on }">
-                                        <v-icon class="ml-n1 mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom
+                                           color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                                class="mtn6"
+                                                color="rgba(48, 44, 44, 0.99)"
+                                                dark
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                        >
+                                            <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                        </v-btn>
                                     </template>
-                                    <span>Когда у пользователя закончатся попытки, Вы можете начислять ему дополнительные попытки через определенные промежутки времени, также можно ограничить максимальное кол-во дополнительных попыток.</span>
+                                    <span>Когда у пользователя закончатся попытки, Вы можете начислять ему дополнительные
+                                        попытки через определенные промежутки времени, также можно ограничить
+                                        максимальное кол-во дополнительных попыток.</span>
+                                </v-tooltip>
+
+                                <v-tooltip v-else bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
+                                    </template>
+                                    <span>Когда у пользователя закончатся попытки, Вы можете начислять ему дополнительные
+                                        попытки через определенные промежутки времени, также можно ограничить
+                                        максимальное кол-во дополнительных попыток.</span>
                                 </v-tooltip>
                             </template>
                         </v-switch>
@@ -371,11 +431,32 @@
                                 v-model="switchPaidAttempts"
                         >
                             <template v-slot:append>
-                                <v-tooltip bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
-                                    <template v-slot:activator="{ on }">
-                                        <v-icon class="ml-n1 mt3px" size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom
+                                           color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                                class="mtn6"
+                                                color="rgba(48, 44, 44, 0.99)"
+                                                dark
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                icon
+                                        >
+                                            <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                        </v-btn>
                                     </template>
-                                    <span>Для покупки попытки пользователю нужно будет написать в комментариях "/купить попытку X" (без кавычек), где X - число покупаемых попыток. Если X не задан, то покупается одна попытка. Пример: "/купить попытку", "/купить попытку 1", "/купить попытку 5"</span>
+                                    <span><span>Для покупки попытки пользователю нужно будет написать в комментариях "/купить
+                                        попытку X" (без кавычек), где X - число покупаемых попыток. Если X не задан,
+                                        то покупается одна попытка. Пример: "/купить попытку", "/купить попытку 1", "/купить попытку 5"</span></span>
+                                </v-tooltip>
+
+                                <v-tooltip v-else bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
+                                    </template>
+                                    <span><span>Для покупки попытки пользователю нужно будет написать в комментариях "/купить
+                                        попытку X" (без кавычек), где X - число покупаемых попыток. Если X не задан,
+                                        то покупается одна попытка. Пример: "/купить попытку", "/купить попытку 1", "/купить попытку 5"</span></span>
                                 </v-tooltip>
                             </template>
                         </v-switch>
@@ -443,15 +524,29 @@
                                 :color='color_alert'
                                 dense
                         >4. Содержание поста
-                            <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                            <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom
+                                       color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                            color="rgba(48, 44, 44, 0.99)"
+                                            dark
+                                            v-bind="attrs"
+                                            v-on="on"
+                                            icon
+                                    >
+                                        <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>
+                            Отредактируйте наш шаблон поста под Вашу игровую механику, а также можете загрузить свою картинку.
+                            После нажатия на "Запустить игру" пост будет опубликован в группе.
+                            </span>
+                            </v-tooltip>
+
+                            <v-tooltip v-else bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
                                 <template v-slot:activator="{ on }">
                                     <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                                 </template>
-                                <!--                            <span>-->
-                                <!--                            Отредактируйте наш шаблон поста под Вашу игровую механику, а также можете загрузить свою картинку.-->
-                                <!--                            После нажатия на "Запустить игру" пост будет опубликован в группе (сразу или в виде отложенного-->
-                                <!--                            поста, если функция задана).-->
-                                <!--                            </span>-->
                                 <span>
                             Отредактируйте наш шаблон поста под Вашу игровую механику, а также можете загрузить свою картинку.
                             После нажатия на "Запустить игру" пост будет опубликован в группе.
@@ -479,7 +574,8 @@
                                             slot="emoji-invoker"
                                             slot-scope="{ events: { click: clickEvent } }"
                                     >
-                                        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                        <svg height="24" viewBox="0 0 24 24" width="24"
+                                             xmlns="http://www.w3.org/2000/svg">
                                             <path d="M0 0h24v24H0z" fill="none"/>
                                             <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
                                         </svg>
@@ -487,7 +583,8 @@
                                     <div slot="emoji-picker" slot-scope="{ emojis, insert,  }">
                                         <!--                                <div :style="{ top: 1 + 'px', left: 400 + 'px' }" class="emoji-picker">-->
                                         <div class="emoji-picker">
-                                            <div class="emojis" :key="category" v-for="(emojiGroup, category) in emojis">
+                                            <div class="emojis" :key="category"
+                                                 v-for="(emojiGroup, category) in emojis">
                                                 <!--                                        <h5>{{ category }}</h5>-->
 
                                                 <span
@@ -508,7 +605,8 @@
                 <div id="image_post" v-if='!/id_game/i.test($route.params.id)' class="mt-n3">
                     <v-row align="center" dense>
                         <v-col :align="$vuetify.breakpoint.name === 'xs' ? 'center' : ''"
-                               :justify="$vuetify.breakpoint.name === 'xs' ? 'center' : 'start'" cols="12" xs="12" sm="5"
+                               :justify="$vuetify.breakpoint.name === 'xs' ? 'center' : 'start'" cols="12" xs="12"
+                               sm="5"
                                class="mr-3">
                             <v-img id="img" max-width="300" height="auto" :src="src"></v-img>
                         </v-col>
@@ -560,50 +658,31 @@
                 <!--                </v-col>-->
                 <!--            </v-row>-->
 
-                <div v-if="!notification_allowed">
-                    <!--            <span>h1</span>-->
-                    <!--            <v-btn dark small color="red">Разрешить уведомления</v-btn>-->
-                    <v-alert
-                            class="mt-3"
-                            text
-                            prominent
-                            type="error"
-                            icon="mdi-progress-alert"
-                    >
-                        <v-row align="center">
-                            <v-col class="">
-                                Для запуска игры необходимо разрешение на получение уведомлений, чтобы мы могли прислать
-                                Вам сообщение в случае возникновения внештатных ситуаций.
-                            </v-col>
-                            <v-col class="shrink">
-                                <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="error">Разрешить уведомления</v-btn>
-                            </v-col>
-                        </v-row>
-                    </v-alert>
-                </div>
-                <!--        <div id='token' v-if="!group_token" class="mt-3">-->
-                <!--            <v-col class="pb-0">-->
-                <!--                <span v-bind:style="{ color: 'red' }">Для запуска игры необходимо предоставить ключ доступа. </span>-->
-                <!--                <a href="https://vk.com/@pedestal-kluch-dostupa" target="_blank">Открыть инструкцию.</a>-->
-                <!--            </v-col>-->
-                <!--            <v-col cols="12">-->
-                <!--                <v-row dense>-->
-                <!--                    <v-text-field-->
-                <!--                            label="Ключ доступа"-->
-                <!--                            id="styled-input"-->
-                <!--                            class="styled-input mb-n5"-->
-                <!--                            outlined-->
-                <!--                            dense-->
-                <!--                            v-model="token_group"-->
+                <!--                <div v-if="!notification_allowed">-->
+                <!--                    &lt;!&ndash;            <span>h1</span>&ndash;&gt;-->
+                <!--                    &lt;!&ndash;            <v-btn dark small color="red">Разрешить уведомления</v-btn>&ndash;&gt;-->
+                <!--                    <v-alert-->
+                <!--                            class="mt-3"-->
+                <!--                            text-->
+                <!--                            prominent-->
+                <!--                            type="error"-->
+                <!--                            icon="mdi-progress-alert"-->
                 <!--                    >-->
-                <!--                        <template v-slot:append id="btn_token">-->
-                <!--                            <v-btn @click="group_record_token" id="qw1" x-small color="primary">применить</v-btn>-->
-                <!--                        </template>-->
-                <!--                    </v-text-field>-->
-                <!--                </v-row>-->
-                <!--                <span v-bind:style="{ color: 'red', fontSize: 14 + 'px' }">{{ message_group_record_token }}</span>-->
-                <!--            </v-col>-->
-                <!--        </div>-->
+                <!--                        <v-row align="center">-->
+                <!--                            <v-col class="">-->
+                <!--                                Для запуска игры необходимо разрешение на получение уведомлений, чтобы мы могли прислать-->
+                <!--                                Вам сообщение в случае возникновения внештатных ситуаций.-->
+                <!--                            </v-col>-->
+                <!--                            <v-col class="shrink">-->
+                <!--                                <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="error">Разрешить уведомления</v-btn>-->
+                <!--                            </v-col>-->
+                <!--                        </v-row>-->
+                <!--                    </v-alert>-->
+                <!--                </div>-->
+
+                <!--                плашка с правами photos (токен юзера)-->
+
+
                 <div id="pay_method"
                      v-if='!/id_game/i.test($route.params.id) && this.games_available_launches > 0 && this.payment_type !== 3'>
                     <v-col class="px-0 pb-0">
@@ -612,13 +691,27 @@
                                 :color='color_alert'
                                 dense
                         >5. Вариант оплаты
-                            <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                            <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom
+                                       color="rgba(48, 44, 44, 0.99)" max-width="280">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                            color="rgba(48, 44, 44, 0.99)"
+                                            dark
+                                            v-bind="attrs"
+                                            v-on="on"
+                                            icon
+                                    >
+                                        <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Подсказка.</span>
+                            </v-tooltip>
+
+                            <v-tooltip v-else bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
                                 <template v-slot:activator="{ on }">
                                     <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                                 </template>
-                                <span>
-                            Подсказка.
-                        </span>
+                                <span>Подсказка.</span>
                             </v-tooltip>
                         </v-alert>
                     </v-col>
@@ -666,6 +759,24 @@
                 <!--                    block-->
                 <!--                    @click="VKWebAppGetCommunityToken"-->
                 <!--            >Предоставить права доступа</v-btn>-->
+                <div v-if="show_alert_user_token">
+                    <v-alert
+                            class="mt-3"
+                            text
+                            prominent
+                            type="primary"
+                            icon="mdi-progress-alert"
+                    >
+                        <v-row align="center">
+                            <v-col class="">
+                                Для запуска игры приложению требуются права доступа пользователя. Они необходимы для публикации поста с игрой.
+                            </v-col>
+                            <v-col class="shrink">
+                                <v-btn @click="vkWebAppGetAuthToken" small color="primary">Предоставить права</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-alert>
+                </div>
                 <v-alert
                         v-if="!token_availability"
                         class="mt-3"
@@ -676,7 +787,7 @@
                 >
                     <v-row align="center">
                         <v-col class="">
-                            Необходимо предоставить права доступа для работы приложения с сообществом. Они нужны для запуска игр и ответов пользователям от имени сообщества.
+                            Для запуска игры приложению требуются права доступа сообщества. Они необходимы для публикации комментариев от имени сообщества.
                         </v-col>
                         <v-col class="shrink">
                             <v-btn @click="VKWebAppGetCommunityToken" small color="primary">Предоставить права
@@ -787,6 +898,9 @@
             'name_game',
             'game_type',
             'ending_game_textarea_block',
+            'auth_data',
+            'auth_data_url',
+            'pedestal_integration_enabled'
         ],
         data: () => ({
             show_skeleton: true,
@@ -796,7 +910,7 @@
             now: '',
             show_btn_permission: false,
             notification_allowed: true,
-            pedestal_integration_enabled: true,
+            // pedestal_integration_enabled: true,
             current_post_text: '',
             group_status: 1,
             balance: '',
@@ -902,6 +1016,7 @@
             mobile: false,
             game_id: '',
             def_message: '',
+            show_alert_user_token: false,
         }),
         directives: {
             focus: {
@@ -912,35 +1027,17 @@
         },
         mounted:
             async function () {
+            this.settings.auth_data = this.auth_data
                 // скрол страницы в самый вверх
-                document.documentElement.scrollTop = 0
+                window.scrollTo(0,0)
                 this.show_skeleton = true
-                await this.getAllUrlParams()
-                await this.get_data_group()
+                // await this.getAllUrlParams()
+                this.get_data_group()
                 this.get_admin()
 
-                // блок загрузки сообщений в зависимости от типа игры
-                this.advanced_settings_textareas[0].textarea_content = this.mechanics_textarea_block
-                if (this.game_type === 2 || this.game_type === 3 || this.game_type === 4 || this.game_type == 6) {
-                    this.advanced_settings_textareas.push(this.ending_game_textarea_block)
-                    // удаление первого поля, которого не должно быть в играх данного типа
-                    this.advanced_settings_textareas[1].textarea_content.splice(0, 1)
-                }
-                if (this.game_type === 5) {
-                    let index4 = this.advanced_settings_textareas.findIndex(item => item.name === 'Игровая механика')
-                    let index5 = this.advanced_settings_textareas[index4].textarea_content.findIndex(item => item.id === 'message_valid')
-                    if (index5 !== -1) {
-                        this.advanced_settings_textareas[index4].textarea_content.splice(index5, 1)
-                    }
-                }
 
-                await this.get_group_status()
-                if (this.group_status === 1) {
-                    this.payment_type = 3
-                }
-                if (this.group_status === 2) {
-                    await this.get_prices()
-                }
+                this.get_group_status()
+
                 if (this.$route.params.id) {
                     await this.load_user_settings()
                     this.loadDefaulImage()
@@ -957,9 +1054,12 @@
                         // this.auto_resize (30)
                         this.auto_resize()
                     }
+                    this.settings.post_text = this.settings.post_text + ' '
+                    this.apply_def_settings()
+                    // this.show_skeleton = false
                 } else {
-                    await this.load_individual_settings()
-                    this.gameData = this.def_settings
+                    this.load_individual_settings()
+
                     this.loadDefaulImage()
                     if (this.name_game === 'guess_number') {
                         this.$emit('randomNumber')
@@ -968,23 +1068,43 @@
                     this.auto_resize()
                 }
 
-                await this.load_balance()
-                await this.load_free_attempts()
+                this.load_balance()
+                this.load_free_attempts()
 
                 // ранее была проверка токена, чтобы показать окно для ввода нового, сейчас убираем это
                 // await this.check_group_token()
 
-                this.apply_def_settings()
+                // this.apply_def_settings()
                 // await this.getAllUrlParams()
-                this.common_settings.id_group_vk = +this.settings.auth_data.vk_group_id
-                this.mobile = this.settings.auth_data.vk_platform !== 'desktop_web'
+                this.common_settings.id_group_vk = +this.auth_data.vk_group_id
+                this.mobile = this.auth_data.vk_platform !== 'desktop_web'
                 // await this.vkWebAppGetAuthToken()
-                await this.get_data_group()
-                this.now = Math.floor(new Date()/1000)
+                // await this.get_data_group()
+                this.now = Math.floor(new Date() / 1000)
                 this.load_page = true
+
+
+                setTimeout(this.auto_resize, 300)
+                // блок загрузки сообщений в зависимости от типа игры
+                this.advanced_settings_textareas[0].textarea_content = this.mechanics_textarea_block
+                if (this.game_type === 2 || this.game_type === 3 || this.game_type === 4 || this.game_type == 6) {
+                    this.advanced_settings_textareas.push(this.ending_game_textarea_block)
+                    // удаление первого поля, которого не должно быть в играх данного типа
+                    this.advanced_settings_textareas[1].textarea_content.splice(0, 1)
+                }
+                if (this.game_type === 5) {
+                    let index4 = this.advanced_settings_textareas.findIndex(item => item.name === 'Игровая механика')
+                    let index5 = this.advanced_settings_textareas[index4].textarea_content.findIndex(item => item.id === 'message_valid')
+                    if (index5 !== -1) {
+                        this.advanced_settings_textareas[index4].textarea_content.splice(index5, 1)
+                    }
+                }
+                if (this.auth_data.vk_access_token_settings !== 'photos') {
+                    this.show_alert_user_token = true
+                }
+
                 this.show_skeleton = false
                 this.settings.post_text = this.settings.post_text + ' '
-                setTimeout(this.auto_resize, 300)
             },
         watch: {
             loader() {
@@ -1146,14 +1266,14 @@
                     }
                 }
             },
-            alert_integration_pedeatal () {
+            alert_integration_pedeatal() {
                 if (this.now > this.license_expiration_at && this.pedestal_integration_enabled) {
                     return true
                 } else {
                     return false
                 }
             },
-            advanced_settings_textareas () {
+            advanced_settings_textareas() {
                 if (this.pedestal_integration_enabled) {
                     return [
                         {
@@ -1326,7 +1446,6 @@
                                 },
                             ]
                         },
-
                     ]
                 } else {
                     return [
@@ -1648,8 +1767,7 @@
         },
         methods: {
             get_data_group: async function () {
-                // let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + sessionStorage.getItem('auth_data_url'))
-                let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/' + this.auth_data_url)
+                let response = await fetch('/app/wallgames/group/' + this.auth_data.vk_group_id + '/' + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     this.license_expiration_at = response.license_expiration_at
@@ -1669,8 +1787,7 @@
                 }
             },
             get_admin: async function () {
-                // let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/' + sessionStorage.getItem('auth_data_url'))
-                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/' + this.auth_data_url)
+                let response = await fetch('/app/wallgames/admin/' + this.auth_data.vk_user_id + '/' + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     // console.log(response)
@@ -1682,10 +1799,10 @@
             },
             put_admin: async function () {
                 let obj = {}
-                obj.auth_data = this.settings.auth_data
+                obj.auth_data = this.auth_data
                 obj.notification_allowed = true
 
-                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/',
+                let response = await fetch('/app/wallgames/admin/' + this.auth_data.vk_user_id + '/',
                     {
                         method: 'put',
                         headers: {
@@ -1706,8 +1823,8 @@
             VKWebAppGetCommunityToken: async function () {
                 try {
                     let response = await bridge.send("VKWebAppGetCommunityToken", {
-                        "app_id": +this.settings.auth_data.vk_app_id,
-                        "group_id": +this.settings.auth_data.vk_group_id,
+                        "app_id": +this.auth_data.vk_app_id,
+                        "group_id": +this.auth_data.vk_group_id,
                         "scope": "messages, manage, wall"
                     })
                     if (response.access_token) {
@@ -1737,9 +1854,9 @@
             },
             put_group_info: async function () {
                 let obj = {}
-                obj.auth_data = this.settings.auth_data
+                obj.auth_data = this.auth_data
                 obj.not_launch_games = false
-                let response = await fetch('/app/wallgames/group_info/' + this.settings.auth_data.vk_group_id + '/',
+                let response = await fetch('/app/wallgames/group_info/' + this.auth_data.vk_group_id + '/',
                     {
                         method: 'put',
                         headers: {
@@ -1757,11 +1874,11 @@
             },
             put_data_group: async function (token_group, mask) {
                 let obj = {}
-                obj.auth_data = this.settings.auth_data
+                obj.auth_data = this.auth_data
                 obj.access_token = token_group
                 obj.access_token_permission = mask
 
-                let response = await fetch('/app/wallgames/group/' + this.settings.auth_data.vk_group_id + '/',
+                let response = await fetch('/app/wallgames/group/' + this.auth_data.vk_group_id + '/',
                     {
                         method: 'put',
                         headers: {
@@ -1780,7 +1897,7 @@
             },
             VKWebAppAllowMessagesFromGroup: async function () {
                 let response = await bridge.send("VKWebAppAllowMessagesFromGroup", {
-                    "group_id": +this.settings.auth_data.vk_group_id,
+                    "group_id": +this.auth_data.vk_group_id,
                     "key": "dBuBKe1kFcdemzB"
                 })
                 // console.log(response)
@@ -1790,9 +1907,9 @@
             },
             create_map: async function () {
                 let obj = {}
-                obj.auth_data = this.settings.auth_data
+                obj.auth_data = this.auth_data
                 obj.game_type = this.game_type
-                obj.group_id = +this.settings.auth_data.vk_group_id
+                obj.group_id = +this.auth_data.vk_group_id
                 // let response = await fetch('/app/wallgames/map/' + sessionStorage.getItem('auth_data_url'),
                 let response = await fetch('/app/wallgames/map/' + this.auth_data_url,
                     {
@@ -1812,12 +1929,20 @@
                 }
             },
             get_group_status: async function () {
-                // let response = await fetch("/app/wallgames/group/" + this.settings.auth_data.vk_group_id + "/status/" + sessionStorage.getItem('auth_data_url'))
-                let response = await fetch("/app/wallgames/group/" + this.settings.auth_data.vk_group_id + "/status/" + this.auth_data_url)
+                let response = await fetch("/app/wallgames/group/" + this.auth_data.vk_group_id + "/status/" + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     this.group_status = +response.status
+
+
+                    if (this.group_status === 1) {
+                        this.payment_type = 3
+                    }
+                    if (this.group_status === 2) {
+                        await this.get_prices()
+                    }
                 } else {
+                    await this.get_prices()
                     response = await response.json()
                     console.log(response)
                 }
@@ -1902,19 +2027,20 @@
                 }
             },
             load_individual_settings: async function () {
-                // let response = await fetch("/app/wallgames/guess_number/default_settings/1")
                 let response = await fetch('/app/wallgames/' + this.name_game + '/default_settings/')
                 if (response.ok) {
                     let result = await response.json()
                     this.def_settings = {...this.def_settings, ...result}
-                    // this.gameData = {...this.gameData, ...result}
+                    this.gameData = this.def_settings
+                    this.apply_def_settings()
+                    // this.show_skeleton = false
+                    this.settings.post_text = this.settings.post_text + ' '
                 } else {
                     console.log("Ошибка HTTP: " + response.status)
                 }
             },
             load_balance: async function () {
-                // let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/balance/' + sessionStorage.getItem('auth_data_url'))
-                let response = await fetch('/app/wallgames/admin/' + this.settings.auth_data.vk_user_id + '/balance/' + this.auth_data_url)
+                let response = await fetch('/app/wallgames/admin/' + this.auth_data.vk_user_id + '/balance/' + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     this.balance = +response.balance
@@ -1925,9 +2051,7 @@
                 }
             },
             load_free_attempts: async function () {
-                // let response = await fetch('/app/wallgames/payments/free_attempts/' + sessionStorage.getItem('auth_data_url'))
-                  let response = await fetch('/app/wallgames/payments/free_attempts/' + this.auth_data_url)
-                // let response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/payments/free_attempts/?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE')
+                let response = await fetch('/app/wallgames/payments/free_attempts/' + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
                     this.games_available_launches = +response.games_available_launches
@@ -1938,10 +2062,7 @@
             },
             load_user_settings: async function () {
                 this.game_id = this.$route.params.id.replace(/[^\d]/g, '')
-                // console.log('load_user_settings')
                 try {
-                    // let response = await fetch('https://pedestal-test2.aiva-studio.ru/app/wallgames/guess_number/174?vk_access_token_settings=friends%2Cphotos%2Cwall%2Cgroups&vk_app_id=7355601&vk_are_notifications_enabled=0&vk_group_id=195496572&vk_is_app_user=1&vk_is_favorite=0&vk_language=ru&vk_platform=desktop_web&vk_ref=other&vk_user_id=312527953&vk_viewer_group_role=admin&sign=pRX7wFcULWKWDii8VrK8dzAj4Yjlf7o2FffOYSPD8OE')
-                    // let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id + '/' + sessionStorage.getItem('auth_data_url'))
                     let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id + '/' + this.auth_data_url)
                     let result = await response.json()
 
@@ -2056,6 +2177,23 @@
                     setTimeout(this.clear_message, 5000)
                     return
                 }
+
+                if (!this.token) {
+                    if (this.auth_data.vk_access_token_settings !== 'photos') {
+                        this.show_alert_user_token = true
+                        this.message_error = 'Отсутствует токен пользователя'
+                        setTimeout(this.clear_message, 5000)
+                        return
+                    } else {
+                        if (!this.vkWebAppGetAuthToken()) {
+                            this.show_alert_user_token = true
+                            this.message_error = 'Отсутствует токен пользователя'
+                            setTimeout(this.clear_message, 5000)
+                            return
+                        }
+                    }
+                }
+
                 if (this.required_join_partner_group_abc === 'b' || this.required_join_partner_group_abc === 'c') {
                     await this.transform_partner_group_url()
                 }
@@ -2078,11 +2216,11 @@
                         return
                     }
                 }
-                if (!await this.vkWebAppGetAuthToken()) {
-                    this.message_error = 'Отсутствуют права "Photo"'
-                    setTimeout(this.clear_message, 5000)
-                    return
-                }
+                // if (!await this.vkWebAppGetAuthToken()) {
+                //     this.message_error = 'Отсутствуют права "Photo"'
+                //     setTimeout(this.clear_message, 5000)
+                //     return
+                // }
                 this.loading = true
 
                 await this.transform_message_front_back()
@@ -2133,11 +2271,11 @@
                     if (await this.create_game()) {
                         let top = document.body.offsetHeight / 2 - 125
                         this.dialog = true
-                        if (this.settings.auth_data.vk_platform === 'desktop_web') {
+                        if (this.auth_data.vk_platform === 'desktop_web') {
                             await bridge.send("VKWebAppScroll", {"top": top, "speed": 600})
                         }
                     } else {
-                        this.message_error = 'Ошибка отправки даннных'
+                        this.message_error = 'Ошибка отправки данных'
                         setTimeout(this.clear_message, 5000)
                         return this.loading = false
                     }
@@ -2149,10 +2287,6 @@
 
                 // записываем в кеш и в базу, что хоть одна игра запущена
                 await this.put_group_info()
-                // if (!localStorage.getItem('not_launch_games_' + toString(this.settings.auth_data.vk_group_id))) {
-                //     this.put_group_info()
-                //     localStorage.setItem('not_launch_games_' + this.settings.auth_data.vk_group_id, 'false')
-                // }
                 this.loading = false
             },
 
@@ -2164,7 +2298,7 @@
             },
             setting_variables_in_the_post_text: function () {
                 this.current_post_text = this.settings.post_text
-                this.settings.post_text = this.settings.post_text.replace(/{ссылка}/ig, "@https://vk.com/app" + this.settings.auth_data.vk_app_id + '_-' + this.settings.auth_data.vk_group_id + "#map=" + this.settings.map + ' ' + "(Открыть игровое поле)")
+                this.settings.post_text = this.settings.post_text.replace(/{ссылка}/ig, "@https://vk.com/app" + this.auth_data.vk_app_id + '_-' + this.auth_data.vk_group_id + "#map=" + this.settings.map + ' ' + "(Открыть игровое поле)")
             },
             clear_message: function () {
                 this.message_error = ''
@@ -2211,7 +2345,7 @@
                         "method": "photos.getWallUploadServer",
                         "request_id": "32test",
                         "params": {
-                            "group_id": +this.settings.auth_data.vk_group_id,
+                            "group_id": +this.auth_data.vk_group_id,
                             "v": "5.124",
                             "access_token": this.token
                         }
@@ -2229,7 +2363,7 @@
                         "request_id": "32test",
                         "params": {
                             "v": "5.124",
-                            "group_id": this.settings.auth_data.vk_group_id,
+                            "group_id": this.auth_data.vk_group_id,
                             "access_token": this.token
                         }
                     })
@@ -2252,7 +2386,7 @@
                             "server": server,
                             "photo": photo,
                             "hash": hash,
-                            "group_id": this.settings.auth_data.vk_group_id,
+                            "group_id": this.auth_data.vk_group_id,
                             "access_token": this.token
                         }
                     })
@@ -2267,7 +2401,7 @@
                 let response
                 if (this.image === null) {
                     const formData = new FormData()
-                    formData.append('auth_data', this.settings.auth_data)
+                    formData.append('auth_data', this.auth_data)
                     formData.append('upload_url', await this.getUploadServer())
                     formData.append('game_name', this.name_game)
                     // response = await fetch("/app/wallgames/upload_photo/" + sessionStorage.getItem('auth_data_url'),
@@ -2322,10 +2456,10 @@
             },
             pay: async function () {
                 let obj = {}
-                obj.user_id = this.settings.auth_data.vk_user_id
-                obj.group_id = this.settings.auth_data.vk_group_id
+                obj.user_id = this.auth_data.vk_user_id
+                obj.group_id = this.auth_data.vk_group_id
                 obj.game_type = this.game_type
-                obj.auth_data = this.settings.auth_data
+                obj.auth_data = this.auth_data
                 // console.log(obj)
                 let response = await fetch('/app/wallgames/payments/pay/',
                     {
@@ -2346,7 +2480,6 @@
                 }
             },
             get_prices: async function () {
-                // let response = await fetch("/app/wallgames/payments/prices/" + sessionStorage.getItem('auth_data_url'))
                 let response = await fetch("/app/wallgames/payments/prices/" + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
@@ -2434,30 +2567,25 @@
             send_post_vk: async function (media_id) {
                 try {
                     let response = await bridge.send("VKWebAppShowWallPostBox", {
-                        "owner_id": -this.settings.auth_data.vk_group_id,
+                        "owner_id": -this.auth_data.vk_group_id,
                         "message": this.settings.post_text,
                         "from_group": "1",
-                        "attachments": "photo" + this.settings.auth_data.vk_user_id + '_' + media_id,
+                        "attachments": "photo" + this.auth_data.vk_user_id + '_' + media_id,
                     });
                     this.common_settings.id_post_vk = response.post_id
-                    // const result = await response.json();
-                    // console.log('Успех:', response);
                 } catch (error) {
                     this.settings.post_text = this.current_post_text
                     console.error('Ошибка:', error); // TypeError: failed to fetch
                 }
             },
             send_deferred_post_vk: async function (media_id) {
-                // console.log('id_group_vk - ' + this.settings.auth_data.vk_group_id)
-                // console.log('this.media_id - ' + media_id)
                 let publish_date = Date.parse(this.timeDeferredPost) / 1000
-                // console.log('publish_date - ' + publish_date)
                 try {
                     let response = await bridge.send("VKWebAppShowWallPostBox", {
-                        "owner_id": -this.settings.auth_data.vk_group_id,
+                        "owner_id": -this.auth_data.vk_group_id,
                         "message": this.settings.post_text,
                         "from_group": "1",
-                        "attachments": "photo" + this.settings.auth_data.vk_user_id + '_' + media_id,
+                        "attachments": "photo" + this.auth_data.vk_user_id + '_' + media_id,
                         "publish_date": publish_date
                     });
                     this.common_settings.id_post_vk = response.post_id
@@ -2502,6 +2630,7 @@
                 // console.log(send_obj)
                 if (this.game_type == 1 || this.game_type == 5) {
                     this.gameData.game.game_duration = null
+                    this.gameData.game.auth_data = this.auth_data
                 }
                 try {
                     let response = await fetch('/app/wallgames/' + this.name_game + '/' + this.game_id + '/',
@@ -2559,10 +2688,11 @@
             vkWebAppGetAuthToken: async function () {
                 try {
                     let response = await bridge.send("VKWebAppGetAuthToken", {
-                        "app_id": +this.settings.auth_data.vk_app_id,
+                        "app_id": +this.auth_data.vk_app_id,
                         "scope": "photos"
                     })
                     this.token = response.access_token
+                    this.show_alert_user_token = false
                     return true
                     // console.log('Успех token - ', response.access_token)
                 } catch (error) {
@@ -2582,8 +2712,8 @@
                     if (response.find(item => item.setting === 262144) && response.find(item => item.setting === 8192) && response.find(item => item.setting === 4096)) {
                         try {
                             let formData = new FormData()
-                            for (let key in this.settings.auth_data) {
-                                formData.set(key, this.settings.auth_data[key])
+                            for (let key in this.auth_data) {
+                                formData.set(key, this.auth_data[key])
                             }
                             formData.append('group_access_token', this.token_group)
                             formData.append('group_access_token_permission', mask)
@@ -2605,13 +2735,13 @@
                         }
                     } else {
                         this.message_group_record_token = 'В введенном ключе доступа предоставленны не все права'
-                        setTimeout(this.clear_message, 10000)
+                        setTimeout(this.clear_message, 5000)
                         console.log('В введенном ключе доступа предоставленны не все права')
                     }
 
                 } catch (error) {
                     this.message_group_record_token = 'Введен некорректный ключ доступа'
-                    setTimeout(this.clear_message, 10000)
+                    setTimeout(this.clear_message, 5000)
                     console.error(error)
                     console.log('Введен некорректный ключ доступа')
                 }
@@ -2750,6 +2880,10 @@
         top: calc(constant(safe-area-inset-top) + 10px);
         top: calc(env(safe-area-inset-top) + 10px);
         z-index: 8;
+    }
+
+    .mtn6 {
+        margin-top: -6px;
     }
 
 

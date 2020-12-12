@@ -3,10 +3,16 @@
         <v-btn v-show="show_btn_pedestal" id="square" depressed dark color="#4a76a8" @click="go_widget_page">Вернуться в
             основное меню
         </v-btn>
+        <div id="safe_area_bottom"></div>
         <router-view
+                v-model="data_bus"
+                id="bottom_iphone"
                 :settings="settings"
+                :auth_data="settings.auth_data"
                 :auth_data_url="auth_data_url"
-                class="px-0" :class="{ router : $vuetify.breakpoint.name === 'xs' }"></router-view>
+                :pedestal_integration_enabled="data_bus.pedestal_integration_enabled"
+                class="px-0" :class="{ router : $vuetify.breakpoint.name === 'xs' }">
+        </router-view>
     </v-app>
 </template>
 
@@ -17,6 +23,9 @@
     export default {
         mixins: [auto_resize],
         data: () => ({
+            data_bus: {
+                pedestal_integration_enabled: ''
+            },
             token: '',
             settings: {
                 auth_data: ''
@@ -24,7 +33,7 @@
             group_name: '',
             incognito_mode: true,
             auth_data_url: '',
-            storageAvailable: false
+            storageAvailable: false,
         }),
         methods: {
             go_widget_page: function () {
@@ -55,8 +64,6 @@
                 console.log('/map/' + map + this.auth_data_url)
                 this.$router.push({path: '/map/' + map + this.auth_data_url})
             }
-
-
         },
         computed: {
             show_btn_pedestal: function () {
@@ -69,6 +76,11 @@
 
 
 <style>
+    #app {
+
+
+    }
+
     .dense-textarea textarea {
         line-height: 1.4rem !important;
     }
@@ -78,7 +90,11 @@
         overflow-y: auto !important;
         background: white;
 
-        /*width: 795px;*/
+    }
+
+    #bottom_iphone {
+        padding-bottom-bottom: constant(safe-area-inset-bottom) !important;
+        padding-bottom: env(safe-area-inset-bottom) !important;
     }
 
     #square {
@@ -113,6 +129,7 @@
         position: relative;
         z-index: 7;
         min-width: 320px;
+
     }
 
     .px6px {
@@ -127,6 +144,18 @@
         white-space: nowrap; /* paragraph to one line */
         overflow: hidden; /* older browsers */
     }
+
+    #safe_area_bottom {
+        background-color: white;
+        height: constant(safe-area-inset-bottom);
+        height: env(safe-area-inset-bottom);
+        position: fixed;
+        z-index: 8;
+        width: 100%;
+        bottom: 0;
+    }
+
+
 
 
 </style>
