@@ -23,11 +23,12 @@
                             max-width="50"
                             type="number"
                             min="1"
+                            max="999999"
                             v-model.number="prizes_front_index.count"
                             label="Кол-во победителей"
                             dense
                             validate-on-blur
-                            :rules="prize_count_rules"
+                            :rules="[rules.required, rules.type_number, rules.max_count_win]"
                             :disabled="/id_game/i.test($route.params.id)"
                     ></v-text-field>
                 </v-col>
@@ -189,7 +190,9 @@
                 required: v => !!v || 'Недопустимый формат',
                 zero: v => (v !== '0') || 'Недопустимый формат',
                 max_length_200: v => (v && v.length <= 200) || 'Максимально допустимо 200 символов',
-                max_length_12: v => (v && v.length <= 12) || 'Максимально допустимо 12 символов',
+                max_length_7: v => (v && v.length <= 7) || 'Максимально допустимо 7 символов',
+                max_count_win: v => (v && v <= 999999) || 'Максимально допустимо 7 символов',
+                type_number: v => (/^[0-9]{1,6}$/.test(v)) || 'Недопустимый формат',
                 range: v => (/^[0-9]{1,6}$/.test(v) || /^[0-9]{1,6}[-]{1}[0-9]{1,6}$/.test(v)) || 'Недопустимый формат'
             },
             // n: {},

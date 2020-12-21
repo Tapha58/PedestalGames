@@ -29,7 +29,6 @@
                     sort-by="start_date"
                     sortDesc
                     items-per-page="10"
-
                     hide-default-footer
                     :page.sync="page"
                     @page-count="pageCount = $event"
@@ -52,7 +51,6 @@
                             icon
                             @click="copy_game(item.id, item.route)"
                     >
-
                         <v-icon
                                 class="mx-5"
                                 :size="size_icon"
@@ -64,17 +62,21 @@
                     <v-btn
                             @click="editItem(item.id, item.route)"
                             icon
-
                             v-show="item.is_active"
                     >
 
                         <v-icon
                                 :size="size_icon"
-
                         >
                             mdi-pencil
                         </v-icon>
                     </v-btn>
+<!--                    <v-btn-->
+<!--                            @click="results_game(item.id, item.route)"-->
+<!--                            icon-->
+<!--                    >-->
+<!--                        <v-icon :size="size_icon">mdi-sort-descending</v-icon>-->
+<!--                    </v-btn>-->
 
                 </template>
 
@@ -112,14 +114,10 @@
         mixins: [auto_resize],
         props: ['settings', 'auth_data_url'],
         data: () => ({
-            // settings: {
-            //     auth_data: ''
-            // },
             page: 1,
             pageCount: 10,
             show_skeleton: true,
             headers: [
-                // { text: 'Id', value: 'id'},
                 {text: 'Игра', value: 'name', sortable: false},
                 {text: 'Статус', value: 'is_active'},
                 {text: 'Дата создания', value: 'start_date', sortable: true},
@@ -127,8 +125,6 @@
                 {text: '', value: 'actions', sortable: false},
             ],
             games: [],
-
-            // auth_data_url: ''
         }),
         computed: {
             size_icon() {
@@ -150,13 +146,8 @@
             },
         },
         methods: {
-            // go_post_page: function (item) {
-            //     window.open('https://vk.com/wall-' + item.id_group_vk + '_' + item.id_post_vk, '_blank')
-            // },
             load_info_list: async function () {
-                // let response = await fetch('/app/wallgames/game/info_list/' + sessionStorage.getItem('auth_data_url'))
                 let response = await fetch('/app/wallgames/game/info_list/' + this.auth_data_url)
-                // let response = await fetch('/app/wallgames/game/info_list/' + document.location.search)
                 if (response.ok) {
                     this.games = await response.json()
                     this.games = this.games.map(item => Object.assign(item, this.name_route_obj[item.type]))
@@ -190,16 +181,15 @@
                 return end_date.toLocaleString("ru", options)
             },
             editItem(id, route) {
-                // console.log(route + id)
-                console.log(route + '&id_game=' + id)
                 this.$router.push({path: route + ':id_game=' + id + this.auth_data_url})
             },
             copy_game(id, route) {
-                console.log(route + '&copy=' + id)
                 this.$router.push({path: route + ':copy=' + id + this.auth_data_url})
             },
+            results_game(id) {
+                this.$router.push({path: '/results/' + id})
+            },
             auto_resize: function () {
-                // console.log('mygames autoresize - ' + document.body.offsetHeight)
                 bridge.send("VKWebAppResizeWindow", {
                     "width": 795,
                     "height": Math.max(document.body.offsetHeight, 150) + 30
@@ -214,10 +204,8 @@
         },
         mounted:
             async function () {
-                // await this.getAllUrlParams()
                 await this.load_info_list()
                 this.show_skeleton = false
-                // await this.transform_info_list()
                 this.auto_resize()
             },
     }

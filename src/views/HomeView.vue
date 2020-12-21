@@ -73,6 +73,7 @@
                 :license_expiration_at="license_expiration_at"
                 :incognito_mode="incognito_mode"
                 :auth_data_url="auth_data_url"
+                :online="online"
                 :settings="settings"
                 :storageAvailable="storageAvailable"
                 :games_available_launches="games_available_launches"
@@ -90,7 +91,7 @@
         model: {
             prop: 'data_bus'
         },
-        props: ['settings', 'auth_data_url', 'data_bus'],
+        props: ['settings', 'auth_data_url', 'data_bus', 'online'],
         data: () => ({
             license_expiration_at: null,
             show_skeleton: true,
@@ -106,6 +107,9 @@
                 this.storageAvailable = true
             } else {
                 this.storageAvailable = false
+            }
+            if (!this.storageAvailable || !localStorage.getItem('create_group_' + this.settings.auth_data.vk_group_id)) {
+                await this.create_group()
             }
             await this.get_data_group()
             await this.load_balance()
@@ -138,6 +142,27 @@
             }
         },
         methods: {
+            create_group: async function () {
+                console.log('create_group')
+                let obj = {}
+                obj.auth_data = this.settings.auth_data
+                let response = await fetch('/app/wallgames/group/' + this.auth_data_url,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(obj)
+                    })
+                if (response.ok) {
+                    if (this.storageAvailable) {
+                        localStorage.setItem('create_group_' + this.settings.auth_data.vk_group_id, 'true')
+                    }
+                } else {
+                    response = await response.json()
+                    console.log(response)
+                }
+            },
             storageAvailableFun: function (type) {
                 try {
                     let storage = window[type];
@@ -203,7 +228,6 @@
                     response = await response.json()
                     this.license_expiration_at = response.license_expiration_at
                     this.games_available_launches = response.games_available_launches
-                    console.log(response)
                     this.data_bus.pedestal_integration_enabled = response.pedestal_integration_enabled
                 } else {
                     let result = await response.json()

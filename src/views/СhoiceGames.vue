@@ -93,7 +93,7 @@
                     class="mt-3"
                     text
                     prominent
-                    type="primary"
+                    type="error"
                     icon="mdi-progress-alert"
             >
                 <v-row align="center">
@@ -117,7 +117,7 @@
             >
                 <v-row align="center">
                     <v-col class="">
-                        Привет, друг! На балансе сообщества есть жетон, его достаточно чтобы бесплатно запустить одну
+                        Привет, друг! На балансе сообщества есть жетон, его достаточно, чтобы бесплатно запустить одну
                         любую игру. Выбирай из списка ниже и жми “Создать игру”.
                     </v-col>
                 </v-row>
@@ -449,9 +449,8 @@
             incognito_mode: true,
         }),
         mounted: async function () {
-            if (!this.storageAvailable || !localStorage.getItem('create_group_' + this.settings.auth_data.vk_group_id)) {
-                await this.create_group()
-            }
+            window.scrollTo(0, 0)
+
             if (!this.storageAvailable || !localStorage.getItem('not_launch_games_' + this.settings.auth_data.vk_group_id)) {
                 await this.get_group_info()
             }
@@ -473,6 +472,8 @@
                 if (this.$vuetify.breakpoint.name === 'xs') {
                     return false
                 } else if (this.settings.auth_data.vk_platform === 'mobile_web') {
+                    return false
+                } else if (this.settings.auth_data.vk_platform !== 'desktop_web') {
                     return false
                 } else return true
             },
@@ -651,7 +652,7 @@
             },
             // информация, запускалась ли когда-либо игра в данном сообществе
             get_group_info: async function () {
-                console.log('get_group_info')
+                // console.log('get_group_info')
                 let response = await fetch("/app/wallgames/group_info/" + this.settings.auth_data.vk_group_id + this.auth_data_url)
                 if (response.ok) {
                     response = await response.json()
@@ -666,26 +667,7 @@
                     console.log(response)
                 }
             },
-            create_group: async function () {
-                let obj = {}
-                obj.auth_data = this.settings.auth_data
-                let response = await fetch('/app/wallgames/group/' + this.auth_data_url,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json;charset=utf-8'
-                        },
-                        body: JSON.stringify(obj)
-                    })
-                if (response.ok) {
-                    if (this.storageAvailable) {
-                        localStorage.setItem('create_group_' + this.settings.auth_data.vk_group_id, 'true')
-                    }
-                } else {
-                    response = await response.json()
-                    console.log(response)
-                }
-            },
+
         },
     }
 </script>
@@ -729,6 +711,8 @@
     .btn {
         text-decoration: none;
     }
+
+
 
 
 </style>

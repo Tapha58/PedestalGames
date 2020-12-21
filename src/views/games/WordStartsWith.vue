@@ -13,7 +13,8 @@
                 :game_type="game_type"
                 :auth_data="auth_data"
                 :auth_data_url="auth_data_url"
-
+                :pedestal_integration_enabled="pedestal_integration_enabled"
+                :online="online"
         >
             <template v-slot:settings>
                 <div class="pt-5" cols="auto">
@@ -21,7 +22,21 @@
                             :color='color_alert'
                             dense
                     >2. Настройки игры
-                        <v-tooltip bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
+                        <v-tooltip v-if="auth_data.vk_platform === 'mobile_iphone'" bottom color="rgba(48, 44, 44, 0.99)" max-width="280">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                        color="rgba(48, 44, 44, 0.99)"
+                                        dark
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        icon
+                                >
+                                    <v-icon size="20" v-on="on">mdi-help-circle-outline</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Настройте игру.</span>
+                        </v-tooltip>
+                        <v-tooltip v-else bottom max-width="280" color="rgba(48, 44, 44, 0.99)">
                             <template v-slot:activator="{ on }">
                                 <v-icon v-on="on" size="20">mdi-help-circle-outline</v-icon>
                             </template>
@@ -120,7 +135,7 @@
         components: {
             GeneralSettingsBlock
         },
-        props: ['auth_data', 'auth_data_url'],
+        props: ['auth_data', 'auth_data_url', 'pedestal_integration_enabled', 'online'],
         data: () => ({
             settings: {
                 start_letters: '',
@@ -129,7 +144,7 @@
                 post_text: 'Поиграем?)\n' +
                     '\n' +
                     'Ваша задача — написать как можно больше слов, которые начинаются на __.\n' +
-                    'Победители (кто соберёт больше всех слов) - получат подарки 🎁\n' +
+                    'Победители (кто соберёт больше всех слов) получат подарки 🎁\n' +
                     '\n' +
                     'Один комментарий - одно слово. Наш бот в ответном сообщении сообщит результат.' + '\n' +
                     '\n' +
@@ -284,7 +299,7 @@
         // },
         computed: {
             main_variables () {
-                if (this.settings.pedestal_integration_enabled) {
+                if (this.pedestal_integration_enabled) {
                     return this.main_variables1
                 } else {
                     return this.main_variables2

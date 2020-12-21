@@ -15,6 +15,7 @@
                 :auth_data="auth_data"
                 :auth_data_url="auth_data_url"
                 :pedestal_integration_enabled="pedestal_integration_enabled"
+                :online="online"
         >
             <template v-slot:settings>
                 <div class="pt-5">
@@ -173,7 +174,7 @@
         components: {
             GeneralSettingsBlock
         },
-        props: ['auth_data', 'auth_data_url', 'pedestal_integration_enabled'],
+        props: ['auth_data', 'auth_data_url', 'pedestal_integration_enabled', 'online'],
         data: () => ({
             settings: {
                 auth_data: '',
@@ -348,10 +349,7 @@
             is_single_winner: false,
             color_alert: '#edeef0',
         }),
-        // mounted() {
-        //     // this.create_arr()
-        //     this.create_win_fields_type5(10)
-        // },
+        mounted() {},
         computed: {
             main_variables () {
                 if (this.pedestal_integration_enabled) {

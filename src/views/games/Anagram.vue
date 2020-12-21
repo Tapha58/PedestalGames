@@ -13,6 +13,8 @@
                 :game_type="game_type"
                 :auth_data="auth_data"
                 :auth_data_url="auth_data_url"
+                :pedestal_integration_enabled="pedestal_integration_enabled"
+                :online="online"
         >
             <template v-slot:settings>
                 <div class="pt-5" cols="auto">
@@ -119,7 +121,7 @@
         components: {
             GeneralSettingsBlock
         },
-        props: ['auth_data', 'auth_data_url'],
+        props: ['auth_data', 'auth_data_url', 'pedestal_integration_enabled', 'online'],
         data: () => ({
             settings: {
                 start_word: '',
@@ -296,7 +298,7 @@
         // },
         computed: {
             main_variables () {
-                if (this.settings.pedestal_integration_enabled) {
+                if (this.pedestal_integration_enabled) {
                     return this.main_variables1
                 } else {
                     return this.main_variables2

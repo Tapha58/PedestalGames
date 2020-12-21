@@ -18,6 +18,8 @@
                 :game_type="game_type"
                 :auth_data="auth_data"
                 :auth_data_url="auth_data_url"
+                :pedestal_integration_enabled="pedestal_integration_enabled"
+                :online="online"
 
         >
             <template v-slot:settings>
@@ -143,7 +145,7 @@
         components: {
             GeneralSettingsBlock
         },
-        props: ['auth_data', 'auth_data_url'],
+        props: ['auth_data', 'auth_data_url', 'pedestal_integration_enabled', 'online'],
         data: () => ({
             // loading: true,
             // transition: 'scale-transition',
@@ -153,7 +155,7 @@
                 max_number: '',
                 guessed_number: '',
                 closely_interval: '',
-                post_text: 'У нас мини-игра 🎁 Мы загадали число. Угадавший получит приз\n' +
+                post_text: 'У нас мини-игра 🎁 Мы загадали число. Угадавший получит приз.\n' +
                     'Задача - угадать число, которое мы загадали. В комментариях под этим постом напишите ваш вариант. ' +
                     'Например, 15.\n' + 'Каждый участник имеет 3 попытки с интервалом между попытками в 1 минуту.  ' +
                     'Каждый раз, когда у вас ' + 'закончатся попытки, вы будете получать еще по 2 попытки каждые 10 минут! ' +
@@ -263,7 +265,7 @@
         }),
         computed: {
             main_variables () {
-                if (this.settings.pedestal_integration_enabled) {
+                if (this.pedestal_integration_enabled) {
                     return this.main_variables1
                 } else {
                     return this.main_variables2

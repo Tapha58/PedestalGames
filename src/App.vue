@@ -10,9 +10,29 @@
                 :settings="settings"
                 :auth_data="settings.auth_data"
                 :auth_data_url="auth_data_url"
+                :online="online"
                 :pedestal_integration_enabled="data_bus.pedestal_integration_enabled"
                 class="px-0" :class="{ router : $vuetify.breakpoint.name === 'xs' }">
         </router-view>
+        <v-dialog
+                v-model="offline"
+                persistent
+                width="300"
+        >
+            <v-card
+                    color="primary"
+                    dark
+            >
+                <v-card-text align="center">
+                    Отсутствует интернет соединение
+                    <v-progress-linear
+                            indeterminate
+                            color="white"
+                            class="mb-0"
+                    ></v-progress-linear>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-app>
 </template>
 
@@ -34,8 +54,11 @@
             incognito_mode: true,
             auth_data_url: '',
             storageAvailable: false,
+            online: true,
+            offline: false,
         }),
         methods: {
+
             go_widget_page: function () {
                 document.location.href = '/app/' + this.auth_data_url
             },
@@ -50,7 +73,21 @@
             await this.getAllUrlParams()
         },
         mounted: async function () {
-
+            window.addEventListener('offline', () => {
+                console.log("The network connection has been lost.");
+                this.online = false
+                this.offline = true
+            });
+            // addEventListener version
+            window.addEventListener('online', () => {
+                console.log("You are now connected to the network.");
+                this.online = true
+                this.offline = false
+            });
+            // onoffline version
+            // window.onoffline = () => {
+            //     console.log("The network connection has been lost1.");
+            // };
             await bridge.send("VKWebAppInit")
             window.onpopstate = this.close_app
             if (bridge.supports("VKWebAppSetViewSettings")) {
@@ -89,6 +126,7 @@
         overflow-x: auto !important;
         overflow-y: auto !important;
         background: white;
+        -webkit-user-select: none !important;
 
     }
 
@@ -149,10 +187,19 @@
         background-color: white;
         height: constant(safe-area-inset-bottom);
         height: env(safe-area-inset-bottom);
-        position: fixed;
+        position: static;
         z-index: 8;
         width: 100%;
         bottom: 0;
+    }
+
+    .Panel::after {
+        position: fixed;
+        background: white;
+    }
+
+    .caption {
+        -webkit-user-select: text !important;
     }
 
 

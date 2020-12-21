@@ -11,7 +11,7 @@
             >
                 <v-row align="center">
                     <v-col class="">
-                        С iPhone пополнение баланса доступно только через VkPay.
+                        С iPhone пополнение баланса доступно только через VK Pay. Вы можете пополнить баланс картой / ЮMoney / QIWI с компьютерной версии сайта Вконтакте.
                     </v-col>
                     <!--                    <v-col class="shrink">-->
                     <!--                        <v-btn @click="VKWebAppAllowMessagesFromGroup" small color="primary">Разрешить уведомления</v-btn>-->
@@ -44,7 +44,7 @@
         <v-col align="left">
             <span><b>Способ пополнения:</b></span>
         </v-col>
-        <v-row justify="space-around">
+        <v-row justify="space-around" v-if="settings.auth_data.vk_platform !== 'mobile_iphone'">
             <div class="balance" :class="{selected : bank_card}" @click="select('bank_card')">
                 <v-img
                         class="ma-1"
@@ -66,21 +66,34 @@
                         src="/static/longtime/icons/pay/vkpay.png"></v-img>
             </div>
         </v-row>
+        <v-row justify="space-around" v-else>
+            <div class="balance" :class="{selected : vk_pay, mobile : mobile}" @click="select('vk_pay')">
+                <v-img
+                        class="mt-1"
+                        src="/static/longtime/icons/pay/vkpay.png"></v-img>
+            </div>
+        </v-row>
         <v-col align="left" class="pb-0">
             <span><b>Сумма пополнения:</b></span>
         </v-col>
         <v-row justify="center" class="">
             <v-col :cols="$vuetify.breakpoint.name === ('sm' || 'xs') ? 4 : 12">
                 <v-text-field
-                        label="введите сумму"
+                        label="Введите сумму"
                         dense
                         outlined
                         type="number"
+                        required
                         min="1"
-                        v-model="amount"
+                        max="99999"
+                        v-model.number="amount"
+                        validate-on-blur
+                        :rules="[rules.type_number, rules.zero, rules.zero_zero, rules.max_count_win]"
+                        inputmode="tel"
                 >
                     <template v-slot:append>
                         <v-btn v-show="vk_pay" small color="primary" class="mtn2px" @click="replenish">Пополнить</v-btn>
+
                         <v-btn v-show="yandex_money || bank_card" small color="primary" class="mtn2px" type="submit">
                             Пополнить
                         </v-btn>
@@ -92,7 +105,7 @@
         <hr id="line_vk">
         <v-col align="left" class="pb-0">
             <span><b>Жетонов на балансе группы: </b>{{games_available_launches}}</span><br>
-            <span>Жетон дает возможность запустить бесплатно одну игру. Жетоны могуть быть начисленны в ходе акции.</span>
+            <span>Жетон дает возможность запустить бесплатно одну игру. Жетоны могут быть начислены в ходе акции.</span>
         </v-col>
     </form>
 </template>
@@ -105,18 +118,25 @@
         props: ['games_available_launches', 'balance', 'settings', 'auth_data_url'],
         mixins: [auto_resize],
         data: () => ({
-            bank_card: true,
+            bank_card: false,
             yandex_money: false,
             qiwi: false,
-            vk_pay: false,
+            vk_pay: true,
             amount: 100,
-            // settings: {
-            //     auth_data: ''
-            // },
-            vk_ts: Math.floor(new Date() / 1000)
+            vk_ts: Math.floor(new Date() / 1000),
+            rules: {
+                // required: v => !!v || 'Недопустимый формат',
+                zero: v => (v !== '0') || 'Недопустимый формат',
+                zero_zero: v => (v > 0) || 'Недопустимый формат',
+                max_length_200: v => (v && v.length <= 200) || 'Максимально допустимо 200 символов',
+                max_length_7: v => (v && v.length <= 7) || 'Максимально допустимо 7 символов',
+                max_count_win: v => (v && v <= 99999) || 'Максимальная сумма 99999',
+                type_number: v => (/^[0-9]{1,60}$/.test(v)) || 'Недопустимый формат',
+                range: v => (/^[0-9]{1,6}$/.test(v) || /^[0-9]{1,6}[-]{1}[0-9]{1,6}$/.test(v)) || 'Недопустимый формат'
+            },
         }),
         mounted() {
-            this.getAllUrlParams()
+            // this.getAllUrlParams()
             setInterval(this.get_balance, 10000)
 
         },
@@ -185,9 +205,12 @@
                 }
             },
             replenish: async function () {
+                if (this.amount > 99999 || this.amount === 0) {
+                    return
+                }
                 let response = await bridge.send("VKWebAppOpenPayForm", {
                     "app_id": +this.settings.auth_data.vk_app_id, "action": "pay-to-group", "params": {
-                        "amount": this.amount,
+                        "amount": +this.amount,
                         "group_id": 187978241, "description": "Пополнение баланса"
                     }
                 })

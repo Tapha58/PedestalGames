@@ -1,12 +1,12 @@
 <template>
     <div>
         <div v-if="settings.auth_data.vk_platform !== 'desktop_web' && $vuetify.breakpoint.name === ('xs')" id="top_div">
-            <v-btn class="app_name ml-3" color="primary" text>Пьедестал. Игры</v-btn>
+            <span class="app_name ml-3 text-button colorprimary">Пьедестал. Игры</span>
         </div>
 
         <div v-if="!show_alert_successful_installation">
             <v-sheet
-                    class="d-flex"
+                    class="d-flex mb-3"
                     color="#f0f2f5"
                     height="auto"
             >
@@ -25,7 +25,7 @@
                 <v-card
                         v-for="(game) in game_card"
                         :key="game.name"
-                        class="mx-0 mt-3"
+                        class="mx-0 mb-3"
                         :max-width="max_width_card"
                         min-width="297"
                 >
@@ -103,7 +103,7 @@
                 },
                 {
                     name: 'Угадай число',
-                    description: 'Загадайте число. Тот из игроков, кто первым отгадает получит приз.',
+                    description: 'Загадайте число. Тот из игроков, кто первым отгадает, получит приз.',
                     url_avatar: '/static/wallgames/image/promo_games/guess_number.png',
                     btn_example: 'https://vk.com/club197375430?w=wall-197375430_21',
                     btn_more_details: 'https://vk.com/@pedestal-wallgames-opisanie?anchor=igra-ugaday-chislo'
@@ -194,5 +194,9 @@
         height: 46px;
         height: calc(constant(safe-area-inset-top) + 46px);
         height: calc(env(safe-area-inset-top) + 46px);
+    }
+
+    .colorprimary {
+        color: #4a76a8
     }
 </style>

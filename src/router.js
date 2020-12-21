@@ -10,7 +10,7 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'home',
+            name: 'route_page',
             component: () => import('./views/RoutePage'),
         },
         {
@@ -110,6 +110,11 @@ export default new Router({
             path: '/sea_battle_with_score_settings/:id',
             name: 'sea_battle_with_score_settings_id',
             component: () => import('./views/games/SeaBattleWithScore'),
+        },
+        {
+            path: '/results/:id',
+            name: 'results',
+            component: () => import('./views/Results'),
         },
     ]
 })
