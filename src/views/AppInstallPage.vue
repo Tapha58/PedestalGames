@@ -189,8 +189,8 @@
         top: 0px;
         position: fixed;
         width: 100%;
-        background-color: #ffffff;
-        z-index: 8;
+        background-color: red;
+        z-index: 18;
         height: 46px;
         height: calc(constant(safe-area-inset-top) + 46px);
         height: calc(env(safe-area-inset-top) + 46px);

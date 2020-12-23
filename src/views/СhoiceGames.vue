@@ -102,7 +102,7 @@
                         игр и ответов пользователям от имени сообщества.
                     </v-col>
                     <v-col class="shrink">
-                        <v-btn @click="VKWebAppGetCommunityToken" small color="primary">Предоставить права
+                        <v-btn @click="VKWebAppGetCommunityToken" small color="error">Предоставить права
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -653,18 +653,26 @@
             // информация, запускалась ли когда-либо игра в данном сообществе
             get_group_info: async function () {
                 // console.log('get_group_info')
-                let response = await fetch("/app/wallgames/group_info/" + this.settings.auth_data.vk_group_id + this.auth_data_url)
-                if (response.ok) {
-                    response = await response.json()
-                    if (response.not_launch_games) {
-                        this.show_alert_first_start = true
+                try {
+                    let response = await fetch("/app/wallgames/group_info/" + this.settings.auth_data.vk_group_id + this.auth_data_url)
+                    if (response.ok) {
+                        response = await response.json()
+                        if (response.not_launch_games) {
+                            this.show_alert_first_start = true
+                        } else {
+                            if (this.storageAvailable) {
+                                localStorage.setItem('not_launch_games_' + this.settings.auth_data.vk_group_id, false)
+                            }
+                        }
                     } else {
-                        if (this.storageAvailable) {
-                        localStorage.setItem('not_launch_games_' + this.settings.auth_data.vk_group_id, false)
-                    }}
-                } else {
-                    response = await response.json()
-                    console.log(response)
+                        response = await response.json()
+                        // if (response.detail === "Not found.") {
+                        //     this.show_alert_first_start = true
+                        // }
+                        console.log(response)
+                    }
+                } catch (e) {
+                    console.log(e)
                 }
             },
 
@@ -711,8 +719,6 @@
     .btn {
         text-decoration: none;
     }
-
-
 
 
 </style>

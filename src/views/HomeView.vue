@@ -108,9 +108,10 @@
             } else {
                 this.storageAvailable = false
             }
-            if (!this.storageAvailable || !localStorage.getItem('create_group_' + this.settings.auth_data.vk_group_id)) {
-                await this.create_group()
-            }
+            // if (!this.storageAvailable || !localStorage.getItem('create_group_' + this.settings.auth_data.vk_group_id)) {
+            //     await this.create_group()
+            // }
+            await this.create_group()
             await this.get_data_group()
             await this.load_balance()
             this.show_skeleton = false
@@ -143,7 +144,7 @@
         },
         methods: {
             create_group: async function () {
-                console.log('create_group')
+                // console.log('create_group')
                 let obj = {}
                 obj.auth_data = this.settings.auth_data
                 let response = await fetch('/app/wallgames/group/' + this.auth_data_url,
@@ -155,6 +156,7 @@
                         body: JSON.stringify(obj)
                     })
                 if (response.ok) {
+                    // console.log(response)
                     if (this.storageAvailable) {
                         localStorage.setItem('create_group_' + this.settings.auth_data.vk_group_id, 'true')
                     }

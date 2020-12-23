@@ -22,7 +22,7 @@ module.exports = {
     },
     pluginOptions: {
         eruda: {
-            enable: true
+            enable: false
         }
     }
 }

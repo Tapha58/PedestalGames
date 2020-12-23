@@ -2026,6 +2026,27 @@
                     console.log(response)
                 }
             },
+            post_group_info: async function () {
+                let obj = {}
+                obj.auth_data = this.auth_data
+                obj.not_launch_games = false
+
+                let response = await fetch('/app/wallgames/group_info/',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(obj)
+                    })
+                if (response.ok) {
+                    response = await response.json()
+                    console.log(response)
+                } else {
+                    response = await response.json()
+                    console.log(response)
+                }
+            },
             put_data_group: async function (token_group, mask) {
                 let obj = {}
                 obj.auth_data = this.auth_data
@@ -2444,7 +2465,7 @@
                 }
 
                 // записываем в кеш и в базу, что хоть одна игра запущена
-                await this.put_group_info()
+                await this.post_group_info()
                 this.loading = false
             },
 
