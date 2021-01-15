@@ -4,12 +4,16 @@
       <v-img
           class="item"
           src="https://cdn.activebot.ru/f/contests/promo/badges/new_year_predictions2.png"
-          @mousemove="doDrag"
+          @mousemove="getCoordinates"
+          width="300"
       ></v-img>
+        <span>{{x}} x {{y}}</span>
       <v-img
           class="item"
           src="https://cdn.activebot.ru/f/contests/promo/badges/new_year_predictions2.png"
-          @mousemove="doDrag"
+          @mousemove="getCoordinates"
+
+          width="300"
       ></v-img>
 
     </div>
@@ -20,13 +24,17 @@
 export default {
   data: () => ({
     vv: 'rotateX(10deg)',
+      x: '',
+      y: '',
 
   }),
 
 
 
   methods: {
-    doDrag(e) {
+      getCoordinates(e) {
+          this.x = e.offsetX
+          this.y = e.offsetY
       console.log(e)
     },
   }
