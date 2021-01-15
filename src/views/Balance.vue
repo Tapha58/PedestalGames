@@ -3,7 +3,6 @@
     <form method="POST" :action='action' target="_blank">
         <div v-if="show_alert_iphone_pay">
             <v-alert
-                    class="mt-3"
                     text
                     prominent
                     type="primary"

@@ -11,6 +11,7 @@
   "dependencies": {
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "@sentry/integrations": "^5.27.4",
+    "@sentry/vue": "^5.29.2",
     "@vkontakte/vk-bridge": "^2.3.0",
     "core-js": "^3.6.4",
     "emoji-vue": "^0.2.4",

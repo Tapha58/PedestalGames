@@ -1,7 +1,16 @@
 <template>
     <v-app id="app">
-        <v-btn v-show="show_btn_pedestal" id="square" depressed dark color="#4a76a8" @click="go_widget_page">Вернуться в
-            основное меню
+<!--      <h1>привет</h1>-->
+        <v-btn
+            v-show="from_pedestal"
+            id="square"
+            depressed
+            dark
+            color="#4a76a8"
+            :href="'https://vk.com/app7147757_-' + vk_group_id_pedestal"
+            target="_parent"
+            :class="{back_pedestal : !computer_mode}"
+        >Вернуться в основное меню
         </v-btn>
         <div id="safe_area_bottom"></div>
         <router-view
@@ -11,7 +20,9 @@
                 :auth_data="settings.auth_data"
                 :auth_data_url="auth_data_url"
                 :online="online"
+                :from_pedestal="from_pedestal"
                 :pedestal_integration_enabled="data_bus.pedestal_integration_enabled"
+                :vk_group_id_pedestal="data_bus.vk_group_id_pedestal"
                 class="px-0" :class="{ router : $vuetify.breakpoint.name === 'xs' }">
         </router-view>
         <v-dialog
@@ -39,12 +50,16 @@
 <script>
     import bridge from "@vkontakte/vk-bridge";
     import auto_resize from "@/mixins/auto_resize";
+    import shim from 'string.prototype.matchall/shim';
+    shim()
 
     export default {
         mixins: [auto_resize],
         data: () => ({
             data_bus: {
-                pedestal_integration_enabled: ''
+                pedestal_integration_enabled: '',
+                vk_group_id_pedestal: '',
+                url_atr: '',
             },
             token: '',
             settings: {
@@ -67,12 +82,20 @@
                     console.log('закрываем приложение')
                     bridge.send("VKWebAppClose", {"status": "success"})
                 }
-            }
+            },
+
+
         },
         created: async function () {
             await this.getAllUrlParams()
         },
         mounted: async function () {
+          this.data_bus.url_atr = window.location.href
+
+
+
+
+          await bridge.send("VKWebAppInit")
             window.addEventListener('offline', () => {
                 console.log("The network connection has been lost.");
                 this.online = false
@@ -88,7 +111,7 @@
             // window.onoffline = () => {
             //     console.log("The network connection has been lost1.");
             // };
-            await bridge.send("VKWebAppInit")
+
             window.onpopstate = this.close_app
             if (bridge.supports("VKWebAppSetViewSettings")) {
                 bridge.send("VKWebAppSetViewSettings", {"status_bar_style": "dark", "action_bar_color": "#ffffff"})
@@ -103,9 +126,42 @@
             }
         },
         computed: {
-            show_btn_pedestal: function () {
+            from_pedestal: function () {
                 return /#pedestal/.test(window.location.href)
             },
+          vk_group_id_pedestal: function () {
+            let url = window.location.href
+            if (/#pedestal/.test(url)) {
+              const matchAll = require('string.prototype.matchall')
+              matchAll.shim()
+              let result = url.matchAll(/pedestal_(\d+)/g)
+              result = Array.from(result)
+              console.log(result)
+              console.log(result[0][1])
+              // this.data_bus.vk_group_id_pedestal = result[0][1]
+              // let str = window.location.href
+              // const matchAll = require('string.prototype.matchall')
+              // matchAll.shim()
+              // let result = str.matchAll(/(?<=pedestal_)\d+/g)
+              // result = Array.from(result)
+              // console.log(result)
+              // return result[0]
+              return result[0][1]
+            } else {
+              return ''
+            }
+          },
+          computer_mode() {
+            if (this.settings.auth_data.vk_platform === 'desktop_web') {
+              return true
+            } else {
+              if (this.settings.auth_data.vk_platform === 'mobile_web' && this.$vuetify.breakpoint.name !== ('xs')) {
+                return true
+              } else {
+                return false
+              }
+            }
+          }
         },
     }
 
@@ -130,10 +186,10 @@
 
     }
 
-    #bottom_iphone {
-        padding-bottom-bottom: constant(safe-area-inset-bottom) !important;
-        padding-bottom: env(safe-area-inset-bottom) !important;
-    }
+    /*#bottom_iphone {*/
+    /*    padding-bottom-bottom: constant(safe-area-inset-bottom) !important;*/
+    /*    padding-bottom: env(safe-area-inset-bottom) !important;*/
+    /*}*/
 
     #square {
         border-radius: 0 !important;
@@ -191,6 +247,12 @@
         z-index: 8;
         width: 100%;
         bottom: 0;
+    }
+
+    .back_pedestal {
+      top: 83px;
+      top: calc(constant(safe-area-inset-top) + 64px);
+      top: calc(env(safe-area-inset-top) + 64px);
     }
 
     .Panel::after {

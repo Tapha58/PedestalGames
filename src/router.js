@@ -116,5 +116,10 @@ export default new Router({
             name: 'results',
             component: () => import('./views/Results'),
         },
+        {
+            path: '/test/',
+            name: 'test',
+            component: () => import('./views/Test'),
+        },
     ]
 })

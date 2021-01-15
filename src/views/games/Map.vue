@@ -50,12 +50,7 @@
             show_table: true,
             mobile: false,
         }),
-        beforeMount:
-            async function() {
 
-
-
-        },
         mounted: async function() {
             await this.getAllUrlParams()
             await this.get_map()
